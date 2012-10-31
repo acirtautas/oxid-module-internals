@@ -11,6 +11,23 @@
 class ac_module extends ac_module_parent // oxModule
 {
     /**
+     * Check supported metadata version
+     *
+     * @param $sMetadataVersion Metadata version
+     *
+     * @return bool
+     */
+    public function isMetadataSupported($sMetadataVersion)
+    {
+        $sLatestVersion = 1.0;
+        if ( method_exists(parent,'getModuleVersions') || method_exists(parent,'getModuleEvents') ) {
+            $sLatestVersion = 1.1;
+        }
+
+        return version_compare($sLatestVersion, $sMetadataVersion) >=0;
+    }
+
+    /**
      * Set template extend to database, do cleanup before.
      *
      * @param string $sModuleId     Module ID

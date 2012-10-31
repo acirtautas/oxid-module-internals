@@ -12,7 +12,7 @@ $aModule = array(
     'title'        => 'Module Internals',
     'description'  => 'Internal OXID eShop module system information and troubleshooting tools.',
     'thumbnail'    => 'ac_module_internals.png',
-    'version'      => '1.0',
+    'version'      => '0.1',
     'author'       => 'Alfonsas Cirtautas',
     'url'          => 'https://github.com/acirtautas/oxid-module-internals',
     'email'        => '',
@@ -25,8 +25,8 @@ $aModule = array(
         'ac_module_internals_utils'    => 'ac_module_internals/controllers/admin/ac_module_internals_utils.php'
     ),
     'templates'    => array(
-        'ac_module_internals_metadata.tpl' => 'ac_module_internals/views/admin/tpl/ac_module_internals_metadata.tpl',
-        'ac_module_internals_health.tpl'   => 'ac_module_internals/views/admin/tpl/ac_module_internals_health.tpl',
-        'ac_module_internals_utils.tpl'    => 'ac_module_internals/views/admin/tpl/ac_module_internals_utils.tpl',
+        'ac_module_internals_metadata.tpl' => 'ac_module_internals/out/admin/tpl/ac_module_internals_metadata.tpl',
+        'ac_module_internals_health.tpl'   => 'ac_module_internals/out/admin/tpl/ac_module_internals_health.tpl',
+        'ac_module_internals_utils.tpl'    => 'ac_module_internals/out/admin/tpl/ac_module_internals_utils.tpl',
     )
 );

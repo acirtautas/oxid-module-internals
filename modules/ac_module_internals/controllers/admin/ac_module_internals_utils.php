@@ -38,9 +38,11 @@ class ac_module_internals_utils extends oxAdminView
      */
     public function render()
     {
-        $sModuleId = $this->getEditObjectId();
+        $oModule   = $this->getModule();
+        $sModuleId = $oModule->getId();
 
-        $this->_aViewData['oxid'] = $sModuleId;
+        $this->_aViewData['oxid']       = $sModuleId;
+        $this->_aViewData['blIsActive'] = $oModule->isActive();
 
         return $this->sTemplate;
     }
@@ -50,7 +52,22 @@ class ac_module_internals_utils extends oxAdminView
      */
     public function reset_cache()
     {
-        $oModule = $this->getModule();
-        $oModule->resetCache();
+        $this->getModule()->resetCache();
+    }
+
+    /**
+     * Activate module.
+     */
+    public function activate_module()
+    {
+        $this->getModule()->activate();
+    }
+
+    /**
+     * Deactivate module.
+     */
+    public function deactivate_module()
+    {
+        $this->getModule()->deactivate();
     }
 }

@@ -53,8 +53,11 @@ class ac_module_internals_health extends oxAdminView
         $this->_aViewData['aSettings']  = $this->_checkModuleSettings($sModulePath, $oModule->getInfo('settings'), $oModule->getModuleSettings($sModuleId));
         $this->_aViewData['aFiles']     = $this->_checkModuleFiles($sModulePath, $oModule->getInfo('files'), $oModule->getModuleFiles($sModuleId));
         $this->_aViewData['aTemplates'] = $this->_checkModuleTemplates($sModulePath, $oModule->getInfo('templates'), $oModule->getModuleTemplates($sModuleId));
-        $this->_aViewData['aEvents']    = $this->_checkModuleEvents($sModulePath, $oModule->getInfo('events'), $oModule->getModuleEvents($sModuleId));
-        $this->_aViewData['aVersions']  = $this->_checkModuleVersions($sModulePath, $oModule->getInfo('version'), $oModule->getModuleVersion($sModuleId));
+
+        if ($oModule->isMetadataSupported('1.1')) {
+            $this->_aViewData['aEvents']    = $this->_checkModuleEvents($sModulePath, $oModule->getInfo('events'), $oModule->getModuleEvents($sModuleId));
+            $this->_aViewData['aVersions']  = $this->_checkModuleVersions($sModulePath, $oModule->getInfo('version'), $oModule->getModuleVersion($sModuleId));
+        }
 
         $this->_aViewData['sState'] = array (-3 => 'sfatals', -2 => 'sfatalm', -1 => 'serror', 0 => 'swarning', 1 => 'sok');
 
