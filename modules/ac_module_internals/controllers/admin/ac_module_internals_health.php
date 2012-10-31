@@ -215,7 +215,9 @@ class ac_module_internals_health extends oxAdminView
                     }
                 }
 
-                if (!file_exists($sModulesDir.'/'.$sModulePath.'/'.$aBlock['file'])) {
+                if (!file_exists($sModulesDir.'/'.$sModulePath.'/'.$aBlock['file']) &&
+                    !file_exists($sModulesDir.'/'.$sModulePath.'/out/blocks/'.basename($aBlock['file'])) &&
+                    !file_exists($sModulesDir.'/'.$sModulePath.'/out/blocks/'.basename($aBlock['file']).'.tpl') ) {
                     $iState = -2;
                 }
 
@@ -229,7 +231,9 @@ class ac_module_internals_health extends oxAdminView
 
                 if (!isset($aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXFILE']])) {
                     $aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXFILE']] = -1;
-                    if (!file_exists($sModulesDir.'/'.$sModulePath.'/'.$aDbBlock['OXFILE'])) {
+                    if (!file_exists($sModulesDir.'/'.$sModulePath.'/'.$aDbBlock['OXFILE']) &&
+                        !file_exists($sModulesDir.'/'.$sModulePath.'/out/blocks/'.basename($aDbBlock['OXFILE'])) &&
+                        !file_exists($sModulesDir.'/'.$sModulePath.'/out/blocks/'.basename($aDbBlock['OXFILE'])).'.tpl') {
                         $aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXFILE']] = -3;
                     }
                 }
