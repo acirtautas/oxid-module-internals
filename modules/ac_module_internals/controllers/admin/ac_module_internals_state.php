@@ -6,16 +6,16 @@
  */
 
 /**
- * Module health checker, compares module data across different storage levels (metadata file / database / configuration).
+ * Module state checker, compares module data across different storage levels (metadata file / database / configuration).
  */
-class ac_module_internals_health extends oxAdminView
+class ac_module_internals_state extends oxAdminView
 {
     public function getLink(){}
 
     /**
      * @var string
      */
-    public $sTemplate = 'ac_module_internals_health.tpl';
+    public $sTemplate = 'ac_module_internals_state.tpl';
 
     /**
      * Get active module object.
@@ -36,7 +36,7 @@ class ac_module_internals_health extends oxAdminView
     }
 
     /**
-     * Collect info about module health.
+     * Collect info about module state.
      *
      * @return string
      */

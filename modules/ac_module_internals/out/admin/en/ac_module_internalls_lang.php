@@ -11,7 +11,7 @@ $aLang = array(
     'charset' => 'ISO-8859-15',
 
     'tbclmodule_internals_metadata' => 'Metadata',
-    'tbclmodule_internals_health'   => 'Health',
+    'tbclmodule_internals_state'    => 'State',
     'tbclmodule_internals_utils'    => 'Utils',
 
     'AC_MI_VERSION'    => 'Version',

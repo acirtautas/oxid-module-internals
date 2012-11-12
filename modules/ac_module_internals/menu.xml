@@ -4,7 +4,7 @@
         <MAINMENU id="mxextensions">
             <SUBMENU id="mxmodule" cl="module" list="module_list">
                 <TAB id="tbclmodule_internals_metadata" cl="ac_module_internals_metadata"/>
-                <TAB id="tbclmodule_internals_health" cl="ac_module_internals_health"/>
+                <TAB id="tbclmodule_internals_state" cl="ac_module_internals_state"/>
                 <TAB id="tbclmodule_internals_utils" cl="ac_module_internals_utils"/>
             </SUBMENU>
         </MAINMENU>
