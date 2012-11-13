@@ -7,6 +7,7 @@ Functionality:
 
  * Display highlighted metadata file content.
  * Reset module related shop cache data.
+ * Toggle module activation / deactivation
  * Compare and troubleshoot metadata vs internally stores data
    * Extended classes
    * Template blocks
