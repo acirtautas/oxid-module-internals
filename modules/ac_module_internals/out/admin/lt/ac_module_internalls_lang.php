@@ -10,7 +10,7 @@ $sLangName = "Lietuvių";
 $aLang = array(
     'charset' => 'UTF-8',
 
-    'tbclmodule_internals_metadata' => 'Metadata',
+    'tbclmodule_internals_metadata' => 'Metaduomenys',
     'tbclmodule_internals_state'    => 'Būklė',
     'tbclmodule_internals_utils'    => 'Įrankiai',
 
@@ -40,5 +40,5 @@ $aLang = array(
     'AC_STATE_WA_LABEL'  => 'Metadata įrašų trūksta sistemoje',
     'AC_STATE_ER_LABEL'  => 'Sistemos įrašų nėra metadata faile',
     'AC_STATE_FM_LABEL'  => 'Neegzistuojantys failai metadata aprašę',
-    'AC_STATE_FS_LABEL'  => 'Neegzistuonajtys failai sistemos įrašuose'
+    'AC_STATE_FS_LABEL'  => 'Neegzistuojantys failai sistemos įrašuose'
 );
