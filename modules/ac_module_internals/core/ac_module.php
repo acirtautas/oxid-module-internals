@@ -19,9 +19,9 @@ class ac_module extends ac_module_parent // oxModule
      */
     public function isMetadataSupported($sMetadataVersion)
     {
-        $sLatestVersion = 1.0;
-        if ( method_exists(parent,'getModuleVersions') || method_exists(parent,'getModuleEvents') ) {
-            $sLatestVersion = 1.1;
+        $sLatestVersion = '1.0';
+        if ( method_exists('oxModule', 'getModuleVersions') || method_exists('oxModule', 'getModuleEvents') ) {
+            $sLatestVersion = '1.1';
         }
 
         return version_compare($sLatestVersion, $sMetadataVersion) >=0;
