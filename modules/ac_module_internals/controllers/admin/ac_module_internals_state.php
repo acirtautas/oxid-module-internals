@@ -10,8 +10,6 @@
  */
 class ac_module_internals_state extends oxAdminView
 {
-    public function getLink(){}
-
     /**
      * @var string
      */
