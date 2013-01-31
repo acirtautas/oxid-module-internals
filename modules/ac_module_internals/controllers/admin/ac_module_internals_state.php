@@ -47,7 +47,7 @@ class ac_module_internals_state extends oxAdminView
         $this->_aViewData['oxid']       = $sModuleId;
 
         $this->_aViewData['aExtended']  = $this->_checkExtendedClasses($sModulePath, $oModule->getInfo('extend'), $oModule->getAllModules());
-        $this->_aViewData['aBlocks']    = $this->_checkTemplateBlocks($sModulePath, $oModule->getInfo('blocks'), $oModule->getModuleBlocks($sModuleId));
+        $this->_aViewData['aBlocks']    = $this->_checkTemplateBlocks($sModulePath, $oModule->getInfo('blocks'), $oModule->getModuleBlocks($sModuleId), $oModule->getInfo('templates'));
         $this->_aViewData['aSettings']  = $this->_checkModuleSettings($sModulePath, $oModule->getInfo('settings'), $oModule->getModuleSettings($sModuleId));
         $this->_aViewData['aFiles']     = $this->_checkModuleFiles($sModulePath, $oModule->getInfo('files'), $oModule->getModuleFiles($sModuleId));
         $this->_aViewData['aTemplates'] = $this->_checkModuleTemplates($sModulePath, $oModule->getInfo('templates'), $oModule->getModuleTemplates($sModuleId));
@@ -130,7 +130,8 @@ class ac_module_internals_state extends oxAdminView
     /**
      * Fix module events.
      */
-    public function fix_events()    {
+    public function fix_events()
+    {
         $oModule = $this->getModule();
         $aEvents = $oModule->getInfo('events');
 
@@ -188,9 +189,11 @@ class ac_module_internals_state extends oxAdminView
      * @param $sModulePath
      * @param $aMetadataBlocks
      * @param $aDatabaseBlocks
+     * @param $aMetadataTemplates
+     *
      * @return array
      */
-    protected function _checkTemplateBlocks($sModulePath, $aMetadataBlocks, $aDatabaseBlocks)
+    protected function _checkTemplateBlocks($sModulePath, $aMetadataBlocks, $aDatabaseBlocks, $aMetadataTemplates)
     {
         $sModulesDir = $this->getConfig()->getModulesDir();
 
@@ -219,7 +222,7 @@ class ac_module_internals_state extends oxAdminView
                     $iState = -2;
                 }
 
-                $aResult[$aBlock['template']][$aBlock['file']] = $iState;
+                $aResult[$aBlock['template']][$aBlock['file']]['file'] = $iState;
             }
         }
 
@@ -232,7 +235,40 @@ class ac_module_internals_state extends oxAdminView
                     if (!file_exists($sModulesDir.'/'.$sModulePath.'/'.$aDbBlock['OXFILE']) &&
                         !file_exists($sModulesDir.'/'.$sModulePath.'/out/blocks/'.basename($aDbBlock['OXFILE'])) &&
                         !file_exists($sModulesDir.'/'.$sModulePath.'/out/blocks/'.basename($aDbBlock['OXFILE'])).'.tpl') {
-                        $aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXFILE']] = -3;
+                        $aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXFILE']]['file'] = -3;
+                    }
+                }
+            }
+        }
+
+        // Check if template file exists and block is defined.
+        if (is_array($aMetadataBlocks)) {
+            foreach ($aMetadataBlocks as $aBlock) {
+
+                // Get template from shop..
+                $sTemplate = $this->getConfig()->getTemplatePath($aBlock['template'], false);
+
+                // Get template from shop admin ..
+                if (!$sTemplate) {
+                    $sTemplate = $this->getConfig()->getTemplatePath($aBlock['template'], true);
+                }
+
+                // Get template from module ..
+                if (!$sTemplate && isset($aMetadataTemplates[$aBlock['template']]) ) {
+
+                    $sModulesDir = $this->getConfig()->getModulesDir();
+
+                    if (file_exists($sModulesDir.'/'.$aMetadataTemplates[$aBlock['template']])) {
+                        $sTemplate = $sModulesDir.'/'.$aMetadataTemplates[$aBlock['template']];
+                    }
+                }
+
+                if (empty($sTemplate)) {
+                    $aResult[$aBlock['template']][$aBlock['file']]['template'] = -3;
+                } else {
+                    $sContent = file_get_contents($sTemplate);
+                    if (!preg_match('/\[{.*block.* name.*= *"'.$aBlock['block'].'".*}\]/', $sContent)) {
+                        $aResult[$aBlock['template']][$aBlock['file']]['template'] = -1;
                     }
                 }
             }

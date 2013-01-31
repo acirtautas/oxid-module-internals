@@ -93,14 +93,21 @@
     <h3>[{oxmultilang ident="AC_MI_BLOCKS"}]</h3>
     <table>
         [{assign var="_ok" value=1}]
-        [{foreach from=$aBlocks key=sClass item=aModules}]
+        [{foreach from=$aBlocks key=sTemplate item=aFiles}]
         <tr>
-            <td style="vertical-align: top;"><b>[{$sClass}]</b></td>
+            [{assign var="_tstate" value=1}]
+            [{foreach from=$aFiles key=sFile item=aStates}]
+                [{if $aStates.template < $_tstate}]
+                    [{assign var="_tstate" value=$aStates.template}]
+                [{/if}]
+            [{/foreach}]
+            <td style="vertical-align: top;"><b><span class="state [{$sState.$_tstate}]">[{$sTemplate}]</span></b></td>
             <td>
-                [{foreach from=$aModules key=sModule item=iState}]
+                [{foreach from=$aFiles key=sFile item=aStates}]
+                [{assign var="_state" value=$aStates.file}]
                 <div>
-                    <span class="state [{$sState.$iState}]">[{$sModule}]</span>
-                    [{if $iState < 1 && $iState != -2 }][{assign var="_ok" value=0}][{/if}]
+                    <span class="state [{$sState.$_state}]">[{$sFile}]</span>
+                    [{if $_state < 1 && $_state != -2 }][{assign var="_ok" value=0}][{/if}]
                 </div>
                 [{/foreach}]
             </td>
