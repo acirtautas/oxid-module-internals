@@ -19,9 +19,9 @@ class ac_module extends ac_module_parent // oxModule
      */
     public function isMetadataSupported($sMetadataVersion)
     {
-        $sLatestVersion = 1.0;
-        if ( method_exists(parent,'getModuleVersions') || method_exists(parent,'getModuleEvents') ) {
-            $sLatestVersion = 1.1;
+        $sLatestVersion = '1.0';
+        if ( method_exists('oxModule', 'getModuleVersions') || method_exists('oxModule', 'getModuleEvents') ) {
+            $sLatestVersion = '1.1';
         }
 
         return version_compare($sLatestVersion, $sMetadataVersion) >=0;
@@ -35,8 +35,6 @@ class ac_module extends ac_module_parent // oxModule
      */
     public function setModuleExtend($sModuleId, $aModuleExtend)
     {
-        $oConfig     = oxRegistry::getConfig();
-
         $aInstalledModules = $this->getAllModules();
         $aDisabledModules  = $this->getDisabledModules();
 
@@ -58,6 +56,7 @@ class ac_module extends ac_module_parent // oxModule
         $aModules = $this->mergeModuleArrays($aInstalledModules, $aModuleExtend);
         $aModules = $this->buildModuleChains($aModules);
 
+        $oConfig = $this->getConfig();
         $oConfig->setConfigParam('aModules', $aModules);
         $oConfig->saveShopConfVar('aarr', 'aModules', $aModules);
     }
