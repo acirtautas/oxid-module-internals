@@ -150,6 +150,7 @@ class ac_module_internals_state extends oxAdminView
     protected function _checkExtendedClasses($sModulePath, $aMetadataExtend, $aAllModules)
     {
         $aResult = array();
+        $sModulesDir = $this->getConfig()->getModulesDir(true);
 
         // Check if all classes are extended.
         if (is_array($aMetadataExtend)) {
@@ -162,8 +163,12 @@ class ac_module_internals_state extends oxAdminView
                         $iState = in_array($sModuleName, $aAllModules[$sClassName]) ? 1 : 0;
                     }
                 }
-
-                $aResult[$sClassName][$sModuleName] = $iState;
+                
+                if (!file_exists($sModulesDir . $sModuleName .".php")) {
+                    $aResult[$sClassName][$sModuleName] = -2; // sfatalm
+                } else {
+                    $aResult[$sClassName][$sModuleName] = $iState;
+                }
             }
         }
 
