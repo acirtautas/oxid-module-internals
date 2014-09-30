@@ -10,6 +10,15 @@
  */
 class ac_module_internals_utils extends oxAdminView
 {
+    /** @var oxModule */
+    protected $_oModule;
+
+    /** @var oxModuleCache */
+    protected $_oModuleCache;
+
+    /** @var oxModuleInstaller */
+    protected $_oModuleInstaller;
+
     /**
      * @var string
      */
@@ -22,15 +31,43 @@ class ac_module_internals_utils extends oxAdminView
      */
     public function getModule()
     {
-        $sModuleId = $this->getEditObjectId();
+        if($this->_oModule === null) {
+            $sModuleId = $this->getEditObjectId();
 
-        $this->_aViewData['oxid'] = $sModuleId;
+            $this->_aViewData['oxid'] = $sModuleId;
+            $this->_oModule = oxNew('oxModule');
+            $this->_oModule->load($sModuleId);
+        }
 
-        /** @var $oModule oxModule */
-        $oModule = oxNew('oxModule');
-        $oModule->load($sModuleId);
+        return $this->_oModule;
+    }
 
-        return $oModule;
+    /**
+     * Returns initialized cache instance
+     *
+     * @return oxModuleCache
+     */
+    public function getModuleCache()
+    {
+        if($this->_oModuleCache === null) {
+            $this->_oModuleCache = oxNew('oxModuleCache', $this->getModule());
+        }
+
+        return $this->_oModuleCache;
+    }
+
+    /**
+     * Returns initialized module installer instance
+     *
+     * @return oxModuleInstaller
+     */
+    public function getModuleInstaller()
+    {
+        if($this->_oModuleInstaller === null) {
+            $this->_oModuleInstaller = oxNew('oxModuleInstaller', $this->getModuleCache());
+        }
+
+        return $this->_oModuleInstaller;
     }
 
     /**
@@ -52,7 +89,7 @@ class ac_module_internals_utils extends oxAdminView
      */
     public function reset_cache()
     {
-        $this->getModule()->resetCache();
+        $this->getModuleCache()->resetCache();
     }
 
     /**
@@ -60,7 +97,7 @@ class ac_module_internals_utils extends oxAdminView
      */
     public function activate_module()
     {
-        $this->getModule()->activate();
+        $this->getModuleInstaller()->activate($this->getModule());
     }
 
     /**
@@ -68,6 +105,6 @@ class ac_module_internals_utils extends oxAdminView
      */
     public function deactivate_module()
     {
-        $this->getModule()->deactivate();
+        $this->getModuleInstaller()->deactivate($this->getModule());
     }
 }
