@@ -20,4 +20,4 @@ Functionality:
 Compatibility:
 
  * Requires OXID eShop CE|PE|EE 4.6 for metadata v1.0
- * Requires OXID eShop CE|PE 4.7 & EE 5.0 for metadata v1.1
+ * Requires OXID eShop CE|PE 4.7 & EE 5.0 or CE|PE 4.8 & EE 5.1 for metadata v1.1
