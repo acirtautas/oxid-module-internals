@@ -9,7 +9,7 @@ $sMetadataVersion = '1.0';
 
 $aModule = array(
     'id'           => 'ac_module_internals',
-    'title'        => 'Module Internals (CE|PE 4.9 & EE 5.2)',
+    'title'        => 'Module Internals',
     'description'  => 'Internal OXID eShop module system information and troubleshooting tools (CE|PE 4.9 & EE 5.2).',
     'thumbnail'    => 'ac_module_internals.png',
     'version'      => '0.3.0',
