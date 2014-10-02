@@ -8,11 +8,16 @@
     <input type="hidden" name="editlanguage" value="[{ $editlanguage }]">
 </form>
 
-<script>
+<script type="text/javascript">
+    <!--
+    window.onload = function () {
+        top.oxid.admin.updateList('[{ $oxid }]');
+    }
     function module_internals_fix(fnc) {
         document.getElementById('fnc').value = fnc;
         document.getElementById('transfer').submit();
     }
+    //-->
 </script>
 
 <div>
