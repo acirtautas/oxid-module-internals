@@ -8,5 +8,7 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "composer/installers": "~1.0"
+    }
 }
