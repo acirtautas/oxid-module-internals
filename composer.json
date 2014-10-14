@@ -1,0 +1,12 @@
+{
+    "name": "acirtautas/oxid-module-internals",
+    "description": "OXID eShop module system helper tools",
+    "type": "oxid-module",
+    "authors": [
+        {
+            "name": "Alfonsas Cirtautas"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
