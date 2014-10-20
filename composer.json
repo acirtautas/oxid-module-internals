@@ -7,8 +7,16 @@
             "name": "Alfonsas Cirtautas"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "composer/installers": "~1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : "~4.2"
+    },
+    "autoload": {
+        "files": [
+            "core/ac_module_internals_data_helper.php",
+            "core/ac_module_internals_fix_helper.php"
+        ]
     }
 }
