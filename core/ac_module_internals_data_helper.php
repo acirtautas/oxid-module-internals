@@ -19,6 +19,12 @@ class ac_module_internals_data_helper
     /** @var oxModuleList */
     protected $_oModuleList;
 
+    /** @var oxDB */
+    protected $_oDb;
+
+    /** @var oxConfig */
+    protected $_oConfig;
+
     /**
      * Injects helper parameters
      *
@@ -64,6 +70,46 @@ class ac_module_internals_data_helper
     }
 
     /**
+     * @return oxLegacyDb
+     */
+    public function getDb()
+    {
+        if (is_null($this->_oDb)) {
+            $this->setDb(oxDb::getDb(oxDb::FETCH_MODE_ASSOC));
+        }
+
+        return $this->_oDb;
+    }
+
+    /**
+     * @param oxLegacyDb $oDb
+     */
+    public function setDb(oxLegacyDb $oDb)
+    {
+        $this->_oDb = $oDb;
+    }
+
+    /**
+     * @return oxConfig
+     */
+    public function getConfig()
+    {
+        if (is_null($this->_oConfig)) {
+            $this->setConfig(oxRegistry::getConfig());
+        }
+
+        return $this->_oConfig;
+    }
+
+    /**
+     * @param oxConfig $oConfig
+     */
+    public function setConfig(oxConfig $oConfig)
+    {
+        $this->_oConfig = $oConfig;
+    }
+
+    /**
      * Returns module info
      *
      * @param string $sName
@@ -82,12 +128,12 @@ class ac_module_internals_data_helper
      */
     public function getModuleBlocks()
     {
-        return oxDb::getDb(oxDb::FETCH_MODE_ASSOC)->getAll(
-            'SELECT * FROM oxtplblocks WHERE oxmodule = ? AND oxshopid = ?',
-            array($this->getModuleId(), oxRegistry::getConfig()->getShopId())
-        );
-    }
+        $sSelect   = 'SELECT * FROM oxtplblocks WHERE oxmodule = ? AND oxshopid = ?';
+        $iModuleId = $this->getModuleId();
+        $iShopId   = $this->getConfig()->getShopId();
 
+        return $this->getDb()->getAll($sSelect, array($iModuleId, $iShopId));
+    }
 
     /**
      * Get module settings defined in database.
@@ -96,10 +142,11 @@ class ac_module_internals_data_helper
      */
     public function getModuleSettings()
     {
-        return oxDb::getDb(oxDb::FETCH_MODE_ASSOC)->getAll(
-            'SELECT * FROM oxconfig WHERE oxmodule = ? AND oxshopid = ?',
-            array(sprintf('module:%s', $this->getModuleId()), oxRegistry::getConfig()->getShopId())
-        );
+        $sSelect   = 'SELECT * FROM oxconfig WHERE oxmodule = ? AND oxshopid = ?';
+        $iModuleId = $this->getModuleId();
+        $iShopId   = $this->getConfig()->getShopId();
+
+        return $this->getDb()->getAll($sSelect, array($iModuleId, $iShopId));
     }
 
     /**
@@ -209,12 +256,14 @@ class ac_module_internals_data_helper
      */
     public function checkExtendedClasses()
     {
+        $oConfig = $this->getConfig();
+
         $sModulePath = $this->getModulePath();
         $aMetadataExtend = $this->getInfo('extend');
-        $aAllModules = oxRegistry::getConfig()->getModulesWithExtendedClass();
+        $aAllModules = $oConfig->getModulesWithExtendedClass();
 
         $aResult = array();
-        $sModulesDir = oxRegistry::getConfig()->getModulesDir(true);
+        $sModulesDir = $oConfig->getModulesDir(true);
 
         // Check if all classes are extended.
         if (is_array($aMetadataExtend)) {
@@ -259,12 +308,14 @@ class ac_module_internals_data_helper
      */
     public function checkTemplateBlocks()
     {
+        $oConfig = $this->getConfig();
+
         $sModulePath = $this->getModulePath();
         $aMetadataBlocks = $this->getInfo('blocks');
         $aDatabaseBlocks = $this->getModuleBlocks();
         $aMetadataTemplates = $this->getInfo('templates');
 
-        $sModulesDir = oxRegistry::getConfig()->getModulesDir();
+        $sModulesDir = $oConfig->getModulesDir();
 
         $aResult = array();
 
@@ -319,17 +370,17 @@ class ac_module_internals_data_helper
             foreach ($aMetadataBlocks as $aBlock) {
 
                 // Get template from shop..
-                $sTemplate = oxRegistry::getConfig()->getTemplatePath($aBlock['template'], false);
+                $sTemplate = $oConfig->getTemplatePath($aBlock['template'], false);
 
                 // Get template from shop admin ..
                 if (!$sTemplate) {
-                    $sTemplate = oxRegistry::getConfig()->getTemplatePath($aBlock['template'], true);
+                    $sTemplate = $oConfig->getTemplatePath($aBlock['template'], true);
                 }
 
                 // Get template from module ..
                 if (!$sTemplate && isset($aMetadataTemplates[$aBlock['template']])) {
 
-                    $sModulesDir = oxRegistry::getConfig()->getModulesDir();
+                    $sModulesDir = $oConfig->getModulesDir();
 
                     if (file_exists($sModulesDir . '/' . $aMetadataTemplates[$aBlock['template']])) {
                         $sTemplate = $sModulesDir . '/' . $aMetadataTemplates[$aBlock['template']];
@@ -396,7 +447,7 @@ class ac_module_internals_data_helper
         $aMetadataFiles = $this->getInfo('files');
         $aDatabaseFiles = $this->getModuleFiles();
 
-        $sModulesDir = oxRegistry::getConfig()->getModulesDir();
+        $sModulesDir = $this->getConfig()->getModulesDir();
 
         $aResult = array();
 
@@ -438,7 +489,7 @@ class ac_module_internals_data_helper
         $aMetadataTemplates = $this->getInfo('templates');
         $aDatabaseTemplates = $this->getModuleTemplates();
 
-        $sModulesDir = oxRegistry::getConfig()->getModulesDir();
+        $sModulesDir = $this->getConfig()->getModulesDir();
 
         $aResult = array();
 
