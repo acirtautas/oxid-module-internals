@@ -217,4 +217,35 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals($helper->getModuleVersion(), $aAllModuleVersions['module-id']);
     }
+
+    public function testIsMetadataSupportedFirstRelease()
+    {
+        $oModule     = $this->getMock('oxmodule');
+        $oModuleList = $this->getMock('oxmodulelist');
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+
+        $this->assertTrue($helper->isMetadataSupported('0.1'));
+        $this->assertTrue($helper->isMetadataSupported('1.0'));
+
+        $this->assertFalse($helper->isMetadataSupported('1.1'));
+        $this->assertFalse($helper->isMetadataSupported('1.1'));
+    }
+
+    public function testIsMetadataSupportedSecondRelease()
+    {
+        $oModule     = $this->getMock('oxmodule', array('getModuleEvents'));
+        $oModuleList = $this->getMock('oxmodulelist', array('getModuleVersions'));
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+
+        $this->assertTrue($helper->isMetadataSupported('0.1'));
+        $this->assertTrue($helper->isMetadataSupported('1.0'));
+
+        $this->assertTrue($helper->isMetadataSupported('1.1'));
+        $this->assertTrue($helper->isMetadataSupported('1.1'));
+
+        $this->assertFalse($helper->isMetadataSupported('1.2'));
+        $this->assertFalse($helper->isMetadataSupported('1.2'));
+    }
 }

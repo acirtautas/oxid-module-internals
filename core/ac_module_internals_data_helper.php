@@ -222,7 +222,7 @@ class ac_module_internals_data_helper
     public function isMetadataSupported($sMetadataVersion)
     {
         $sLatestVersion = '1.0';
-        if (method_exists('oxModuleList', 'getModuleVersions') || method_exists('oxModule', 'getModuleEvents')) {
+        if (method_exists($this->getModuleList(), 'getModuleVersions') || method_exists($this->getModule(), 'getModuleEvents')) {
             $sLatestVersion = '1.1';
         }
 
