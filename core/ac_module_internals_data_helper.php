@@ -2,14 +2,15 @@
 /**
  * Module internals tools.
  *
+ * @author Alfonsas Cirtautas
  * @author Saulius Cepauskas
  */
 
 /**
  * Class ac_module_internals_helper
  *
- * Data helper service: retrieves and compares module configuration. Checks if all module relavant data is properly
- * registered and exists. Businnes logics moved into service from the controller.
+ * Data helper service: retrieves and compares module configuration. Checks if all module relevant data is properly
+ * registered and exists. Business logic moved into service from the controller.
  */
 class ac_module_internals_data_helper
 {
