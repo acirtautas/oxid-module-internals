@@ -229,7 +229,6 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($helper->isMetadataSupported('1.0'));
 
         $this->assertFalse($helper->isMetadataSupported('1.1'));
-        $this->assertFalse($helper->isMetadataSupported('1.1'));
     }
 
     public function testIsMetadataSupportedSecondRelease()
@@ -241,11 +240,38 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
 
         $this->assertTrue($helper->isMetadataSupported('0.1'));
         $this->assertTrue($helper->isMetadataSupported('1.0'));
-
-        $this->assertTrue($helper->isMetadataSupported('1.1'));
         $this->assertTrue($helper->isMetadataSupported('1.1'));
 
-        $this->assertFalse($helper->isMetadataSupported('1.2'));
         $this->assertFalse($helper->isMetadataSupported('1.2'));
     }
+
+    public function testGetModulePath()
+    {
+        $oModule = $this->getMock('oxmodule', array('getId', 'getModulePath'));
+        $oModule->method('getId')->willReturn('module-id');
+
+        $oModule->expects($this->any())
+                ->method('getModulePath')
+                ->with($this->equalTo('module-id'))
+                ->willReturn('module-id-path');
+
+        $oModuleList = $this->getMock('oxmodulelist');
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+
+        $this->assertEquals($helper->getModulePath(), 'module-id-path');
+    }
+
+    public function testGetModuleId()
+    {
+        $oModule = $this->getMock('oxmodule', array('getId'));
+        $oModule->method('getId')->willReturn('module-id');
+
+        $oModuleList = $this->getMock('oxmodulelist');
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+
+        $this->assertEquals($helper->getModuleId(), 'module-id');
+    }
+
 }
