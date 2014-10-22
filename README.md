@@ -1,6 +1,8 @@
 Oxid Module Internals
 =====================
 
+[![Build Status](https://travis-ci.org/acirtautas/oxid-module-internals.svg?branch=tests)](https://travis-ci.org/acirtautas/oxid-module-internals)
+
 Internal OXID eShop module system information and troubleshooting tools.
 
 Functionality:
