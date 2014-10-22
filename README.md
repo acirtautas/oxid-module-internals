@@ -1,7 +1,9 @@
 Oxid Module Internals
 =====================
 
-[![Build Status](https://travis-ci.org/acirtautas/oxid-module-internals.svg?branch=tests)](https://travis-ci.org/acirtautas/oxid-module-internals)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/acirtautas/oxid-module-internals/badges/quality-score.png?b=tests)](https://scrutinizer-ci.com/g/acirtautas/oxid-module-internals/?branch=tests)
+[![Code Coverage](https://scrutinizer-ci.com/g/acirtautas/oxid-module-internals/badges/coverage.png?b=tests)](https://scrutinizer-ci.com/g/acirtautas/oxid-module-internals/?branch=tests)
+[![Build Status](https://scrutinizer-ci.com/g/acirtautas/oxid-module-internals/badges/build.png?b=tests)](https://scrutinizer-ci.com/g/acirtautas/oxid-module-internals/build-status/tests)
 
 Internal OXID eShop module system information and troubleshooting tools.
 
