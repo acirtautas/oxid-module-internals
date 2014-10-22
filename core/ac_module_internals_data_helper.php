@@ -14,6 +14,12 @@
  */
 class ac_module_internals_data_helper
 {
+    const STATE_OK           = 1;
+    const STATE_WARNING      = 0;
+    const STATE_ERROR        = -1;
+    const STATE_FATAL_MODULE = -2;
+    const STATE_FATAL_SHOP   = -3;
+
     /** @var oxModule */
     protected $_oModule;
 
@@ -270,16 +276,16 @@ class ac_module_internals_data_helper
         if (is_array($aMetadataExtend)) {
             $aMetadataExtend = array_change_key_case($aMetadataExtend, CASE_LOWER);
             foreach ($aMetadataExtend as $sClassName => $sModuleName) {
-                $iState = 0;
+                $iState = self::STATE_WARNING;
                 if (is_array($aAllModules) && isset($aAllModules[$sClassName])) {
                     // Is module extending class
                     if (is_array($aAllModules[$sClassName])) {
-                        $iState = in_array($sModuleName, $aAllModules[$sClassName]) ? 1 : 0;
+                        $iState = in_array($sModuleName, $aAllModules[$sClassName]) ? self::STATE_OK : self::STATE_WARNING;
                     }
                 }
 
                 if (!file_exists($sModulesDir . $sModuleName . ".php")) {
-                    $aResult[$sClassName][$sModuleName] = -2; // sfatalm
+                    $aResult[$sClassName][$sModuleName] = self::STATE_FATAL_MODULE;
                 } else {
                     $aResult[$sClassName][$sModuleName] = $iState;
                 }
@@ -292,7 +298,7 @@ class ac_module_internals_data_helper
                 if (is_array($mModuleName)) {
                     foreach ($mModuleName as $sModuleName) {
                         if (!isset($aResult[$sClassName][$sModuleName]) && strpos($sModuleName, $sModulePath . '/') === 0) {
-                            $aResult[$sClassName][$sModuleName] = -1;
+                            $aResult[$sClassName][$sModuleName] = self::STATE_ERROR;
                         }
                     }
                 }
@@ -323,7 +329,7 @@ class ac_module_internals_data_helper
         // Check if all blocks are injected.
         if (is_array($aMetadataBlocks)) {
             foreach ($aMetadataBlocks as $aBlock) {
-                $iState = 0;
+                $iState = self::STATE_WARNING;
                 if (is_array($aDatabaseBlocks)) {
                     foreach ($aDatabaseBlocks as $aDbBlock) {
                         // Is template block inserted
@@ -332,7 +338,7 @@ class ac_module_internals_data_helper
                             ($aBlock['block'] == $aDbBlock['OXBLOCKNAME']) &&
                             ($aBlock['file'] == $aDbBlock['OXFILE'])
                         ) {
-                            $iState = 1;
+                            $iState = self::STATE_OK;
                         }
                     }
                 }
@@ -341,7 +347,7 @@ class ac_module_internals_data_helper
                     !file_exists($sModulesDir . '/' . $sModulePath . '/out/blocks/' . basename($aBlock['file'])) &&
                     !file_exists($sModulesDir . '/' . $sModulePath . '/out/blocks/' . basename($aBlock['file']) . '.tpl')
                 ) {
-                    $iState = -2;
+                    $iState = self::STATE_FATAL_MODULE;
                 }
 
                 $aResult[$aBlock['template']][$aBlock['file']]['file'] = $iState;
@@ -355,12 +361,12 @@ class ac_module_internals_data_helper
                 $sBaseFile = basename($aDbBlock['OXFILE']);
 
                 if (!isset($aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXFILE']])) {
-                    $aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXFILE']] = -1;
+                    $aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXFILE']] = self::STATE_ERROR;
                     if (!file_exists($sModulesDir . '/' . $sModulePath . '/' . $aDbBlock['OXFILE']) &&
                         !file_exists($sModulesDir . '/' . $sModulePath . '/out/blocks/' . $sBaseFile) &&
                         !file_exists($sModulesDir . '/' . $sModulePath . '/out/blocks/' . $sBaseFile) . '.tpl'
                     ) {
-                        $aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXFILE']]['file'] = -3;
+                        $aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXFILE']]['file'] = self::STATE_FATAL_SHOP;
                     }
                 }
             }
@@ -389,11 +395,11 @@ class ac_module_internals_data_helper
                 }
 
                 if (empty($sTemplate)) {
-                    $aResult[$aBlock['template']][$aBlock['file']]['template'] = -3;
+                    $aResult[$aBlock['template']][$aBlock['file']]['template'] = self::STATE_FATAL_SHOP;
                 } else {
                     $sContent = file_get_contents($sTemplate);
                     if (!preg_match('/\[{.*block.* name.*= *"' . $aBlock['block'] . '".*}\]/', $sContent)) {
-                        $aResult[$aBlock['template']][$aBlock['file']]['template'] = -1;
+                        $aResult[$aBlock['template']][$aBlock['file']]['template'] = self::STATE_ERROR;
                     }
                 }
             }
@@ -418,7 +424,7 @@ class ac_module_internals_data_helper
         if (is_array($aMetadataSettings)) {
             foreach ($aMetadataSettings as $aData) {
                 $sName = $aData['name'];
-                $aResult[$sName] = 0;
+                $aResult[$sName] = self::STATE_WARNING;
             }
         }
 
@@ -428,9 +434,9 @@ class ac_module_internals_data_helper
                 $sName = $aData['OXVARNAME'];
 
                 if (!isset($aResult[$sName])) {
-                    $aResult[$sName] = -1;
+                    $aResult[$sName] = self::STATE_ERROR;
                 } else {
-                    $aResult[$sName] = 1;
+                    $aResult[$sName] = self::STATE_OK;
                 }
             }
         }
@@ -456,9 +462,9 @@ class ac_module_internals_data_helper
         if (is_array($aMetadataFiles)) {
             $aMetadataFiles = array_change_key_case($aMetadataFiles, CASE_LOWER);
             foreach ($aMetadataFiles as $sClass => $sFile) {
-                $aResult[$sClass][$sFile] = 0;
+                $aResult[$sClass][$sFile] = self::STATE_WARNING;
                 if (!file_exists($sModulesDir . '/' . $sFile)) {
-                    $aResult[$sClass][$sFile] = -2;
+                    $aResult[$sClass][$sFile] = self::STATE_FATAL_MODULE;
                 }
             }
         }
@@ -467,12 +473,12 @@ class ac_module_internals_data_helper
         if (is_array($aDatabaseFiles)) {
             foreach ($aDatabaseFiles as $sClass => $sFile) {
                 if (!isset($aResult[$sClass][$sFile])) {
-                    @$aResult[$sClass][$sFile] = -1;
+                    @$aResult[$sClass][$sFile] = self::STATE_ERROR;
                     if (!file_exists($sModulesDir . '/' . $sFile)) {
-                        @$aResult[$sClass][$sFile] = -3;
+                        @$aResult[$sClass][$sFile] = self::STATE_FATAL_SHOP;
                     }
-                } elseif ($aResult[$sClass][$sFile] == 0) {
-                    @$aResult[$sClass][$sFile] = 1;
+                } elseif ($aResult[$sClass][$sFile] == self::STATE_WARNING) {
+                    @$aResult[$sClass][$sFile] = self::STATE_OK;
                 }
             }
         }
@@ -498,9 +504,9 @@ class ac_module_internals_data_helper
         if (is_array($aMetadataTemplates)) {
             $aMetadataTemplates = array_change_key_case($aMetadataTemplates, CASE_LOWER);
             foreach ($aMetadataTemplates as $sTemplate => $sFile) {
-                $aResult[$sTemplate][$sFile] = 0;
+                $aResult[$sTemplate][$sFile] = self::STATE_WARNING;
                 if (!file_exists($sModulesDir . '/' . $sFile)) {
-                    $aResult[$sTemplate][$sFile] = -2;
+                    $aResult[$sTemplate][$sFile] = self::STATE_FATAL_MODULE;
                 }
             }
         }
@@ -509,12 +515,12 @@ class ac_module_internals_data_helper
         if (is_array($aDatabaseTemplates)) {
             foreach ($aDatabaseTemplates as $sTemplate => $sFile) {
                 if (!isset($aResult[$sTemplate][$sFile])) {
-                    @$aResult[$sTemplate][$sFile] = -1;
+                    @$aResult[$sTemplate][$sFile] = self::STATE_ERROR;
                     if (!file_exists($sModulesDir . '/' . $sFile)) {
-                        @$aResult[$sTemplate][$sFile] = -3;
+                        @$aResult[$sTemplate][$sFile] = self::STATE_FATAL_SHOP;
                     }
-                } elseif ($aResult[$sTemplate][$sFile] == 0) {
-                    @$aResult[$sTemplate][$sFile] = 1;
+                } elseif ($aResult[$sTemplate][$sFile] == self::STATE_WARNING) {
+                    @$aResult[$sTemplate][$sFile] = self::STATE_OK;
                 }
             }
         }
@@ -538,7 +544,7 @@ class ac_module_internals_data_helper
         if (is_array($aMetadataEvents)) {
             foreach ($aMetadataEvents as $sEvent => $mCallback) {
                 $sCallback = print_r($mCallback, 1);
-                $aResult[$sEvent][$sCallback] = 0;
+                $aResult[$sEvent][$sCallback] = self::STATE_WARNING;
             }
         }
 
@@ -547,9 +553,9 @@ class ac_module_internals_data_helper
             foreach ($aDatabaseEvents as $sEvent => $mCallback) {
                 $sCallback = print_r($mCallback, 1);
                 if (!isset($aResult[$sEvent][$sCallback])) {
-                    $aResult[$sEvent][$sCallback] = -1;
+                    $aResult[$sEvent][$sCallback] = self::STATE_ERROR;
                 } else {
-                    $aResult[$sEvent][$sCallback] = 1;
+                    $aResult[$sEvent][$sCallback] = self::STATE_OK;
                 }
             }
         }
@@ -571,16 +577,16 @@ class ac_module_internals_data_helper
 
         // Check version..
         if ($sMetadataVersion) {
-            $aResult[$sMetadataVersion] = 0;
+            $aResult[$sMetadataVersion] = self::STATE_WARNING;
         }
 
         // Check for versions match injected.
         if ($sDatabaseVersion) {
 
             if (!isset($aResult[$sDatabaseVersion])) {
-                $aResult[$sDatabaseVersion] = -1;
+                $aResult[$sDatabaseVersion] = self::STATE_ERROR;
             } else {
-                $aResult[$sDatabaseVersion] = 1;
+                $aResult[$sDatabaseVersion] = self::STATE_OK;
             }
         }
 

@@ -111,11 +111,11 @@ class ac_module_internals_state extends oxAdminView
         }
 
         $this->_aViewData['sState'] = array(
-            -3 => 'sfatals',
-            -2 => 'sfatalm',
-            -1 => 'serror',
-             0 => 'swarning',
-             1 => 'sok'
+            ac_module_internals_data_helper::STATE_FATAL_SHOP => 'sfatals',
+            ac_module_internals_data_helper::STATE_FATAL_MODULE => 'sfatalm',
+            ac_module_internals_data_helper::STATE_ERROR => 'serror',
+            ac_module_internals_data_helper::STATE_WARNING => 'swarning',
+            ac_module_internals_data_helper::STATE_OK => 'sok'
         );
 
         return $this->sTemplate;
