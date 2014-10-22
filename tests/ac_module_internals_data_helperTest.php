@@ -279,13 +279,13 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
     public function testCheckExtendedClassesOK()
     {
         $ModuleId  = 'module-id';
-        $ModulePath = '';
-        $ModuleExtend = array('shop-class'=>'module-class');
+        $ModulePath = 'data';
+        $ModuleExtend = array('shop-class'=>'data/module-class');
 
-        $GlobalExtend = array('shop-class'=>array('module-class'));
-        $ModulesDir = __DIR__.'/data/';
+        $GlobalExtend = array('shop-class'=>array('data/module-class'));
+        $ModulesDir = __DIR__.'/';
 
-        $expectedResults = array('shop-class'=>array('module-class' => ac_module_internals_data_helper::STATE_OK));
+        $expectedResults = array('shop-class'=>array('data/module-class' => ac_module_internals_data_helper::STATE_OK));
 
         $oModule = $this->getMock('oxmodule', array('getId', 'getModulePath', 'getInfo'));
         $oModule->method('getId')->willReturn($ModuleId);
@@ -309,13 +309,13 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
     public function testCheckExtendedClassesNotInstalled()
     {
         $ModuleId  = 'module-id';
-        $ModulePath = '';
-        $ModuleExtend = array('shop-class'=>'module-class');
+        $ModulePath = 'data';
+        $ModuleExtend = array('shop-class'=>'data/module-class');
 
         $GlobalExtend = array();
-        $ModulesDir = __DIR__.'/data/';
+        $ModulesDir = __DIR__.'/';
 
-        $expectedResults = array('shop-class'=>array('module-class' => ac_module_internals_data_helper::STATE_WARNING));
+        $expectedResults = array('shop-class'=>array('data/module-class' => ac_module_internals_data_helper::STATE_WARNING));
 
         $oModule = $this->getMock('oxmodule', array('getId', 'getModulePath', 'getInfo'));
         $oModule->method('getId')->willReturn($ModuleId);
@@ -339,13 +339,43 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
     public function testCheckExtendedClassesNotFound()
     {
         $ModuleId  = 'module-id';
-        $ModulePath = '';
-        $ModuleExtend = array('shop-class'=>'module-class-not-found');
+        $ModulePath = 'data';
+        $ModuleExtend = array('shop-class'=>'data/module-class-not-found');
 
-        $GlobalExtend = array('shop-class'=>array('module-class-not-found'));
-        $ModulesDir = __DIR__.'/data/';
+        $GlobalExtend = array('shop-class'=>array('data/module-class-not-found'));
+        $ModulesDir = __DIR__.'/';
 
-        $expectedResults = array('shop-class'=>array('module-class-not-found' => ac_module_internals_data_helper::STATE_FATAL_MODULE));
+        $expectedResults = array('shop-class'=>array('data/module-class-not-found' => ac_module_internals_data_helper::STATE_FATAL_MODULE));
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getModulePath', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getModulePath')->willReturn($ModulePath);
+        $oModule->method('getInfo')->with($this->equalTo('extend'))->willReturn($ModuleExtend);
+
+        $oModuleList = $this->getMock('oxmodulelist');
+
+        $oConfig = $this->getMock('oxConfig', array('getModulesWithExtendedClass', 'getModulesDir'));
+        $oConfig->method('getModulesWithExtendedClass')->willReturn($GlobalExtend);
+        $oConfig->method('getModulesDir')->willReturn($ModulesDir);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+
+        $checkResults  = $helper->checkExtendedClasses();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
+    public function testCheckExtendedClassesRedundant()
+    {
+        $ModuleId  = 'module-id';
+        $ModulePath = 'data';
+        $ModuleExtend = array();
+
+        $GlobalExtend = array('shop-class'=>array('data/module-class'));
+        $ModulesDir = __DIR__.'/';
+
+        $expectedResults = array('shop-class'=>array('data/module-class' => ac_module_internals_data_helper::STATE_ERROR));
 
         $oModule = $this->getMock('oxmodule', array('getId', 'getModulePath', 'getInfo'));
         $oModule->method('getId')->willReturn($ModuleId);
