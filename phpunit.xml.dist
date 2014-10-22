@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true" bootstrap="vendor/autoload.php">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.3/phpunit.xsd"
+         colors="true"
+         strict="true"
+         forceCoversAnnotation="true"
+         bootstrap="vendor/autoload.php">
     <testsuites>
         <testsuite name="Unit">
             <directory>tests</directory>
