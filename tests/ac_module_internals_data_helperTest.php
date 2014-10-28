@@ -445,6 +445,100 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedResults, $checkResults);
     }
 
+    public function testCheckTemplateBlocksRedundant()
+    {
+        $ShopId  = 'shop-id';
+        $ModuleId  = 'module-id';
+        $ModulePath = 'data';
+        $ModuleBlocks = array();
+
+        $GlobalBlocks = array(
+            array('OXTEMPLATE' => 'template1.tpl', 'OXBLOCKNAME' => 'block1', 'OXFILE' => 'file1.tpl'),
+        );
+
+        $ModulesDir = __DIR__.'/';
+        $TemplatesDir = __DIR__.'/data/template1.tpl';
+        $ModuleTemplates = array();
+
+        $expectedResults = array(
+            'template1.tpl'=>array('file1.tpl' => ac_module_internals_data_helper::STATE_ERROR),
+        );
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getModulePath','getModuleBlocks', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getModulePath')->willReturn($ModulePath);
+        $oModule->method('getModuleBlocks')->willReturn($GlobalBlocks);
+        $oModule->method('getInfo')->will($this->onConsecutiveCalls($ModuleBlocks, $ModuleTemplates));
+
+        $oModuleList = $this->getMock('oxmodulelist');
+
+        $oConfig = $this->getMock('oxConfig', array('getModulesDir', 'getTemplatePath', 'getShopId'));
+        $oConfig->method('getModulesDir')->willReturn($ModulesDir);
+        $oConfig->method('getTemplatePath')->willReturn($TemplatesDir);
+        $oConfig->method('getShopId')->willReturn($ShopId);
+
+        $oDb = $this->getMock('oxLegacyDb', array('getAll'));
+        $oDb->expects($this->any())
+            ->method('getAll')
+            ->with($this->anything(), $this->equalTo( array('module-id','shop-id')))
+            ->willReturn($GlobalBlocks);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+        $helper->setDb($oDb);
+
+        $checkResults  = $helper->checkTemplateBlocks();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
+    public function testCheckTemplateBlocksRedundantNotFount()
+    {
+        $ShopId  = 'shop-id';
+        $ModuleId  = 'module-id';
+        $ModulePath = 'data';
+        $ModuleBlocks = array();
+
+        $GlobalBlocks = array(
+            array('OXTEMPLATE' => 'template1.tpl', 'OXBLOCKNAME' => 'block1', 'OXFILE' => 'file2.tpl'),
+        );
+
+        $ModulesDir = __DIR__.'/';
+        $TemplatesDir = __DIR__.'/data/template1.tpl';
+        $ModuleTemplates = array();
+
+        $expectedResults = array(
+            'template1.tpl'=>array('file2.tpl' => array('file'=>ac_module_internals_data_helper::STATE_FATAL_SHOP)),
+        );
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getModulePath','getModuleBlocks', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getModulePath')->willReturn($ModulePath);
+        $oModule->method('getModuleBlocks')->willReturn($GlobalBlocks);
+        $oModule->method('getInfo')->will($this->onConsecutiveCalls($ModuleBlocks, $ModuleTemplates));
+
+        $oModuleList = $this->getMock('oxmodulelist');
+
+        $oConfig = $this->getMock('oxConfig', array('getModulesDir', 'getTemplatePath', 'getShopId'));
+        $oConfig->method('getModulesDir')->willReturn($ModulesDir);
+        $oConfig->method('getTemplatePath')->willReturn($TemplatesDir);
+        $oConfig->method('getShopId')->willReturn($ShopId);
+
+        $oDb = $this->getMock('oxLegacyDb', array('getAll'));
+        $oDb->expects($this->any())
+            ->method('getAll')
+            ->with($this->anything(), $this->equalTo( array('module-id','shop-id')))
+            ->willReturn($GlobalBlocks);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+        $helper->setDb($oDb);
+
+        $checkResults  = $helper->checkTemplateBlocks();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
     public function testCheckTemplateBlockNotFound()
     {
         $ShopId  = 'shop-id';
@@ -510,6 +604,55 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
         $ModulesDir = __DIR__.'/';
         $TemplatesDir = __DIR__.'/data/template1.tpl';
         $ModuleTemplates = array();
+
+        $expectedResults = array(
+            'template1.tpl'=>array('file2.tpl' => array('file'=>ac_module_internals_data_helper::STATE_FATAL_MODULE)),
+        );
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getModulePath','getModuleBlocks', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getModulePath')->willReturn($ModulePath);
+        $oModule->method('getModuleBlocks')->willReturn($GlobalBlocks);
+        $oModule->method('getInfo')->will($this->onConsecutiveCalls($ModuleBlocks, $ModuleTemplates));
+
+        $oModuleList = $this->getMock('oxmodulelist');
+
+        $oConfig = $this->getMock('oxConfig', array('getModulesDir', 'getTemplatePath', 'getShopId'));
+        $oConfig->method('getModulesDir')->willReturn($ModulesDir);
+        $oConfig->method('getTemplatePath')->willReturn($TemplatesDir);
+        $oConfig->method('getShopId')->willReturn($ShopId);
+
+        $oDb = $this->getMock('oxLegacyDb', array('getAll'));
+        $oDb->expects($this->any())
+            ->method('getAll')
+            ->with($this->anything(), $this->equalTo( array('module-id','shop-id')))
+            ->willReturn($GlobalBlocks);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+        $helper->setDb($oDb);
+
+        $checkResults  = $helper->checkTemplateBlocks();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
+    public function testCheckTemplateModuleFileNotFound()
+    {
+        $ShopId  = 'shop-id';
+        $ModuleId  = 'module-id';
+        $ModulePath = 'data';
+        $ModuleBlocks = array(
+            array('template' => 'template1.tpl', 'block' => 'block1', 'file' => 'file2.tpl'),
+        );
+
+        $GlobalBlocks = array(
+            array('OXTEMPLATE' => 'template1.tpl', 'OXBLOCKNAME' => 'block1', 'OXFILE' => 'file2.tpl'),
+        );
+
+        $ModulesDir = __DIR__.'/';
+        $TemplatesDir = null;
+        $ModuleTemplates = array('template1.tpl'=> 'data/template1.tpl');
 
         $expectedResults = array(
             'template1.tpl'=>array('file2.tpl' => array('file'=>ac_module_internals_data_helper::STATE_FATAL_MODULE)),

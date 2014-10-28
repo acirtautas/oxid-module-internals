@@ -366,7 +366,7 @@ class ac_module_internals_data_helper
                         !file_exists($sModulesDir . '/' . $sModulePath . '/out/blocks/' . $sBaseFile) &&
                         !file_exists($sModulesDir . '/' . $sModulePath . '/out/blocks/' . $sBaseFile) . '.tpl'
                     ) {
-                        $aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXFILE']]['file'] = self::STATE_FATAL_SHOP;
+                        $aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXFILE']] = array('file' => self::STATE_FATAL_SHOP);
                     }
                 }
             }
