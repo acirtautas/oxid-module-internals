@@ -735,4 +735,114 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedResults, $checkResults);
     }
 
+    public function testCheckModuleSettingsOK()
+    {
+        $ShopId  = 'shop-id';
+        $ModuleId  = 'module-id';
+        $ModuleSettings = array(
+            array('group' => 'main', 'name' => 'testSetting', 'type' => 'bool', 'value' => 'false'),
+        );
+
+        $GlobalSettings = array(
+            array('OXVARNAME' => 'testSetting')
+        );
+
+        $expectedResults = array('testSetting'=>ac_module_internals_data_helper::STATE_OK);
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getInfo')->with($this->equalTo('settings'))->willReturn($ModuleSettings);
+
+        $oModuleList = $this->getMock('oxmodulelist');
+
+        $oConfig = $this->getMock('oxConfig', array( 'getShopId'));
+        $oConfig->method('getShopId')->willReturn($ShopId);
+
+        $oDb = $this->getMock('oxLegacyDb', array('getAll'));
+        $oDb->expects($this->any())
+            ->method('getAll')
+            ->with($this->anything(), $this->equalTo( array('module-id','shop-id')))
+            ->willReturn($GlobalSettings);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+        $helper->setDb($oDb);
+
+        $checkResults  = $helper->checkModuleSettings();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
+    public function testCheckModuleSettingsRedundant()
+    {
+        $ShopId  = 'shop-id';
+        $ModuleId  = 'module-id';
+        $ModuleSettings = array();
+
+        $GlobalSettings = array(
+            array('OXVARNAME' => 'testSettingRedundant')
+        );
+
+        $expectedResults = array('testSettingRedundant'=>ac_module_internals_data_helper::STATE_ERROR);
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getInfo')->with($this->equalTo('settings'))->willReturn($ModuleSettings);
+
+        $oModuleList = $this->getMock('oxmodulelist');
+
+        $oConfig = $this->getMock('oxConfig', array( 'getShopId'));
+        $oConfig->method('getShopId')->willReturn($ShopId);
+
+        $oDb = $this->getMock('oxLegacyDb', array('getAll'));
+        $oDb->expects($this->any())
+            ->method('getAll')
+            ->with($this->anything(), $this->equalTo( array('module-id','shop-id')))
+            ->willReturn($GlobalSettings);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+        $helper->setDb($oDb);
+
+        $checkResults  = $helper->checkModuleSettings();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
+    public function testCheckModuleSettingsNotInMetadata()
+    {
+        $ShopId  = 'shop-id';
+        $ModuleId  = 'module-id';
+        $ModuleSettings = array(
+            array('group' => 'main', 'name' => 'testSetting', 'type' => 'bool', 'value' => 'false'),
+        );
+
+        $GlobalSettings = array();
+
+        $expectedResults = array('testSetting'=>ac_module_internals_data_helper::STATE_WARNING);
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getInfo')->with($this->equalTo('settings'))->willReturn($ModuleSettings);
+
+        $oModuleList = $this->getMock('oxmodulelist');
+
+        $oConfig = $this->getMock('oxConfig', array( 'getShopId'));
+        $oConfig->method('getShopId')->willReturn($ShopId);
+
+        $oDb = $this->getMock('oxLegacyDb', array('getAll'));
+        $oDb->expects($this->any())
+            ->method('getAll')
+            ->with($this->anything(), $this->equalTo( array('module-id','shop-id')))
+            ->willReturn($GlobalSettings);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+        $helper->setDb($oDb);
+
+        $checkResults  = $helper->checkModuleSettings();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
 }
