@@ -939,4 +939,98 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedResults, $checkResults);
     }
 
+    public function testCheckModuleTemplatesOK()
+    {
+        $ShopId  = 'shop-id';
+        $ModuleId  = 'module-id';
+        $ModuleTemplates = array(
+            'template1.tpl' => 'template1.tpl',
+        );
+
+        $GlobalTemplates = array('module-id'=>array('template1.tpl' => 'template1.tpl',));
+        $ModulesDir = __DIR__.'/data/';
+
+        $expectedResults = array('template1.tpl'=>array('template1.tpl' => ac_module_internals_data_helper::STATE_OK));
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getInfo')->with($this->equalTo('templates'))->willReturn($ModuleTemplates);
+
+        $oModuleList = $this->getMock('oxmodulelist', array('getModuleTemplates'));
+        $oModuleList->method('getModuleTemplates')->willReturn( $GlobalTemplates );
+
+        $oConfig = $this->getMock('oxConfig', array( 'getShopId', 'getModulesDir'));
+        $oConfig->method('getShopId')->willReturn($ShopId);
+        $oConfig->method('getModulesDir')->willReturn($ModulesDir);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+
+        $checkResults  = $helper->checkModuleTemplates();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
+    public function testCheckModuleTemplatesMissing()
+    {
+        $ShopId  = 'shop-id';
+        $ModuleId  = 'module-id';
+        $ModuleTemplates = array(
+            'template1.tpl' => 'template1-missing.tpl',
+        );
+
+        $GlobalTemplates = array('module-id'=>array('template1.tpl' => 'template1-missing.tpl',));
+        $ModulesDir = __DIR__.'/data/';
+
+        $expectedResults = array('template1.tpl'=>array('template1-missing.tpl' => ac_module_internals_data_helper::STATE_FATAL_MODULE));
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getInfo')->with($this->equalTo('templates'))->willReturn($ModuleTemplates);
+
+        $oModuleList = $this->getMock('oxmodulelist', array('getModuleTemplates'));
+        $oModuleList->method('getModuleTemplates')->willReturn( $GlobalTemplates );
+
+        $oConfig = $this->getMock('oxConfig', array( 'getShopId', 'getModulesDir'));
+        $oConfig->method('getShopId')->willReturn($ShopId);
+        $oConfig->method('getModulesDir')->willReturn($ModulesDir);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+
+        $checkResults  = $helper->checkModuleTemplates();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
+    public function testCheckModuleTemplatesRedundant()
+    {
+        $ShopId  = 'shop-id';
+        $ModuleId  = 'module-id';
+        $ModuleTemplates = array();
+
+        $GlobalTemplates = array('module-id'=>array('template1.tpl' => 'template1-missing.tpl',));
+        $ModulesDir = __DIR__.'/data/';
+
+        $expectedResults = array('template1.tpl'=>array('template1-missing.tpl' => ac_module_internals_data_helper::STATE_FATAL_SHOP));
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getInfo')->with($this->equalTo('templates'))->willReturn($ModuleTemplates);
+
+        $oModuleList = $this->getMock('oxmodulelist', array('getModuleTemplates'));
+        $oModuleList->method('getModuleTemplates')->willReturn( $GlobalTemplates );
+
+        $oConfig = $this->getMock('oxConfig', array( 'getShopId', 'getModulesDir'));
+        $oConfig->method('getShopId')->willReturn($ShopId);
+        $oConfig->method('getModulesDir')->willReturn($ModulesDir);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+
+        $checkResults  = $helper->checkModuleTemplates();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
 }
