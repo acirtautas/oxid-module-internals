@@ -845,4 +845,98 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedResults, $checkResults);
     }
 
+    public function testCheckModuleFilesOK()
+    {
+        $ShopId  = 'shop-id';
+        $ModuleId  = 'module-id';
+        $ModuleFiles = array(
+            'module-class' => 'module-class.php',
+        );
+
+        $GlobalFiles = array('module-id'=>array('module-class' => 'module-class.php'));
+        $ModulesDir = __DIR__.'/data/';
+
+        $expectedResults = array('module-class'=>array('module-class.php' => ac_module_internals_data_helper::STATE_OK));
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getInfo')->with($this->equalTo('files'))->willReturn($ModuleFiles);
+
+        $oModuleList = $this->getMock('oxmodulelist', array('getModuleFiles'));
+        $oModuleList->method('getModuleFiles')->willReturn( $GlobalFiles );
+
+        $oConfig = $this->getMock('oxConfig', array( 'getShopId', 'getModulesDir'));
+        $oConfig->method('getShopId')->willReturn($ShopId);
+        $oConfig->method('getModulesDir')->willReturn($ModulesDir);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+
+        $checkResults  = $helper->checkModuleFiles();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
+    public function testCheckModuleFilesMissing()
+    {
+        $ShopId  = 'shop-id';
+        $ModuleId  = 'module-id';
+        $ModuleFiles = array(
+            'module-class' => 'module-class-missing.php',
+        );
+
+        $GlobalFiles = array();
+        $ModulesDir = __DIR__.'/data/';
+
+        $expectedResults = array('module-class'=>array('module-class-missing.php' => ac_module_internals_data_helper::STATE_FATAL_MODULE));
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getInfo')->with($this->equalTo('files'))->willReturn($ModuleFiles);
+
+        $oModuleList = $this->getMock('oxmodulelist', array('getModuleFiles'));
+        $oModuleList->method('getModuleFiles')->willReturn( $GlobalFiles );
+
+        $oConfig = $this->getMock('oxConfig', array( 'getShopId', 'getModulesDir'));
+        $oConfig->method('getShopId')->willReturn($ShopId);
+        $oConfig->method('getModulesDir')->willReturn($ModulesDir);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+
+        $checkResults  = $helper->checkModuleFiles();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
+    public function testCheckModuleFilesRedundant()
+    {
+        $ShopId  = 'shop-id';
+        $ModuleId  = 'module-id';
+        $ModuleFiles = array();
+
+        $GlobalFiles = array('module-id'=>array('module-class' => 'missing-module-class.php'));
+        $ModulesDir  = __DIR__.'/data/';
+
+        $expectedResults = array('module-class'=>array('missing-module-class.php' => ac_module_internals_data_helper::STATE_FATAL_SHOP));
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getInfo')->with($this->equalTo('files'))->willReturn($ModuleFiles);
+
+        $oModuleList = $this->getMock('oxmodulelist', array('getModuleFiles'));
+        $oModuleList->method('getModuleFiles')->willReturn( $GlobalFiles );
+
+        $oConfig = $this->getMock('oxConfig', array( 'getShopId', 'getModulesDir'));
+        $oConfig->method('getShopId')->willReturn($ShopId);
+        $oConfig->method('getModulesDir')->willReturn($ModulesDir);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+
+        $checkResults  = $helper->checkModuleFiles();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
 }
