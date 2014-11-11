@@ -1092,4 +1092,63 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedResults, $checkResults);
     }
 
+    public function testCheckModuleVersionsOK()
+    {
+        $ShopId  = 'shop-id';
+        $ModuleId  = 'module-id';
+        $ModuleVersion = '1.1';
+
+        $GlobalVersions = array('module-id'=>'1.1');
+
+        $expectedResults = array('1.1'=> ac_module_internals_data_helper::STATE_OK);
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getInfo')->with($this->equalTo('version'))->willReturn($ModuleVersion);
+
+        $oModuleList = $this->getMock('oxmodulelist', array('getModuleVersions'));
+        $oModuleList->method('getModuleVersions')->willReturn( $GlobalVersions );
+
+        $oConfig = $this->getMock('oxConfig', array( 'getShopId'));
+        $oConfig->method('getShopId')->willReturn($ShopId);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+
+        $checkResults  = $helper->checkModuleVersions();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
+    public function testCheckModuleVersionsMismatch()
+    {
+        $ShopId  = 'shop-id';
+        $ModuleId  = 'module-id';
+        $ModuleVersion = '1.1';
+
+        $GlobalVersions = array('module-id'=>'1.0');
+
+        $expectedResults = array(
+            '1.1'=> ac_module_internals_data_helper::STATE_WARNING,
+            '1.0'=> ac_module_internals_data_helper::STATE_ERROR,
+        );
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getInfo')->with($this->equalTo('version'))->willReturn($ModuleVersion);
+
+        $oModuleList = $this->getMock('oxmodulelist', array('getModuleVersions'));
+        $oModuleList->method('getModuleVersions')->willReturn( $GlobalVersions );
+
+        $oConfig = $this->getMock('oxConfig', array( 'getShopId'));
+        $oConfig->method('getShopId')->willReturn($ShopId);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+
+        $checkResults  = $helper->checkModuleVersions();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
 }
