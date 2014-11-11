@@ -1033,4 +1033,63 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedResults, $checkResults);
     }
 
+
+    public function testCheckModuleEventsOK()
+    {
+        $ShopId  = 'shop-id';
+        $ModuleId  = 'module-id';
+        $ModuleEvents = array(
+            'onEvent'=> 'module-class::onEvent',
+        );
+
+        $GlobalEvents = array('module-id'=>array('onEvent'=> 'module-class::onEvent',));
+
+        $expectedResults = array('onEvent'=> array('module-class::onEvent' => ac_module_internals_data_helper::STATE_OK));
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getInfo')->with($this->equalTo('events'))->willReturn($ModuleEvents);
+
+        $oModuleList = $this->getMock('oxmodulelist', array('getModuleEvents'));
+        $oModuleList->method('getModuleEvents')->willReturn( $GlobalEvents );
+
+        $oConfig = $this->getMock('oxConfig', array( 'getShopId'));
+        $oConfig->method('getShopId')->willReturn($ShopId);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+
+        $checkResults  = $helper->checkModuleEvents();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
+    public function testCheckModuleEventsRedundant()
+    {
+        $ShopId  = 'shop-id';
+        $ModuleId  = 'module-id';
+        $ModuleEvents = array();
+
+        $GlobalEvents = array('module-id'=>array('onEvent'=> 'module-class::onEvent',));
+
+        $expectedResults = array('onEvent'=> array('module-class::onEvent' => ac_module_internals_data_helper::STATE_ERROR));
+
+        $oModule = $this->getMock('oxmodule', array('getId', 'getInfo'));
+        $oModule->method('getId')->willReturn($ModuleId);
+        $oModule->method('getInfo')->with($this->equalTo('events'))->willReturn($ModuleEvents);
+
+        $oModuleList = $this->getMock('oxmodulelist', array('getModuleEvents'));
+        $oModuleList->method('getModuleEvents')->willReturn( $GlobalEvents );
+
+        $oConfig = $this->getMock('oxConfig', array( 'getShopId'));
+        $oConfig->method('getShopId')->willReturn($ShopId);
+
+        $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
+        $helper->setConfig($oConfig);
+
+        $checkResults  = $helper->checkModuleEvents();
+
+        $this->assertEquals($expectedResults, $checkResults);
+    }
+
 }
