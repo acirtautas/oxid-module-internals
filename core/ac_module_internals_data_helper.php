@@ -211,7 +211,12 @@ class ac_module_internals_data_helper
     {
         $sModulePath = $this->getModulePath();
         $aMetadataExtend = $this->getInfo('extend');
-        $aAllModules = oxRegistry::getConfig()->getModulesWithExtendedClass();
+        $oxidConfig = oxRegistry::getConfig();
+        if (method_exists($oxidConfig, 'getModulesWithExtendedClass')) {
+            $aAllModules = $oxidConfig->getModulesWithExtendedClass();
+        } else {
+            $aAllModules = $oxidConfig->getAllModules();
+        }
 
         $aResult = array();
         $sModulesDir = oxRegistry::getConfig()->getModulesDir(true);
