@@ -10,4 +10,15 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <blacklist>
+            <directory suffix=".php">vendor</directory>
+        </blacklist>
+        <whitelist processUncoveredFilesFromWhitelist="false">
+            <directory suffix=".php">controllers</directory>
+            <directory suffix=".php">core</directory>
+            <directory suffix=".php">views</directory>
+            <file>metadata.php</file>
+        </whitelist>
+    </filter>
 </phpunit>
