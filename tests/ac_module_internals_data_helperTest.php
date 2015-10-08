@@ -138,7 +138,7 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
         $oDb = $this->getMock('oxLegacyDb', array('getAll'));
         $oDb->expects($this->any())
             ->method('getAll')
-            ->with($this->anything(), $this->equalTo( array('module-id','shop-id')))
+            ->with($this->anything(), $this->equalTo( array('module:module-id','shop-id')))
             ->willReturn('module-settings');
 
         $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
@@ -761,7 +761,7 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
         $oDb = $this->getMock('oxLegacyDb', array('getAll'));
         $oDb->expects($this->any())
             ->method('getAll')
-            ->with($this->anything(), $this->equalTo( array('module-id','shop-id')))
+            ->with($this->anything(), $this->equalTo( array('module:module-id','shop-id')))
             ->willReturn($GlobalSettings);
 
         $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
@@ -797,7 +797,7 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
         $oDb = $this->getMock('oxLegacyDb', array('getAll'));
         $oDb->expects($this->any())
             ->method('getAll')
-            ->with($this->anything(), $this->equalTo( array('module-id','shop-id')))
+            ->with($this->anything(), $this->equalTo( array('module:module-id','shop-id')))
             ->willReturn($GlobalSettings);
 
         $helper = new ac_module_internals_data_helper($oModule, $oModuleList);
@@ -833,7 +833,7 @@ class ac_module_internals_data_helperTest extends PHPUnit_Framework_TestCase {
         $oDb = $this->getMock('oxLegacyDb', array('getAll'));
         $oDb->expects($this->any())
             ->method('getAll')
-            ->with($this->anything(), $this->equalTo( array('module-id','shop-id')))
+            ->with($this->anything(), $this->equalTo( array('module:module-id','shop-id')))
             ->willReturn($GlobalSettings);
 
         $helper = new ac_module_internals_data_helper($oModule, $oModuleList);

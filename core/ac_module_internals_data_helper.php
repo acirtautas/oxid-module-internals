@@ -153,7 +153,7 @@ class ac_module_internals_data_helper
         $iModuleId = $this->getModuleId();
         $iShopId   = $this->getConfig()->getShopId();
 
-        return $this->getDb()->getAll($sSelect, array($iModuleId, $iShopId));
+        return $this->getDb()->getAll($sSelect, array('module:'.$iModuleId, $iShopId));
     }
 
     /**
