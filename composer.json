@@ -2,6 +2,7 @@
     "name": "acirtautas/oxid-module-internals",
     "description": "OXID eShop module system helper tools",
     "type": "oxid-module",
+    "license": "MIT",
     "authors": [
         {
             "name": "Alfonsas Cirtautas"
