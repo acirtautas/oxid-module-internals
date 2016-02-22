@@ -117,25 +117,32 @@
     <h3>[{oxmultilang ident="AC_MI_BLOCKS"}]</h3>
     <table>
         [{assign var="_ok" value=1}]
-        [{foreach from=$aBlocks key=sTemplate item=aFiles}]
-        <tr>
-            [{assign var="_tstate" value=1}]
-            [{foreach from=$aFiles key=sFile item=aStates}]
-                [{if $aStates.template < $_tstate}]
-                    [{assign var="_tstate" value=$aStates.template}]
-                [{/if}]
-            [{/foreach}]
-            <td style="vertical-align: top;"><b><span class="state [{$sState.$_tstate}]">[{$sTemplate}]</span></b></td>
-            <td>
+        [{foreach from=$aBlocks key=sTemplate item=aBlockNames}]
+            [{foreach from=$aBlockNames key=sBlockName item=aFiles}]
+            <tr>
+                [{assign var="_tstate" value=1}]
+                [{assign var="_bstate" value=1}]
                 [{foreach from=$aFiles key=sFile item=aStates}]
-                [{assign var="_state" value=$aStates.file}]
-                <div>
-                    <span class="state [{$sState.$_state}]">[{$sFile}]</span>
-                    [{if $_state < 1 && $_state != -2 }][{assign var="_ok" value=0}][{/if}]
-                </div>
+                    [{if $aStates.template < $_tstate}]
+                        [{assign var="_tstate" value=$aStates.template}]
+                    [{/if}]
+                    [{if $aStates.block < $_bstate}]
+                        [{assign var="_bstate" value=$aStates.block}]
+                    [{/if}]
                 [{/foreach}]
-            </td>
-        </tr>
+                <td style="vertical-align: top;"><b><span class="state [{$sState.$_tstate}]">[{$sTemplate}]</span></b></td>
+                <td style="vertical-align: top;"><b><span class="state [{$sState.$_bstate}]">[{$sBlockName}]</span></b></td>
+                <td>
+                    [{foreach from=$aFiles key=sFile item=aStates}]
+                    [{assign var="_state" value=$aStates.file}]
+                    [{if $_state < 1 && $_state != -2 }][{assign var="_ok" value=0}][{/if}]
+                    <div>
+                        <span class="state [{$sState.$_state}]">[{$sFile}]</span>
+                    </div>
+                    [{/foreach}]
+                </td>
+            </tr>
+            [{/foreach}]
         [{/foreach}]
     </table>
     [{if !$_ok}]
