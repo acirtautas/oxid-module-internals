@@ -224,6 +224,7 @@ class ac_module_internals_data_helper
         // Check if all classes are extended.
         if (is_array($aMetadataExtend)) {
             $aMetadataExtend = array_change_key_case($aMetadataExtend, CASE_LOWER);
+            $aAllModules = array_change_key_case($aAllModules, CASE_LOWER);
             foreach ($aMetadataExtend as $sClassName => $sModuleName) {
                 $iState = 0;
                 if (is_array($aAllModules) && isset($aAllModules[$sClassName])) {
