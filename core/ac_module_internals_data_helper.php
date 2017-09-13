@@ -233,10 +233,22 @@ class ac_module_internals_data_helper
                     }
                 }
 
-                if (!file_exists($sModulesDir . $sModuleName . ".php")) {
+                $sExtensionPath = $sModulesDir . $sModuleName . ".php";
+                if (!file_exists($sExtensionPath)) {
                     $aResult[$sClassName][$sModuleName] = -2; // sfatalm
                 } else {
-                    $aResult[$sClassName][$sModuleName] = $iState;
+                    $dir = dirname($sExtensionPath);
+                    $file = basename($sExtensionPath);
+
+                    //check if filename case sensitive so we will see errors
+                    //also on case insensitive filesystems
+                    if(in_array($file,scandir($dir))) {
+                        $aResult[$sClassName][$sModuleName] = $iState;
+                    } else {
+                        //file case does not match mark this because on other systems
+                        //this file will not be found
+                        $aResult[$sClassName][$sModuleName] = -2; // sfatalm
+                    }
                 }
             }
         }
