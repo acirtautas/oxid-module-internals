@@ -10,7 +10,7 @@ namespace OxCom\ModuleInternals\Controller\Admin;
 /**
  * Internal module utilities.
  */
-class Utils extends oxAdminView
+class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminController
 {
     /** @var oxModule */
     protected $_oModule;
