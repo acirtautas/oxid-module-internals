@@ -1,4 +1,6 @@
 <?php
+namespace OxCom\ModuleInternals\Controller\Admins;
+
 /**
  * Module internals tools.
  *
@@ -8,7 +10,7 @@
 /**
  * Module metadata content retrieving.
  */
-class ac_module_internals_metadata extends oxAdminView
+class Metadata extends oxAdminView
 {
     /**
      * @var string
