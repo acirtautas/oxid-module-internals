@@ -132,6 +132,23 @@ class DataHelper
     }
 
     /**
+     * Returns array of module files
+     *
+     * @return array
+     */
+    public function getModuleController()
+    {
+        $aReturn = [];
+        $aList = $this->getModuleList()->getModuleConfigParametersByKey(ModuleList::MODULE_KEY_CONTROLLERS);
+
+        if (isset($aList[$this->getModuleId()])) {
+            $aReturn = $aList[$this->getModuleId()];
+        }
+
+        return $aReturn;
+    }
+
+    /**
      * Returns array of module templates
      *
      * @return array
@@ -192,7 +209,7 @@ class DataHelper
             $sLatestVersion = '1.1';
         }
 
-        if (method_exists('ModuleList', 'getModuleConfigParametersByKey')) {
+        if (method_exists(ModuleList::class, 'getModuleConfigParametersByKey')) {
             $sLatestVersion = '2.0';
         }
 
@@ -220,6 +237,14 @@ class DataHelper
     }
 
     /**
+     * returns metadata version
+     * @return mixed
+     */
+    public function getMetaDataVersion(){
+        return $this->getModule()->getMetaDataVersion();
+    }
+
+    /**
      * Analyze extended class information in metadata and database.
      *
      * @return array
@@ -240,7 +265,7 @@ class DataHelper
 
         // Check if all classes are extended.
         if (is_array($aMetadataExtend)) {
-            if (version_compare($this->getModuleVersion(), '2.0') < 1)
+            if (version_compare($this->getMetaDataVersion(), '2.0') != 0)
                 $aMetadataExtend = array_change_key_case($aMetadataExtend, CASE_LOWER);
 
             foreach ($aMetadataExtend as $sClassName => $sModuleName) {
@@ -253,7 +278,7 @@ class DataHelper
                 }
 
                 // if we are on version gt 6 we don't have files - we use namespace
-                if (version_compare($this->getModuleVersion(), '2.0') >= 1) {
+                if (version_compare($this->getMetaDataVersion(), '2.0') == 0) {
                     $composerClassLoader = include VENDOR_PATH . 'autoload.php';
                     if(!$composerClassLoader->findFile($sModuleName)){
                         $aResult[$sClassName][$sModuleName] = -2; // sfatalm
@@ -454,6 +479,64 @@ class DataHelper
                     @$aResult[$sClass][$sFile] = -1;
                     if (!file_exists($sModulesDir . '/' . $sFile)) {
                         @$aResult[$sClass][$sFile] = -3;
+                    }
+                } elseif ($aResult[$sClass][$sFile] == 0) {
+                    @$aResult[$sClass][$sFile] = 1;
+                }
+            }
+        }
+
+        return $aResult;
+    }
+
+    /**
+     * Analyze controller in metadata ans settings.
+     *
+     * @return array
+     */
+    public function checkModuleController()
+    {
+        $aMetadataFiles = $this->getInfo('controllers');
+        $aDatabaseFiles = $this->getModuleController();
+
+        $sModulesDir = Registry::getConfig()->getModulesDir();
+
+        $aResult = [];
+
+        // Check if all module files are injected.
+        if (is_array($aMetadataFiles)) {
+            if (version_compare($this->getMetaDataVersion(), '2.0') != 0)
+                $aMetadataFiles = array_change_key_case($aMetadataFiles, CASE_LOWER);
+            foreach ($aMetadataFiles as $sClass => $sFile) {
+                $aResult[$sClass][$sFile] = 0;
+
+                if (version_compare($this->getMetaDataVersion(), '2.0') == 0) {
+                    $composerClassLoader = include VENDOR_PATH . 'autoload.php';
+                    if(!$composerClassLoader->findFile($sFile)){
+                        $aResult[$sClass][$sFile] = -2;
+                    }
+                }else {
+                    if (!file_exists($sModulesDir . '/' . $sFile)) {
+                        $aResult[$sClass][$sFile] = -2;
+                    }
+                }
+            }
+        }
+
+        // Check for redundant or missing module files
+        if (is_array($aDatabaseFiles)) {
+            foreach ($aDatabaseFiles as $sClass => $sFile) {
+                if (!isset($aResult[$sClass][$sFile])) {
+                    @$aResult[$sClass][$sFile] = -1;
+                    if (version_compare($this->getMetaDataVersion(), '2.0') == 0) {
+                        $composerClassLoader = include VENDOR_PATH . 'autoload.php';
+                        if(!$composerClassLoader->findFile($sFile)){
+                            @$aResult[$sClass][$sFile] = -2;
+                        }
+                    }else {
+                        if (!file_exists($sModulesDir . '/' . $sFile)) {
+                            @$aResult[$sClass][$sFile] = -3;
+                        }
                     }
                 } elseif ($aResult[$sClass][$sFile] == 0) {
                     @$aResult[$sClass][$sFile] = 1;

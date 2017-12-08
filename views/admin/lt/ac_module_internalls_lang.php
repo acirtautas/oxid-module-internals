@@ -23,6 +23,7 @@ $aLang = array(
     'AC_MI_EVENTS'     => 'Įvykiai',
     'AC_MI_CACHE'      => 'Modulio podėlis',
     'AC_MI_ACTIVATION' => 'Modulio įjungimas / išjungimas',
+    'AC_MI_CONTROLLER' => 'Modulio Controller',
 
     'AC_MI_FIXBTN'         => 'Taisyti',
     'AC_MI_RESETBTN'       => 'Valyti',

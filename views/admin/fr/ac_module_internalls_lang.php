@@ -23,6 +23,7 @@ $aLang = array(
     'AC_MI_EVENTS'     => 'Evènements',
     'AC_MI_CACHE'      => 'Cache du module',
     'AC_MI_ACTIVATION' => 'Activer / Désactiver le module',
+    'AC_MI_CONTROLLER' => 'Module Controller',
 
     'AC_MI_FIXBTN'         => 'Réparer',
     'AC_MI_RESETBTN'       => 'Réinitialiser',

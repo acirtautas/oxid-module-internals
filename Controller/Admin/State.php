@@ -116,14 +116,21 @@ class State extends AdminController
         $this->addTplParam('aTemplates', $oHelper->checkModuleTemplates());
 
         //valid not for  metadata version 1.*
-        if ($oHelper->isMetadataSupported('1.0') | $oHelper->isMetadataSupported('1.1')) {
+        if (version_compare($oHelper->getMetaDataVersion(), '1.0') == 0 || version_compare($oHelper->getMetaDataVersion(), '1.1') == 0) {
             $this->addTplParam('aFiles', $oHelper->checkModuleFiles());
         }
 
         //valid  for  metadata version 1.1 and 2.0
-        if ($oHelper->isMetadataSupported('1.1')) {
+        if (version_compare($oHelper->getMetaDataVersion(), '1.1') == 0 || version_compare($oHelper->getMetaDataVersion(), '2.0') == 0) {
             $this->addTplParam('aEvents', $oHelper->checkModuleEvents());
             $this->addTplParam('aVersions', $oHelper->checkModuleVersions());
+        }
+
+        /**
+         * @todo check if files is set - should'nt be
+         */
+        if(version_compare($oHelper->getMetaDataVersion(), '2.0') == 0){
+            $this->addTplParam('aControllers', $oHelper->checkModuleController());
         }
 
         $this->addTplParam(

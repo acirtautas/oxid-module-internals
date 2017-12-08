@@ -26,19 +26,43 @@
 </script>
 
 [{if $aVersions|@count > 0}]
-<div style="position: relative;">
-    <h3>[{oxmultilang ident="AC_MI_VERSION"}]</h3>
-    [{assign var="_ok" value=1}]
-    [{foreach from=$aVersions key=sVersion item=iState}]
+    <div style="position: relative;">
+        <h3>[{oxmultilang ident="AC_MI_VERSION"}]</h3>
+        [{assign var="_ok" value=1}]
+        [{foreach from=$aVersions key=sVersion item=iState}]
         <span class="state [{$sState.$iState}]">[{$sVersion}]</span>
         [{if $iState < 1 && $iState != -2 }][{assign var="_ok" value=0}][{/if}]
-    [{/foreach}]
-    [{if !$_ok}]
+        [{/foreach}]
+        [{if !$_ok}]
         <button class="fix" onclick="module_internals_fix('fix_version')">[{oxmultilang ident="AC_MI_FIXBTN"}]</button>
-    [{/if}]
-    <br>
-</div>
+        [{/if}]
+        <br>
+    </div>
 [{/if}]
+
+[{if $aControllers|@count > 0}]
+    <div style="position: relative;">
+        <h3>[{oxmultilang ident="AC_MI_CONTROLLER"}]</h3>
+        <table>
+            [{assign var="_ok" value=1}]
+            [{foreach from=$aControllers key=sClass item=aModules}]
+            <tr>
+                <td style="vertical-align: top;"><b>[{$sClass}]</b></td>
+                <td>
+                    [{foreach from=$aModules key=sModule item=iState}]
+                    <span class="state [{$sState.$iState}]">[{$sModule}]</span>
+                    [{if $iState < 1 && $iState != -2 }][{assign var="_ok" value=0}][{/if}]
+                    [{/foreach}]
+                </td>
+            </tr>
+            [{/foreach}]
+        </table>
+        [{if !$_ok}]
+        <button class="fix" onclick="module_internals_fix('fix_extend')">[{oxmultilang ident="AC_MI_FIXBTN"}]</button>
+        [{/if}]
+        <br>
+    </div>
+    [{/if}]
 
 [{if $aExtended|@count > 0}]
 <div style="position: relative;">
