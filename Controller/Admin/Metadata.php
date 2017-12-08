@@ -15,7 +15,7 @@ class Metadata extends oxAdminView
     /**
      * @var string
      */
-    public $sTemplate = 'ac_module_internals_metadata.tpl';
+    public $sTemplate = 'metadata.tpl';
 
     /**
      * @return string
