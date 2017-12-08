@@ -2,18 +2,13 @@
 
 namespace OxCom\ModuleInternals\Controller\Admin;
 
+use OxidEsales\Eshop\Application\Controller\Admin\AdminController;
 use \OxidEsales\EshopCommunity\Core\Module\Module as Module;
-
-/**
- * Module internals tools.
- *
- * @author Alfonsas Cirtautas
- */
 
 /**
  * Module metadata content retrieving.
  */
-class Metadata extends \OxidEsales\Eshop\Application\Controller\Admin\AdminController
+class Metadata extends AdminController
 {
     /**
      * @var string
@@ -29,14 +24,14 @@ class Metadata extends \OxidEsales\Eshop\Application\Controller\Admin\AdminContr
 
         $this->addTplParam('oxid', $sModuleId);
 
-        /** @var $oModule oxModule */
+        /** @var $oModule Module */
         $oModule = oxNew(Module::class);
         $oModule->load($sModuleId);
 
         if ($oModule->hasMetadata()) {
-            $sModulePath = $oModule->getModulePath($sModuleId);
+            $sModulePath   = $oModule->getModulePath($sModuleId);
             $sMetadataPath = $this->getConfig()->getModulesDir() . $sModulePath . "/metadata.php";
-            $sRawMetadata = highlight_file($sMetadataPath, 1);
+            $sRawMetadata  = highlight_file($sMetadataPath, 1);
             $this->addTplParam('sRawMetadata', $sRawMetadata);
         }
 
