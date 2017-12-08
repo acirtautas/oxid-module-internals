@@ -1,4 +1,6 @@
 <?php
+namespace OxCom\ModuleInternals\Controller\Admins;
+
 /**
  * Module internals tools.
  *
@@ -8,7 +10,7 @@
 /**
  * Module state checker, compares module data across different storage levels (metadata file / database / configuration).
  */
-class ac_module_internals_state extends oxAdminView
+class State extends oxAdminView
 {
     /**
      * @var string

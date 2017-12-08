@@ -1,4 +1,6 @@
 <?php
+namespace OxCom\ModuleInternals\Core\Admins;
+
 /**
  * Module internals tools.
  *
@@ -10,7 +12,7 @@
  *
  * Fix helper service: fix module states and configuration.
  */
-class ac_module_internals_fix_helper
+class FixHelper
 {
     /** @var oxModule */
     protected $_oModule;

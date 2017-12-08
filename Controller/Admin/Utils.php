@@ -1,4 +1,6 @@
 <?php
+namespace OxCom\ModuleInternals\Controller\Admins;
+
 /**
  * Module internals tools.
  *
@@ -8,7 +10,7 @@
 /**
  * Internal module utilities.
  */
-class ac_module_internals_utils extends oxAdminView
+class Utils extends oxAdminView
 {
     /** @var oxModule */
     protected $_oModule;
