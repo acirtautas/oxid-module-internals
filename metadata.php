@@ -30,3 +30,5 @@ $aModule = array(
         'ac_module_internals_utils.tpl'    => 'oxid-module-internals/views/admin/tpl/ac_module_internals_utils.tpl',
     )
 );
+
+
