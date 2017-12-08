@@ -10,7 +10,7 @@ use OxCom\ModuleInternals\Core\DataHelper as DataHelper;
 /**
  * Module internals tools.
  *
- * @author Alfonsas Cirtautas
+ * @author Oxid Community
  */
 
 /**

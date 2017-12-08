@@ -3,11 +3,13 @@
 namespace OxCom\ModuleInternals\Controller\Admin;
 
 use \OxidEsales\EshopCommunity\Core\Module\Module as Module;
+use \OxidEsales\EshopCommunity\Core\Module\ModuleCache as ModuleCache;
+use \OxidEsales\EshopCommunity\Core\Module\ModuleInstaller as ModuleInstaller;
 
 /**
  * Module internals tools.
  *
- * @author Alfonsas Cirtautas
+ * @author Oxid Community
  */
 
 /**
@@ -39,7 +41,7 @@ class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
         if ($this->_oModule === NULL) {
             $sModuleId = $this->getEditObjectId();
 
-            $this->_aViewData['oxid'] = $sModuleId;
+            $this->addTplParam('oxid', $sModuleId);
             $this->_oModule = oxNew(Module::class);
             $this->_oModule->load($sModuleId);
         }
@@ -55,7 +57,7 @@ class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     public function getModuleCache()
     {
         if ($this->_oModuleCache === NULL) {
-            $this->_oModuleCache = oxNew('oxModuleCache', $this->getModule());
+            $this->_oModuleCache = oxNew(ModuleCache::class, $this->getModule());
         }
 
         return $this->_oModuleCache;
@@ -69,7 +71,7 @@ class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     public function getModuleInstaller()
     {
         if ($this->_oModuleInstaller === NULL) {
-            $this->_oModuleInstaller = oxNew('oxModuleInstaller', $this->getModuleCache());
+            $this->_oModuleInstaller = oxNew(ModuleInstaller::class, $this->getModuleCache());
         }
 
         return $this->_oModuleInstaller;
@@ -83,8 +85,8 @@ class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
         $oModule = $this->getModule();
         $sModuleId = $oModule->getId();
 
-        $this->_aViewData['oxid'] = $sModuleId;
-        $this->_aViewData['blIsActive'] = $oModule->isActive();
+        $this->addTplParam('oxid', $sModuleId);
+        $this->addTplParam('blIsActive', $oModule->isActive());
 
         return $this->sTemplate;
     }
