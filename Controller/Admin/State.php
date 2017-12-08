@@ -1,62 +1,66 @@
 <?php
 namespace OxCom\ModuleInternals\Controller\Admin;
 
+use OxCom\ModuleInternals\Core\DataHelper as DataHelper;
+use OxCom\ModuleInternals\Core\FixHelper as FixHelper;
+use OxidEsales\Eshop\Core\Module\ModuleCache as ModuleCache;
+use OxidEsales\Eshop\Core\Module\ModuleList as ModuleList;
+use \OxidEsales\Eshop\Core\Module\Module as Module;
+use OxidEsales\EshopCommunity\Tests\Unit\Core\oxModuleUtilsObject;
+
+
 /**
  * Module internals tools.
  *
- * @author Alfonsas Cirtautas
+ * @author Oxid Community
  */
 
 /**
  * Module state checker, compares module data across different storage levels (metadata file / database / configuration).
  */
-class State extends oxAdminView
-{
+class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminController {
     /**
      * @var string
      */
     public $sTemplate = 'state.tpl';
 
-    /** @var oxModule */
+    /** @var Module */
     protected $_oModule;
 
-    /** @var ac_module_internals_data_helper */
+    /** @var DataHelper */
     protected $_oModuleDataProviderHelper;
 
-    /** @var ac_module_internals_fix_helper */
+    /** @var FixHelper */
     protected $_oModuleFixHelper;
 
     /**
-     * @return ac_module_internals_data_helper
+     * @return DataHelper
      */
-    public function getModuleDataProviderHelper()
-    {
+    public function getModuleDataProviderHelper() {
         if ($this->_oModuleDataProviderHelper === null) {
-            $this->_oModuleDataProviderHelper = oxNew('ac_module_internals_data_helper', $this->getModule(), oxNew('oxModuleList'));
+            $this->_oModuleDataProviderHelper = oxNew(DataHelper::class, $this->getModule(), ModuleList::class);
         }
 
         return $this->_oModuleDataProviderHelper;
     }
 
     /**
-     * @param ac_module_internals_data_helper $oModuleDataProviderHelper
+     * @param DataHelper $oModuleDataProviderHelper
      */
-    public function setModuleDataProviderHelper($oModuleDataProviderHelper)
-    {
+    public function setModuleDataProviderHelper($oModuleDataProviderHelper) {
         $this->_oModuleDataProviderHelper = $oModuleDataProviderHelper;
     }
 
     /**
-     * @return ac_module_internals_fix_helper
+     * @return FixHelper
      */
-    public function getModuleFixHelper()
-    {
+    public function getModuleFixHelper() {
         if ($this->_oModuleFixHelper === null) {
             $this->_oModuleFixHelper = oxNew(
-                'ac_module_internals_fix_helper',
-                $this->getModule(),
-                oxNew('oxModuleList'),
-                oxNew('oxModuleCache', $this->getModule())
+                    FixHelper::class,
+                    $this->getModule(),
+                    oxNew(ModuleList::class),
+                    oxNew(ModuleCache::class, $this->getModule())
             );
         }
 
@@ -64,27 +68,25 @@ class State extends oxAdminView
     }
 
     /**
-     * @param ac_module_internals_fix_helper $oModuleFixHelper
+     * @param FixHelper $oModuleFixHelper
      */
-    public function setModuleFixHelper($oModuleFixHelper)
-    {
+    public function setModuleFixHelper($oModuleFixHelper) {
         $this->_oModuleFixHelper = $oModuleFixHelper;
     }
 
     /**
      * Get active module object.
      *
-     * @return oxModule
+     * @return Module
      */
-    public function getModule()
-    {
+    public function getModule() {
         if ($this->_oModule === null) {
             $sModuleId = $this->getEditObjectId();
 
-            $this->_aViewData['oxid'] = $sModuleId;
+            $this->addTplParam('oxid', $sModuleId);
 
-            /** @var $oModule oxModule */
-            $this->_oModule = oxNew('oxModule');
+            /** @var $oModule Module */
+            $this->_oModule = oxNew(ModuleCache::class);
             $this->_oModule->load($sModuleId);
         }
 
@@ -96,29 +98,34 @@ class State extends oxAdminView
      *
      * @return string
      */
-    public function render()
-    {
+    public function render() {
         $oHelper = $this->getModuleDataProviderHelper();
 
-        $this->_aViewData['oxid'] = $oHelper->getModuleId();
-        $this->_aViewData['aExtended'] = $oHelper->checkExtendedClasses();
-        $this->_aViewData['aBlocks'] = $oHelper->checkTemplateBlocks();
-        $this->_aViewData['aSettings'] = $oHelper->checkModuleSettings();
-        $this->_aViewData['aFiles'] = $oHelper->checkModuleFiles();
-        $this->_aViewData['aTemplates'] = $oHelper->checkModuleTemplates();
+        //valid for all metadata versions
+        $this->addTplParam('oxid', $oHelper->getModuleId());
+        $this->addTplParam('aExtended', $oHelper->checkExtendedClasses());
+        $this->addTplParam('aBlocks', $oHelper->checkTemplateBlocks());
+        $this->addTplParam('aSettings', $oHelper->checkModuleSettings());
+        $this->addTplParam('aTemplates', $oHelper->checkModuleTemplates());
 
-        if ($oHelper->isMetadataSupported('1.1')) {
-            $this->_aViewData['aEvents'] = $oHelper->checkModuleEvents();
-            $this->_aViewData['aVersions'] = $oHelper->checkModuleVersions();
+        //valid not for  metadata version 1.*
+        if ($oHelper->isMetadataSupported('1.0') | $oHelper->isMetadataSupported('1.1')) {
+            $this->addTplParam('aFiles', $oHelper->checkModuleFiles());
         }
 
-        $this->_aViewData['sState'] = array(
-            -3 => 'sfatals',
-            -2 => 'sfatalm',
-            -1 => 'serror',
-             0 => 'swarning',
-             1 => 'sok'
-        );
+        //valid  for  metadata version 1.1 and 2.0
+        if ($oHelper->isMetadataSupported('1.1')) {
+            $this->addTplParam('aEvents', $oHelper->checkModuleEvents());
+            $this->addTplParam('aVersions', $oHelper->checkModuleVersions());
+        }
+
+        $this->addTplParam('sState', array(
+                -3 => 'sfatals',
+                -2 => 'sfatalm',
+                -1 => 'serror',
+                0  => 'swarning',
+                1  => 'sok',
+        ));
 
         return $this->sTemplate;
     }
@@ -126,56 +133,49 @@ class State extends oxAdminView
     /**
      * Fix module version.
      */
-    public function fix_version()
-    {
+    public function fix_version() {
         $this->getModuleFixHelper()->fixVersion();
     }
 
     /**
      * Fix module extend.
      */
-    public function fix_extend()
-    {
+    public function fix_extend() {
         $this->getModuleFixHelper()->fixExtend();
     }
 
     /**
      * Fix module files.
      */
-    public function fix_files()
-    {
+    public function fix_files() {
         $this->getModuleFixHelper()->fixFiles();
     }
 
     /**
      * Fix module templates.
      */
-    public function fix_templates()
-    {
+    public function fix_templates() {
         $this->getModuleFixHelper()->fixTemplates();
     }
 
     /**
      * Fix module blocks.
      */
-    public function fix_blocks()
-    {
+    public function fix_blocks() {
         $this->getModuleFixHelper()->fixBlocks();
     }
 
     /**
      * Fix module settings.
      */
-    public function fix_settings()
-    {
+    public function fix_settings() {
         $this->getModuleFixHelper()->fixSettings();
     }
 
     /**
      * Fix module events.
      */
-    public function fix_events()
-    {
+    public function fix_events() {
         $this->getModuleFixHelper()->fixEvents();
     }
 }

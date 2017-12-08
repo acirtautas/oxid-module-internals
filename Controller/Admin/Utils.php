@@ -1,16 +1,21 @@
 <?php
+
 namespace OxCom\ModuleInternals\Controller\Admin;
+
+use \OxidEsales\EshopCommunity\Core\Module\Module as Module;
+use \OxidEsales\EshopCommunity\Core\Module\ModuleCache as ModuleCache;
+use \OxidEsales\EshopCommunity\Core\Module\ModuleInstaller as ModuleInstaller;
 
 /**
  * Module internals tools.
  *
- * @author Alfonsas Cirtautas
+ * @author Oxid Community
  */
 
 /**
  * Internal module utilities.
  */
-class Utils extends oxAdminView
+class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminController
 {
     /** @var oxModule */
     protected $_oModule;
@@ -33,11 +38,11 @@ class Utils extends oxAdminView
      */
     public function getModule()
     {
-        if($this->_oModule === null) {
+        if ($this->_oModule === NULL) {
             $sModuleId = $this->getEditObjectId();
 
-            $this->_aViewData['oxid'] = $sModuleId;
-            $this->_oModule = oxNew('oxModule');
+            $this->addTplParam('oxid', $sModuleId);
+            $this->_oModule = oxNew(Module::class);
             $this->_oModule->load($sModuleId);
         }
 
@@ -51,8 +56,8 @@ class Utils extends oxAdminView
      */
     public function getModuleCache()
     {
-        if($this->_oModuleCache === null) {
-            $this->_oModuleCache = oxNew('oxModuleCache', $this->getModule());
+        if ($this->_oModuleCache === NULL) {
+            $this->_oModuleCache = oxNew(ModuleCache::class, $this->getModule());
         }
 
         return $this->_oModuleCache;
@@ -65,8 +70,8 @@ class Utils extends oxAdminView
      */
     public function getModuleInstaller()
     {
-        if($this->_oModuleInstaller === null) {
-            $this->_oModuleInstaller = oxNew('oxModuleInstaller', $this->getModuleCache());
+        if ($this->_oModuleInstaller === NULL) {
+            $this->_oModuleInstaller = oxNew(ModuleInstaller::class, $this->getModuleCache());
         }
 
         return $this->_oModuleInstaller;
@@ -77,11 +82,11 @@ class Utils extends oxAdminView
      */
     public function render()
     {
-        $oModule   = $this->getModule();
+        $oModule = $this->getModule();
         $sModuleId = $oModule->getId();
 
-        $this->_aViewData['oxid']       = $sModuleId;
-        $this->_aViewData['blIsActive'] = $oModule->isActive();
+        $this->addTplParam('oxid', $sModuleId);
+        $this->addTplParam('blIsActive', $oModule->isActive());
 
         return $this->sTemplate;
     }

@@ -1,39 +1,46 @@
 <?php
+
 namespace OxCom\ModuleInternals\Core;
+
+use \OxidEsales\EshopCommunity\Core\Module\Module as Module;
+use \OxidEsales\EshopCommunity\Core\Module\ModuleList as ModuleList;
+use \OxidEsales\EshopCommunity\Core\DatabaseProvider as DatabaseProvider;
+use \OxidEsales\EshopCommunity\Core\Registry as Registry;
+
 /**
  * Module internals tools.
  *
- * @author Saulius Cepauskas
+ * @author Oxid Community
  */
 
 /**
- * Class ac_module_internals_helper
+ * Class DataHelper
  *
  * Data helper service: retrieves and compares module configuration. Checks if all module relavant data is properly
  * registered and exists. Businnes logics moved into service from the controller.
  */
 class DataHelper
 {
-    /** @var oxModule */
+    /** @var Module */
     protected $_oModule;
 
-    /** @var oxModuleList */
+    /** @var ModuleList */
     protected $_oModuleList;
 
     /**
      * Injects helper parameters
      *
-     * @param oxModule $oModule
-     * @param oxModuleList $oModuleList
+     * @param Module $oModule
+     * @param ModuleList $oModuleList
      */
-    public function __construct(oxModule $oModule, oxModuleList $oModuleList)
+    public function __construct(Module $oModule, ModuleList $oModuleList)
     {
         $this->_oModule = $oModule;
         $this->_oModuleList = $oModuleList;
     }
 
     /**
-     * @return oxModule
+     * @return Module
      */
     public function getModule()
     {
@@ -41,15 +48,15 @@ class DataHelper
     }
 
     /**
-     * @param oxModule $oModule
+     * @param Module $oModule
      */
-    public function setModule(oxModule $oModule)
+    public function setModule(Module $oModule)
     {
         $this->_oModule = $oModule;
     }
 
     /**
-     * @return oxModuleList
+     * @return ModuleList
      */
     public function getModuleList()
     {
@@ -57,9 +64,9 @@ class DataHelper
     }
 
     /**
-     * @param oxModuleList $oModuleList
+     * @param ModuleList $oModuleList
      */
-    public function setModuleList(oxModuleList $oModuleList)
+    public function setModuleList(ModuleList $oModuleList)
     {
         $this->_oModuleList = $oModuleList;
     }
@@ -71,7 +78,7 @@ class DataHelper
      * @param int $iLang
      * @return string
      */
-    public function getInfo($sName, $iLang = null)
+    public function getInfo($sName, $iLang = NULL)
     {
         return $this->getModule()->getInfo($sName, $iLang);
     }
@@ -83,10 +90,12 @@ class DataHelper
      */
     public function getModuleBlocks()
     {
-        return oxDb::getDb(oxDb::FETCH_MODE_ASSOC)->getAll(
-            'SELECT * FROM oxtplblocks WHERE oxmodule = ? AND oxshopid = ?',
-            array($this->getModuleId(), oxRegistry::getConfig()->getShopId())
+        $aResults = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)->select(
+            'SELECT * FROM oxtplblocks WHERE oxModule = ? AND oxshopid = ?',
+            [$this->getModuleId(), Registry::getConfig()->getShopId()]
         );
+
+        return $aResults->fetchAll();
     }
 
 
@@ -97,10 +106,12 @@ class DataHelper
      */
     public function getModuleSettings()
     {
-        return oxDb::getDb(oxDb::FETCH_MODE_ASSOC)->getAll(
-            'SELECT * FROM oxconfig WHERE oxmodule = ? AND oxshopid = ?',
-            array(sprintf('module:%s', $this->getModuleId()), oxRegistry::getConfig()->getShopId())
+        $aResult = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)->select(
+            'SELECT * FROM oxconfig WHERE Module = ? AND oxshopid = ?',
+            [sprintf('module:%s', $this->getModuleId()), Registry::getConfig()->getShopId()]
         );
+
+        return $aResult->fetchAll();
     }
 
     /**
@@ -110,8 +121,8 @@ class DataHelper
      */
     public function getModuleFiles()
     {
-        $aReturn = array();
-        $aList = $this->getModuleList()->getModuleFiles();
+        $aReturn = [];
+        $aList = $this->getModuleList()->getModuleConfigParametersByKey(ModuleList::MODULE_KEY_FILES);
 
         if (isset($aList[$this->getModuleId()])) {
             $aReturn = $aList[$this->getModuleId()];
@@ -127,8 +138,8 @@ class DataHelper
      */
     public function getModuleTemplates()
     {
-        $aReturn = array();
-        $aList = $this->getModuleList()->getModuleTemplates();
+        $aReturn = [];
+        $aList = $this->getModuleList()->getModuleConfigParametersByKey(ModuleList::MODULE_KEY_TEMPLATES);
 
         if (isset($aList[$this->getModuleId()])) {
             $aReturn = $aList[$this->getModuleId()];
@@ -144,8 +155,8 @@ class DataHelper
      */
     public function getModuleEvents()
     {
-        $aReturn = array();
-        $aList = $this->getModuleList()->getModuleEvents();
+        $aReturn = [];
+        $aList = $this->getModuleList()->getModuleConfigParametersByKey(ModuleList::MODULE_KEY_EVENTS);
 
         if (isset($aList[$this->getModuleId()])) {
             $aReturn = $aList[$this->getModuleId()];
@@ -161,7 +172,7 @@ class DataHelper
      */
     public function getModuleVersion()
     {
-        $aList = $this->getModuleList()->getModuleVersions();
+        $aList = $this->getModuleList()->getModuleConfigParametersByKey(ModuleList::MODULE_KEY_VERSIONS);
 
         return isset($aList[$this->getModuleId()]) ? $aList[$this->getModuleId()] : '';
     }
@@ -176,8 +187,13 @@ class DataHelper
     public function isMetadataSupported($sMetadataVersion)
     {
         $sLatestVersion = '1.0';
+
         if (method_exists('oxModuleList', 'getModuleVersions') || method_exists('oxModule', 'getModuleEvents')) {
             $sLatestVersion = '1.1';
+        }
+
+        if (method_exists('ModuleList', 'getModuleConfigParametersByKey')) {
+            $sLatestVersion = '2.0';
         }
 
         return version_compare($sLatestVersion, $sMetadataVersion) >= 0;
@@ -212,15 +228,15 @@ class DataHelper
     {
         $sModulePath = $this->getModulePath();
         $aMetadataExtend = $this->getInfo('extend');
-        $oxidConfig = oxRegistry::getConfig();
+        $oxidConfig = Registry::getConfig();
         if (method_exists($oxidConfig, 'getModulesWithExtendedClass')) {
             $aAllModules = $oxidConfig->getModulesWithExtendedClass();
         } else {
             $aAllModules = $oxidConfig->getAllModules();
         }
 
-        $aResult = array();
-        $sModulesDir = oxRegistry::getConfig()->getModulesDir(true);
+        $aResult = [];
+        $sModulesDir = Registry::getConfig()->getModulesDir(TRUE);
 
         // Check if all classes are extended.
         if (is_array($aMetadataExtend)) {
@@ -261,6 +277,7 @@ class DataHelper
     /**
      * Analyze template block information in metadata and database.
      *
+     * @todo debug $aBlock
      * @return array
      */
     public function checkTemplateBlocks()
@@ -270,9 +287,9 @@ class DataHelper
         $aDatabaseBlocks = $this->getModuleBlocks();
         $aMetadataTemplates = $this->getInfo('templates');
 
-        $sModulesDir = oxRegistry::getConfig()->getModulesDir();
+        $sModulesDir = Registry::getConfig()->getModulesDir();
 
-        $aResult = array();
+        $aResult = [];
 
         // Check if all blocks are injected.
         if (is_array($aMetadataBlocks)) {
@@ -325,17 +342,17 @@ class DataHelper
             foreach ($aMetadataBlocks as $aBlock) {
 
                 // Get template from shop..
-                $sTemplate = oxRegistry::getConfig()->getTemplatePath($aBlock['template'], false);
+                $sTemplate = Registry::getConfig()->getTemplatePath($aBlock['template'], FALSE);
 
                 // Get template from shop admin ..
                 if (!$sTemplate) {
-                    $sTemplate = oxRegistry::getConfig()->getTemplatePath($aBlock['template'], true);
+                    $sTemplate = Registry::getConfig()->getTemplatePath($aBlock['template'], TRUE);
                 }
 
                 // Get template from module ..
                 if (!$sTemplate && isset($aMetadataTemplates[$aBlock['template']])) {
 
-                    $sModulesDir = oxRegistry::getConfig()->getModulesDir();
+                    $sModulesDir = Registry::getConfig()->getModulesDir();
 
                     if (file_exists($sModulesDir . '/' . $aMetadataTemplates[$aBlock['template']])) {
                         $sTemplate = $sModulesDir . '/' . $aMetadataTemplates[$aBlock['template']];
@@ -366,7 +383,7 @@ class DataHelper
         $aMetadataSettings = $this->getInfo('settings');
         $aDatabaseSettings = $this->getModuleSettings();
 
-        $aResult = array();
+        $aResult = [];
 
         // Check if all settings are injected.
         if (is_array($aMetadataSettings)) {
@@ -402,9 +419,9 @@ class DataHelper
         $aMetadataFiles = $this->getInfo('files');
         $aDatabaseFiles = $this->getModuleFiles();
 
-        $sModulesDir = oxRegistry::getConfig()->getModulesDir();
+        $sModulesDir = Registry::getConfig()->getModulesDir();
 
-        $aResult = array();
+        $aResult = [];
 
         // Check if all module files are injected.
         if (is_array($aMetadataFiles)) {
@@ -444,9 +461,9 @@ class DataHelper
         $aMetadataTemplates = $this->getInfo('templates');
         $aDatabaseTemplates = $this->getModuleTemplates();
 
-        $sModulesDir = oxRegistry::getConfig()->getModulesDir();
+        $sModulesDir = Registry::getConfig()->getModulesDir();
 
-        $aResult = array();
+        $aResult = [];
 
         // Check if all module templates are injected.
         if (is_array($aMetadataTemplates)) {
@@ -486,7 +503,7 @@ class DataHelper
         $aMetadataEvents = $this->getInfo('events');
         $aDatabaseEvents = $this->getModuleEvents();
 
-        $aResult = array();
+        $aResult = [];
 
         // Check if all events are injected.
         if (is_array($aMetadataEvents)) {
@@ -521,7 +538,7 @@ class DataHelper
         $sMetadataVersion = $this->getInfo('version');
         $sDatabaseVersion = $this->getModuleVersion();
 
-        $aResult = array();
+        $aResult = [];
 
         // Check version..
         if ($sMetadataVersion) {

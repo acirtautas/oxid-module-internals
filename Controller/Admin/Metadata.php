@@ -6,6 +6,12 @@ use OxidEsales\Eshop\Application\Controller\Admin\AdminController;
 use \OxidEsales\EshopCommunity\Core\Module\Module as Module;
 
 /**
+ * Module internals tools.
+ *
+ * @author Oxid Community
+ */
+
+/**
  * Module metadata content retrieving.
  */
 class Metadata extends AdminController
