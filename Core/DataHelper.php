@@ -240,7 +240,9 @@ class DataHelper
 
         // Check if all classes are extended.
         if (is_array($aMetadataExtend)) {
-            $aMetadataExtend = array_change_key_case($aMetadataExtend, CASE_LOWER);
+            if (version_compare($this->getModuleVersion(), '2.0') < 1)
+                $aMetadataExtend = array_change_key_case($aMetadataExtend, CASE_LOWER);
+
             foreach ($aMetadataExtend as $sClassName => $sModuleName) {
                 $iState = 0;
                 if (is_array($aAllModules) && isset($aAllModules[$sClassName])) {
@@ -250,11 +252,22 @@ class DataHelper
                     }
                 }
 
-                if (!file_exists($sModulesDir . $sModuleName . ".php")) {
-                    $aResult[$sClassName][$sModuleName] = -2; // sfatalm
+                // if we are on version gt 6 we don't have files - we use namespace
+                if (version_compare($this->getModuleVersion(), '2.0') >= 1) {
+                    $composerClassLoader = include VENDOR_PATH . 'autoload.php';
+                    if(!$composerClassLoader->findFile($sModuleName)){
+                        $aResult[$sClassName][$sModuleName] = -2; // sfatalm
+                    }else{
+                        $aResult[$sClassName][$sModuleName] = $iState;
+                    }
                 } else {
-                    $aResult[$sClassName][$sModuleName] = $iState;
+                    if (!file_exists($sModulesDir . $sModuleName . ".php")) {
+                        $aResult[$sClassName][$sModuleName] = -2; // sfatalm
+                    } else {
+                        $aResult[$sClassName][$sModuleName] = $iState;
+                    }
                 }
+
             }
         }
 

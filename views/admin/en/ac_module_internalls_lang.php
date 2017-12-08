@@ -8,7 +8,7 @@
 $sLangName = "English";
 
 $aLang = array(
-    'charset' => 'ISO-8859-15',
+    'charset' => 'UTF-8',
 
     'tbclmodule_internals_metadata' => 'Metadata',
     'tbclmodule_internals_state'    => 'State',
