@@ -107,7 +107,7 @@ class DataHelper
     public function getModuleSettings()
     {
         $aResult = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)->select(
-            'SELECT * FROM oxconfig WHERE Module = ? AND oxshopid = ?',
+            'SELECT * FROM oxconfig WHERE oxModule = ? AND oxshopid = ?',
             [sprintf('module:%s', $this->getModuleId()), Registry::getConfig()->getShopId()]
         );
 

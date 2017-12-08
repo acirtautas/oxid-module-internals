@@ -39,7 +39,7 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     public function getModuleDataProviderHelper()
     {
         if ($this->_oModuleDataProviderHelper === NULL) {
-            $this->_oModuleDataProviderHelper = oxNew(DataHelper::class, $this->getModule(), ModuleList::class);
+            $this->_oModuleDataProviderHelper = oxNew(DataHelper::class, $this->getModule(), oxNew(ModuleList::class));
         }
 
         return $this->_oModuleDataProviderHelper;
