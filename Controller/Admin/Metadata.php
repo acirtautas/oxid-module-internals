@@ -1,5 +1,5 @@
 <?php
-namespace OxCom\ModuleInternals\Controller\Admins;
+namespace OxCom\ModuleInternals\Controller\Admin;
 
 /**
  * Module internals tools.
@@ -10,7 +10,7 @@ namespace OxCom\ModuleInternals\Controller\Admins;
 /**
  * Module metadata content retrieving.
  */
-class Metadata extends oxAdminView
+class Metadata extends \OxidEsales\Eshop\Application\Controller\Admin\AdminController
 {
     /**
      * @var string

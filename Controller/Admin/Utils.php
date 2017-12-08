@@ -1,5 +1,5 @@
 <?php
-namespace OxCom\ModuleInternals\Controller\Admins;
+namespace OxCom\ModuleInternals\Controller\Admin;
 
 /**
  * Module internals tools.
