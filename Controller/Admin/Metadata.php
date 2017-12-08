@@ -1,5 +1,8 @@
 <?php
-namespace OxCom\ModuleInternals\Controller\Admins;
+
+namespace OxCom\ModuleInternals\Controller\Admin;
+
+use \OxidEsales\EshopCommunity\Core\Module\Module as Module;
 
 /**
  * Module internals tools.
@@ -10,7 +13,7 @@ namespace OxCom\ModuleInternals\Controller\Admins;
 /**
  * Module metadata content retrieving.
  */
-class Metadata extends oxAdminView
+class Metadata extends \OxidEsales\Eshop\Application\Controller\Admin\AdminController
 {
     /**
      * @var string
@@ -24,17 +27,17 @@ class Metadata extends oxAdminView
     {
         $sModuleId = $this->getEditObjectId();
 
-        $this->_aViewData['oxid'] = $sModuleId;
+        $this->addTplParam('oxid', $sModuleId);
 
         /** @var $oModule oxModule */
-        $oModule = oxNew('oxModule');
+        $oModule = oxNew(Module::class);
         $oModule->load($sModuleId);
 
         if ($oModule->hasMetadata()) {
-            $sModulePath                      = $oModule->getModulePath($sModuleId);
-            $sMetadataPath                    = $this->getConfig()->getModulesDir() . $sModulePath . "/metadata.php";
-            $sRawMetadata                     = highlight_file($sMetadataPath, 1);
-            $this->_aViewData['sRawMetadata'] = $sRawMetadata;
+            $sModulePath = $oModule->getModulePath($sModuleId);
+            $sMetadataPath = $this->getConfig()->getModulesDir() . $sModulePath . "/metadata.php";
+            $sRawMetadata = highlight_file($sMetadataPath, 1);
+            $this->addTplParam('sRawMetadata', $sRawMetadata);
         }
 
         return $this->sTemplate;
