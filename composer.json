@@ -20,7 +20,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Hackathon2017\\ModuleInternals\\": "../../../source/modules/oxcom/moduleinternals"
+            "OxCom\\ModuleInternals\\": "../../../source/modules/oxcom/moduleinternals"
         }
     }
 }
