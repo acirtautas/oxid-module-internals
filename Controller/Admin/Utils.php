@@ -27,7 +27,7 @@ class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     /**
      * @var string
      */
-    public $sTemplate = 'ac_module_internals_utils.tpl';
+    public $sTemplate = 'utils.tpl';
 
     /**
      * Get active module object.

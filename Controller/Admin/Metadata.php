@@ -18,7 +18,7 @@ class Metadata extends \OxidEsales\Eshop\Application\Controller\Admin\AdminContr
     /**
      * @var string
      */
-    public $sTemplate = 'ac_module_internals_metadata.tpl';
+    public $sTemplate = 'metadata.tpl';
 
     /**
      * @return string
