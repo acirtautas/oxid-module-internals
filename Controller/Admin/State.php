@@ -3,6 +3,9 @@ namespace OxCom\ModuleInternals\Controller\Admin;
 
 use OxidEsales\Eshop\Core\Module\ModuleCache as ModuleCache;
 use OxidEsales\Eshop\Core\Module\ModuleList as ModuleList;
+use OxCom\ModuleInternals\Core\FixHelper as FixHelper;
+use OxCom\ModuleInternals\Core\DataHelper as DataHelper;
+
 
 /**
  * Module internals tools.
@@ -33,7 +36,7 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
      */
     public function getModuleDataProviderHelper() {
         if ($this->_oModuleDataProviderHelper === null) {
-            $this->_oModuleDataProviderHelper = oxNew('ac_module_internals_data_helper', $this->getModule(), oxNew('oxModuleList'));
+            $this->_oModuleDataProviderHelper = oxNew(DataHelper::class, $this->getModule(), ModuleList::class);
         }
 
         return $this->_oModuleDataProviderHelper;
@@ -52,10 +55,10 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     public function getModuleFixHelper() {
         if ($this->_oModuleFixHelper === null) {
             $this->_oModuleFixHelper = oxNew(
-                    'ac_module_internals_fix_helper',
+                    FixHelper::class,
                     $this->getModule(),
                     oxNew(ModuleList::class),
-                    oxNew('oxModuleCache', $this->getModule())
+                    oxNew(ModuleCache::class, $this->getModule())
             );
         }
 
@@ -96,25 +99,25 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     public function render() {
         $oHelper = $this->getModuleDataProviderHelper();
 
-        $this->addTplParam('oxid',$oHelper->getModuleId());
+        $this->addTplParam('oxid', $oHelper->getModuleId());
         $this->addTplParam('aExtended', $oHelper->checkExtendedClasses());
         $this->addTplParam('aBlocks', $oHelper->checkTemplateBlocks());
-        $this->addTplParam('aSettings',  $oHelper->checkModuleSettings());
-        $this->addTplParam('aFiles',$oHelper->checkModuleFiles());
-        $this->_aViewData['aTemplates'] = $oHelper->checkModuleTemplates();
+        $this->addTplParam('aSettings', $oHelper->checkModuleSettings());
+        $this->addTplParam('aFiles', $oHelper->checkModuleFiles());
+        $this->addTplParam('aTemplates', $oHelper->checkModuleTemplates());
 
         if ($oHelper->isMetadataSupported('1.1')) {
-            $this->_aViewData['aEvents'] = $oHelper->checkModuleEvents();
-            $this->_aViewData['aVersions'] = $oHelper->checkModuleVersions();
+            $this->addTplParam('aEvents', $oHelper->checkModuleEvents());
+            $this->addTplParam('aVersions', $oHelper->checkModuleVersions());
         }
 
-        $this->_aViewData['sState'] = array(
+        $this->addTplParam('sState',  array(
                 -3 => 'sfatals',
                 -2 => 'sfatalm',
                 -1 => 'serror',
                 0  => 'swarning',
                 1  => 'sok',
-        );
+        ));
 
         return $this->sTemplate;
     }
