@@ -1,11 +1,12 @@
 <?php
+
 namespace OxCom\ModuleInternals\Core;
 
-/**
- * Module internals tools.
- *
- * @author Saulius Cepauskas
- */
+use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\Module\Module;
+use OxidEsales\Eshop\Core\Module\ModuleCache;
+use OxidEsales\Eshop\Core\Module\ModuleList;
+use OxidEsales\Eshop\Core\Registry;
 
 /**
  * Class ac_module_internals_helper
@@ -14,30 +15,31 @@ namespace OxCom\ModuleInternals\Core;
  */
 class FixHelper
 {
-    /** @var oxModule */
+    /** @var Module */
     protected $_oModule;
 
-    /** @var oxModuleList */
+    /** @var ModuleList */
     protected $_oModuleList;
 
-    /** @var oxModuleCache */
+    /** @var ModuleCache */
     protected $_oModuleCache;
 
     /**
      * Injects helper parameters
      *
-     * @param oxModule $oModule
-     * @param oxModuleList $oModuleList
+     * @param Module      $oModule
+     * @param ModuleList  $oModuleList
+     * @param ModuleCache $oModuleCache
      */
-    public function __construct(oxModule $oModule, oxModuleList $oModuleList, oxModuleCache $oModuleCache)
+    public function __construct(Module $oModule, ModuleList $oModuleList, ModuleCache $oModuleCache)
     {
-        $this->_oModule = $oModule;
-        $this->_oModuleList = $oModuleList;
+        $this->_oModule      = $oModule;
+        $this->_oModuleList  = $oModuleList;
         $this->_oModuleCache = $oModuleCache;
     }
 
     /**
-     * @return oxModule
+     * @return Module
      */
     public function getModule()
     {
@@ -45,15 +47,15 @@ class FixHelper
     }
 
     /**
-     * @param oxModule $oModule
+     * @param Module $oModule
      */
-    public function setModule(oxModule $oModule)
+    public function setModule(Module $oModule)
     {
         $this->_oModule = $oModule;
     }
 
     /**
-     * @return oxModuleList
+     * @return ModuleList
      */
     public function getModuleList()
     {
@@ -61,15 +63,15 @@ class FixHelper
     }
 
     /**
-     * @param oxModuleList $oModuleList
+     * @param ModuleList $oModuleList
      */
-    public function setModuleList(oxModuleList $oModuleList)
+    public function setModuleList(ModuleList $oModuleList)
     {
         $this->_oModuleList = $oModuleList;
     }
 
     /**
-     * @return oxModuleCache
+     * @return ModuleCache
      */
     public function getModuleCache()
     {
@@ -77,9 +79,9 @@ class FixHelper
     }
 
     /**
-     * @param oxModuleCache $oModuleCache
+     * @param ModuleCache $oModuleCache
      */
-    public function setModuleCache(oxModuleCache $oModuleCache)
+    public function setModuleCache(ModuleCache $oModuleCache)
     {
         $this->_oModuleCache = $oModuleCache;
     }
@@ -108,8 +110,9 @@ class FixHelper
      * Returns module info
      *
      * @param string $sName
-     * @param int $iLang
-     * @return string
+     * @param int    $iLang
+     *
+     * @return array
      */
     public function getInfo($sName, $iLang = null)
     {
@@ -121,8 +124,8 @@ class FixHelper
      */
     public function fixVersion()
     {
-        $sVersion = $this->getInfo('version');
-        $aVersions = (array)oxRegistry::getConfig()->getConfigParam('aModuleVersions');
+        $sVersion  = $this->getInfo('version');
+        $aVersions = (array)Registry::getConfig()->getConfigParam('aModuleVersions');
         if (is_array($aVersions)) {
             $aVersions[$this->getModuleId()] = $sVersion;
         }
@@ -136,8 +139,8 @@ class FixHelper
      */
     public function fixExtend()
     {
-        $aExtend = $this->getInfo('extend');
-        $aInstalledModules = oxRegistry::getConfig()->getModulesWithExtendedClass();
+        $aExtend           = $this->getInfo('extend');
+        $aInstalledModules = Registry::getConfig()->getModulesWithExtendedClass();
 
         $sModulePath = $this->getModulePath();
 
@@ -167,7 +170,7 @@ class FixHelper
     public function fixFiles()
     {
         $aModuleFiles = $this->getInfo('files');
-        $aFiles = (array)oxRegistry::getConfig()->getConfigParam('aModuleFiles');
+        $aFiles       = (array)Registry::getConfig()->getConfigParam('aModuleFiles');
 
         if (is_array($aModuleFiles)) {
             $aFiles[$this->getModuleId()] = array_change_key_case($aModuleFiles, CASE_LOWER);
@@ -184,7 +187,7 @@ class FixHelper
     {
         $aModuleTemplates = $this->getInfo('templates');
 
-        $aTemplates = (array)oxRegistry::getConfig()->getConfigParam('aModuleTemplates');
+        $aTemplates = (array)Registry::getConfig()->getConfigParam('aModuleTemplates');
         if (is_array($aModuleTemplates)) {
             $aTemplates[$this->getModuleId()] = $aModuleTemplates;
         }
@@ -198,10 +201,10 @@ class FixHelper
      */
     public function fixBlocks()
     {
-        $oConfig = oxRegistry::getConfig();
+        $oConfig       = Registry::getConfig();
         $aModuleBlocks = $this->getInfo('blocks');
-        $sShopId = $oConfig->getShopId();
-        $oDb = oxDb::getDb();
+        $sShopId       = $oConfig->getShopId();
+        $oDb           = DatabaseProvider::getDb();
 
         // Cleanup !!!
         $oDb->execute(
@@ -218,11 +221,11 @@ class FixHelper
             ';
 
             foreach ($aModuleBlocks as $aValue) {
-                $sOxId = oxRegistry::get('oxUtilsObject')->generateUId();
+                $sOxId     = Registry::get('oxUtilsObject')->generateUId();
                 $sTemplate = $aValue['template'];
                 $iPosition = $aValue['position'] ? $aValue['position'] : 1;
-                $sBlock = $aValue['block'];
-                $sFile = $aValue['file'];
+                $sBlock    = $aValue['block'];
+                $sFile     = $aValue['file'];
 
                 $oDb->execute(
                     $sSql,
@@ -240,9 +243,9 @@ class FixHelper
     public function fixSettings()
     {
         $aModuleSettings = $this->getInfo('settings');
-        $oConfig = oxRegistry::getConfig();
-        $sShopId = $oConfig->getShopId();
-        $oDb = oxDb::getDb();
+        $oConfig         = Registry::getConfig();
+        $sShopId         = $oConfig->getShopId();
+        $oDb             = DatabaseProvider::getDb();
 
         // Cleanup !!!
         $oDb->execute(
@@ -254,13 +257,15 @@ class FixHelper
         if (is_array($aModuleSettings)) {
 
             foreach ($aModuleSettings as $aValue) {
-                $sOxId = oxRegistry::get('oxUtilsObject')->generateUId();
+                $sOxId = Registry::get('oxUtilsObject')->generateUId();
 
                 $sModule = 'module:' . $this->getModuleId();
-                $sName = $aValue['name'];
-                $sType = $aValue['type'];
-                $sValue = is_null($oConfig->getConfigParam($sName)) ? $aValue['value'] : $oConfig->getConfigParam($sName);
-                $sGroup = $aValue['group'];
+                $sName   = $aValue['name'];
+                $sType   = $aValue['type'];
+                $sValue  = is_null($oConfig->getConfigParam($sName)) ? $aValue['value'] : $oConfig->getConfigParam(
+                    $sName
+                );
+                $sGroup  = $aValue['group'];
 
                 $sConstraints = '';
                 if ($aValue['constraints']) {
@@ -294,7 +299,7 @@ class FixHelper
     public function fixEvents()
     {
         $aModuleEvents = $this->getInfo('events');
-        $aEvents = (array)oxRegistry::getConfig()->getConfigParam('aModuleEvents');
+        $aEvents       = (array)Registry::getConfig()->getConfigParam('aModuleEvents');
 
         if (is_array($aEvents)) {
             $aEvents[$this->getModuleId()] = $aModuleEvents;
@@ -323,14 +328,14 @@ class FixHelper
      */
     protected function _mergeModuleArrays($aAllModuleArray, $aAddModuleArray)
     {
-        if ( is_array( $aAllModuleArray ) && is_array( $aAddModuleArray ) ) {
-            foreach ( $aAddModuleArray as $sClass => $aModuleChain ) {
-                if ( !is_array( $aModuleChain ) ) {
-                    $aModuleChain = array( $aModuleChain );
+        if (is_array($aAllModuleArray) && is_array($aAddModuleArray)) {
+            foreach ($aAddModuleArray as $sClass => $aModuleChain) {
+                if (!is_array($aModuleChain)) {
+                    $aModuleChain = array($aModuleChain);
                 }
-                if ( isset( $aAllModuleArray[$sClass] ) ) {
-                    foreach ( $aModuleChain as $sModule ) {
-                        if ( !in_array( $sModule, $aAllModuleArray[$sClass] ) ) {
+                if (isset($aAllModuleArray[$sClass])) {
+                    foreach ($aModuleChain as $sModule) {
+                        if (!in_array($sModule, $aAllModuleArray[$sClass])) {
                             $aAllModuleArray[$sClass][] = $sModule;
                         }
                     }
@@ -346,15 +351,13 @@ class FixHelper
     /**
      * Save module parameters to shop config
      *
-     * @param string $sVariableName config name
-     * @param string $sVariableValue config value
-     * @param string $sVariableType config type
-     *
-     * @return null
+     * @param string       $sVariableName  config name
+     * @param string|array $sVariableValue config value
+     * @param string       $sVariableType  config type
      */
     protected function _saveToConfig($sVariableName, $sVariableValue, $sVariableType = 'aarr')
     {
-        $oConfig = oxRegistry::getConfig();
+        $oConfig = Registry::getConfig();
         $oConfig->setConfigParam($sVariableName, $sVariableValue);
         $oConfig->saveShopConfVar($sVariableType, $sVariableName, $sVariableValue);
     }
