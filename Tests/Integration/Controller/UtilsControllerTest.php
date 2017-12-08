@@ -46,4 +46,23 @@ class UtilsControllerTest extends UnitTestCase
 
         $this->assertTrue(is_a($module, \OxidEsales\Eshop\Core\Module\ModuleInstaller::class));
     }
+
+    /**
+     * Test resetting cache.
+     */
+    public function testResetCache()
+    {
+        $moduleId = 'moduleinternals';
+        $module = oxNew(\OxidEsales\Eshop\Core\Module\Module::class);
+        $module->load($moduleId);
+
+        $moduleCache = $this->getMock(\OxidEsales\Eshop\Core\Module\ModuleCache::class, ['resetCache'], [$module]);
+        $moduleCache->expects($this->any())->method('resetCache');
+
+        $utilsController = $this->getMock(\OxCom\ModuleInternals\Controller\Admin\Utils::class, ['getModuleCache', 'getEditObjectId']);
+        $utilsController->expects($this->any())->method('getEditObjectId')->will($this->returnValue($moduleId));
+        $utilsController->expects($this->any())->method('getModuleCache')->will($this->returnValue($moduleCache));
+
+        $utilsController->reset_cache();
+    }
 }
