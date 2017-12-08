@@ -1,10 +1,12 @@
 <?php
 namespace OxCom\ModuleInternals\Controller\Admin;
 
+use OxCom\ModuleInternals\Core\DataHelper as DataHelper;
+use OxCom\ModuleInternals\Core\FixHelper as FixHelper;
 use OxidEsales\Eshop\Core\Module\ModuleCache as ModuleCache;
 use OxidEsales\Eshop\Core\Module\ModuleList as ModuleList;
-use OxCom\ModuleInternals\Core\FixHelper as FixHelper;
-use OxCom\ModuleInternals\Core\DataHelper as DataHelper;
+use \OxidEsales\Eshop\Core\Module\Module as Module;
+use OxidEsales\EshopCommunity\Tests\Unit\Core\oxModuleUtilsObject;
 
 
 /**
@@ -22,17 +24,17 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
      */
     public $sTemplate = 'state.tpl';
 
-    /** @var oxModule */
+    /** @var Module */
     protected $_oModule;
 
-    /** @var ac_module_internals_data_helper */
+    /** @var DataHelper */
     protected $_oModuleDataProviderHelper;
 
-    /** @var ac_module_internals_fix_helper */
+    /** @var FixHelper */
     protected $_oModuleFixHelper;
 
     /**
-     * @return ac_module_internals_data_helper
+     * @return DataHelper
      */
     public function getModuleDataProviderHelper() {
         if ($this->_oModuleDataProviderHelper === null) {
@@ -43,14 +45,14 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     }
 
     /**
-     * @param ac_module_internals_data_helper $oModuleDataProviderHelper
+     * @param DataHelper $oModuleDataProviderHelper
      */
     public function setModuleDataProviderHelper($oModuleDataProviderHelper) {
         $this->_oModuleDataProviderHelper = $oModuleDataProviderHelper;
     }
 
     /**
-     * @return ac_module_internals_fix_helper
+     * @return FixHelper
      */
     public function getModuleFixHelper() {
         if ($this->_oModuleFixHelper === null) {
@@ -66,7 +68,7 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     }
 
     /**
-     * @param ac_module_internals_fix_helper $oModuleFixHelper
+     * @param FixHelper $oModuleFixHelper
      */
     public function setModuleFixHelper($oModuleFixHelper) {
         $this->_oModuleFixHelper = $oModuleFixHelper;
@@ -75,7 +77,7 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     /**
      * Get active module object.
      *
-     * @return oxModule
+     * @return Module
      */
     public function getModule() {
         if ($this->_oModule === null) {
@@ -83,7 +85,7 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
 
             $this->addTplParam('oxid', $sModuleId);
 
-            /** @var $oModule oxModule */
+            /** @var $oModule Module */
             $this->_oModule = oxNew(ModuleCache::class);
             $this->_oModule->load($sModuleId);
         }
@@ -99,19 +101,25 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     public function render() {
         $oHelper = $this->getModuleDataProviderHelper();
 
+        //valid for all metadata versions
         $this->addTplParam('oxid', $oHelper->getModuleId());
         $this->addTplParam('aExtended', $oHelper->checkExtendedClasses());
         $this->addTplParam('aBlocks', $oHelper->checkTemplateBlocks());
         $this->addTplParam('aSettings', $oHelper->checkModuleSettings());
-        $this->addTplParam('aFiles', $oHelper->checkModuleFiles());
         $this->addTplParam('aTemplates', $oHelper->checkModuleTemplates());
 
+        //valid not for  metadata version 1.*
+        if ($oHelper->isMetadataSupported('1.0') | $oHelper->isMetadataSupported('1.1')) {
+            $this->addTplParam('aFiles', $oHelper->checkModuleFiles());
+        }
+
+        //valid  for  metadata version 1.1 and 2.0
         if ($oHelper->isMetadataSupported('1.1')) {
             $this->addTplParam('aEvents', $oHelper->checkModuleEvents());
             $this->addTplParam('aVersions', $oHelper->checkModuleVersions());
         }
 
-        $this->addTplParam('sState',  array(
+        $this->addTplParam('sState', array(
                 -3 => 'sfatals',
                 -2 => 'sfatalm',
                 -1 => 'serror',
