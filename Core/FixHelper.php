@@ -149,6 +149,9 @@ class FixHelper
             foreach ($aInstalledModules as $sClassName => $mModuleName) {
                 if (is_array($mModuleName)) {
                     foreach ($mModuleName as $sKey => $sModuleName) {
+                        /**
+                         * @todo metadata version 2.0 - version 6 donät have modulepath in classname
+                         */
                         if (strpos($sModuleName, $sModulePath . '/') === 0) {
                             unset($aInstalledModules[$sClassName][$sKey]);
                         }

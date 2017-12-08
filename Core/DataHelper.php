@@ -301,8 +301,14 @@ class DataHelper
             foreach ($aAllModules as $sClassName => $mModuleName) {
                 if (is_array($mModuleName)) {
                     foreach ($mModuleName as $sModuleName) {
-                        if (!isset($aResult[$sClassName][$sModuleName]) && strpos($sModuleName, $sModulePath . '/') === 0) {
-                            $aResult[$sClassName][$sModuleName] = -1;
+                        if (version_compare($this->getMetaDataVersion(), '2.0') == 0) {
+                            if (!isset($aResult[$sClassName][$sModuleName])){
+                                $aResult[$sClassName][$sModuleName] = -1;
+                            }
+                        }else {
+                            if (!isset($aResult[$sClassName][$sModuleName]) && strpos($sModuleName, $sModulePath . '/') === 0) {
+                                $aResult[$sClassName][$sModuleName] = -1;
+                            }
                         }
                     }
                 }
