@@ -4,6 +4,7 @@ namespace OxCom\ModuleInternals\Controller\Admin;
 
 use OxCom\ModuleInternals\Core\DataHelper as DataHelper;
 use OxCom\ModuleInternals\Core\FixHelper as FixHelper;
+use OxidEsales\Eshop\Application\Controller\Admin\AdminController;
 use OxidEsales\Eshop\Core\Module\ModuleCache as ModuleCache;
 use OxidEsales\Eshop\Core\Module\ModuleList as ModuleList;
 use OxidEsales\Eshop\Core\Module\Module as Module;
@@ -17,7 +18,7 @@ use OxidEsales\Eshop\Core\Module\Module as Module;
 /**
  * Module state checker, compares module data across different storage levels (metadata file / database / configuration).
  */
-class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminController
+class State extends AdminController
 {
     /**
      * @var string
@@ -58,7 +59,7 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
      */
     public function getModuleFixHelper()
     {
-        if ($this->_oModuleFixHelper === NULL) {
+        if ($this->_oModuleFixHelper === null) {
             $this->_oModuleFixHelper = oxNew(
                 FixHelper::class,
                 $this->getModule(),
@@ -85,14 +86,14 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
      */
     public function getModule()
     {
-        if ($this->_oModule === NULL) {
+        if ($this->_oModule === null) {
             $sModuleId = $this->getEditObjectId();
 
             $this->addTplParam('oxid', $sModuleId);
 
-            /** @var $oModule Module */
-            $this->_oModule = oxNew(Module::class);
-            $this->_oModule->load($sModuleId);
+            $module = oxNew(Module::class);
+            $module->load($sModuleId);
+            $this->_oModule = $module;
         }
 
         return $this->_oModule;
@@ -125,13 +126,16 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
             $this->addTplParam('aVersions', $oHelper->checkModuleVersions());
         }
 
-        $this->addTplParam('sState', [
-            -3 => 'sfatals',
-            -2 => 'sfatalm',
-            -1 => 'serror',
-            0  => 'swarning',
-            1  => 'sok',
-        ]);
+        $this->addTplParam(
+            'sState',
+            [
+                -3 => 'sfatals',
+                -2 => 'sfatalm',
+                -1 => 'serror',
+                0  => 'swarning',
+                1  => 'sok',
+            ]
+        );
 
         return $this->sTemplate;
     }

@@ -2,7 +2,9 @@
 
 namespace OxCom\ModuleInternals\Tests\Integration\Controller;
 
-class UtilsControllerTest extends \OxidEsales\TestingLibrary\UnitTestCase
+use OxidEsales\TestingLibrary\UnitTestCase;
+
+class UtilsControllerTest extends UnitTestCase
 {
     /**
      * Test module getter.
