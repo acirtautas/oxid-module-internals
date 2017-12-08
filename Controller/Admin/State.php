@@ -1,13 +1,12 @@
 <?php
+
 namespace OxCom\ModuleInternals\Controller\Admin;
 
 use OxCom\ModuleInternals\Core\DataHelper as DataHelper;
 use OxCom\ModuleInternals\Core\FixHelper as FixHelper;
 use OxidEsales\Eshop\Core\Module\ModuleCache as ModuleCache;
 use OxidEsales\Eshop\Core\Module\ModuleList as ModuleList;
-use \OxidEsales\Eshop\Core\Module\Module as Module;
-use OxidEsales\EshopCommunity\Tests\Unit\Core\oxModuleUtilsObject;
-
+use OxidEsales\Eshop\Core\Module\Module as Module;
 
 /**
  * Module internals tools.
@@ -18,7 +17,8 @@ use OxidEsales\EshopCommunity\Tests\Unit\Core\oxModuleUtilsObject;
 /**
  * Module state checker, compares module data across different storage levels (metadata file / database / configuration).
  */
-class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminController {
+class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminController
+{
     /**
      * @var string
      */
@@ -36,8 +36,9 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     /**
      * @return DataHelper
      */
-    public function getModuleDataProviderHelper() {
-        if ($this->_oModuleDataProviderHelper === null) {
+    public function getModuleDataProviderHelper()
+    {
+        if ($this->_oModuleDataProviderHelper === NULL) {
             $this->_oModuleDataProviderHelper = oxNew(DataHelper::class, $this->getModule(), ModuleList::class);
         }
 
@@ -47,20 +48,22 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     /**
      * @param DataHelper $oModuleDataProviderHelper
      */
-    public function setModuleDataProviderHelper($oModuleDataProviderHelper) {
+    public function setModuleDataProviderHelper($oModuleDataProviderHelper)
+    {
         $this->_oModuleDataProviderHelper = $oModuleDataProviderHelper;
     }
 
     /**
      * @return FixHelper
      */
-    public function getModuleFixHelper() {
-        if ($this->_oModuleFixHelper === null) {
+    public function getModuleFixHelper()
+    {
+        if ($this->_oModuleFixHelper === NULL) {
             $this->_oModuleFixHelper = oxNew(
-                    FixHelper::class,
-                    $this->getModule(),
-                    oxNew(ModuleList::class),
-                    oxNew(ModuleCache::class, $this->getModule())
+                FixHelper::class,
+                $this->getModule(),
+                oxNew(ModuleList::class),
+                oxNew(ModuleCache::class, $this->getModule())
             );
         }
 
@@ -70,7 +73,8 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     /**
      * @param FixHelper $oModuleFixHelper
      */
-    public function setModuleFixHelper($oModuleFixHelper) {
+    public function setModuleFixHelper($oModuleFixHelper)
+    {
         $this->_oModuleFixHelper = $oModuleFixHelper;
     }
 
@@ -79,8 +83,9 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
      *
      * @return Module
      */
-    public function getModule() {
-        if ($this->_oModule === null) {
+    public function getModule()
+    {
+        if ($this->_oModule === NULL) {
             $sModuleId = $this->getEditObjectId();
 
             $this->addTplParam('oxid', $sModuleId);
@@ -98,7 +103,8 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
      *
      * @return string
      */
-    public function render() {
+    public function render()
+    {
         $oHelper = $this->getModuleDataProviderHelper();
 
         //valid for all metadata versions
@@ -119,13 +125,13 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
             $this->addTplParam('aVersions', $oHelper->checkModuleVersions());
         }
 
-        $this->addTplParam('sState', array(
-                -3 => 'sfatals',
-                -2 => 'sfatalm',
-                -1 => 'serror',
-                0  => 'swarning',
-                1  => 'sok',
-        ));
+        $this->addTplParam('sState', [
+            -3 => 'sfatals',
+            -2 => 'sfatalm',
+            -1 => 'serror',
+            0  => 'swarning',
+            1  => 'sok',
+        ]);
 
         return $this->sTemplate;
     }
@@ -133,49 +139,56 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     /**
      * Fix module version.
      */
-    public function fix_version() {
+    public function fix_version()
+    {
         $this->getModuleFixHelper()->fixVersion();
     }
 
     /**
      * Fix module extend.
      */
-    public function fix_extend() {
+    public function fix_extend()
+    {
         $this->getModuleFixHelper()->fixExtend();
     }
 
     /**
      * Fix module files.
      */
-    public function fix_files() {
+    public function fix_files()
+    {
         $this->getModuleFixHelper()->fixFiles();
     }
 
     /**
      * Fix module templates.
      */
-    public function fix_templates() {
+    public function fix_templates()
+    {
         $this->getModuleFixHelper()->fixTemplates();
     }
 
     /**
      * Fix module blocks.
      */
-    public function fix_blocks() {
+    public function fix_blocks()
+    {
         $this->getModuleFixHelper()->fixBlocks();
     }
 
     /**
      * Fix module settings.
      */
-    public function fix_settings() {
+    public function fix_settings()
+    {
         $this->getModuleFixHelper()->fixSettings();
     }
 
     /**
      * Fix module events.
      */
-    public function fix_events() {
+    public function fix_events()
+    {
         $this->getModuleFixHelper()->fixEvents();
     }
 }
