@@ -7,7 +7,7 @@ use \OxidEsales\EshopCommunity\Core\Module\Module as Module;
 /**
  * Module internals tools.
  *
- * @author Alfonsas Cirtautas
+ * @author Oxid Community
  */
 
 /**

@@ -4,7 +4,7 @@ namespace OxCom\ModuleInternals\Controller\Admin;
 /**
  * Module internals tools.
  *
- * @author Alfonsas Cirtautas
+ * @author Oxid Community
  */
 
 /**
