@@ -24,8 +24,8 @@ $aModule = array(
     'email'       => '',
     'extend'      => [],
     'controller'  => [
-        'module_internals_metadata' => \OxCom\ModuleInternals\Controller\Admin::class,
-        'module_internals_state'    => \OxCom\ModuleInternals\Controller\State::class,
+        'module_internals_metadata' => \OxCom\ModuleInternals\Controller\Admin\Metadata::class,
+        'module_internals_state'    => \OxCom\ModuleInternals\Controller\Admin\State::class,
         'module_internals_utils'    => \OxCom\ModuleInternals\Controller\Admin\Utils::class
     ],
     'templates'   => [
