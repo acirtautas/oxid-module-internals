@@ -91,7 +91,7 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
             $this->addTplParam('oxid', $sModuleId);
 
             /** @var $oModule Module */
-            $this->_oModule = oxNew(ModuleCache::class);
+            $this->_oModule = oxNew(Module::class);
             $this->_oModule->load($sModuleId);
         }
 
