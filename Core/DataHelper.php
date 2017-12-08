@@ -2,10 +2,10 @@
 
 namespace OxCom\ModuleInternals\Core;
 
-use \OxidEsales\EshopCommunity\Core\Module\Module as Module;
-use \OxidEsales\EshopCommunity\Core\Module\ModuleList as ModuleList;
-use \OxidEsales\EshopCommunity\Core\DatabaseProvider as DatabaseProvider;
-use \OxidEsales\EshopCommunity\Core\Registry as Registry;
+use \OxidEsales\Eshop\Core\Module\Module as Module;
+use \OxidEsales\Eshop\Core\Module\ModuleList as ModuleList;
+use \OxidEsales\Eshop\Core\DatabaseProvider as DatabaseProvider;
+use \OxidEsales\Eshop\Core\Registry as Registry;
 
 /**
  * Module internals tools.

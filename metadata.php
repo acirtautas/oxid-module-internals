@@ -7,11 +7,11 @@
 
 $sMetadataVersion = '2.0';
 
-$aModule = array(
-    'id'          => 'moduleinternals',
-    'title'       => [
+$aModule = [
+    'id'    => 'moduleinternals',
+    'title' => [
         'de' => 'Module Internals',
-        'en' => 'Module Internals'
+        'en' => 'Module Internals',
     ],
     'description' => [
         'en' => 'Internal OXID eShop module system information and troubleshooting tools (V6).',
@@ -24,9 +24,9 @@ $aModule = array(
     'email'       => '',
     'extend'      => [],
     'controllers'  => [
-        'module_internals_metadata' => \OxCom\ModuleInternals\Controller\Admin\Metadata::class,
-        'module_internals_state'    => \OxCom\ModuleInternals\Controller\Admin\State::class,
-        'module_internals_utils'    => \OxCom\ModuleInternals\Controller\Admin\Utils::class
+        'module_internals_metadata' => OxCom\ModuleInternals\Controller\Admin\Metadata::class,
+        'module_internals_state'    => OxCom\ModuleInternals\Controller\Admin\State::class,
+        'module_internals_utils'    => OxCom\ModuleInternals\Controller\Admin\Utils::class
     ],
     'templates'   => [
         'metadata.tpl' => 'OxCom/moduleinternals/views/admin/tpl/metadata.tpl',
@@ -36,6 +36,6 @@ $aModule = array(
     'blocks'      => [],
     'settings'    => [],
     'events'      => [],
-);
+];
 
 

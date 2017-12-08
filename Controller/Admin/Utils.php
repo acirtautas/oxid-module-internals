@@ -2,9 +2,9 @@
 
 namespace OxCom\ModuleInternals\Controller\Admin;
 
-use \OxidEsales\EshopCommunity\Core\Module\Module as Module;
-use \OxidEsales\EshopCommunity\Core\Module\ModuleCache as ModuleCache;
-use \OxidEsales\EshopCommunity\Core\Module\ModuleInstaller as ModuleInstaller;
+use \OxidEsales\Eshop\Core\Module\Module as Module;
+use \OxidEsales\Eshop\Core\Module\ModuleCache as ModuleCache;
+use \OxidEsales\Eshop\Core\Module\ModuleInstaller as ModuleInstaller;
 
 /**
  * Module internals tools.

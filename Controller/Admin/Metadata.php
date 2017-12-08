@@ -3,7 +3,7 @@
 namespace OxCom\ModuleInternals\Controller\Admin;
 
 use OxidEsales\Eshop\Application\Controller\Admin\AdminController;
-use OxidEsales\EshopCommunity\Core\Module\Module as Module;
+use OxidEsales\Eshop\Core\Module\Module as Module;
 
 /**
  * Module internals tools.
