@@ -17,7 +17,7 @@ class State extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     /**
      * @var string
      */
-    public $sTemplate = 'ac_module_internals_state.tpl';
+    public $sTemplate = 'state.tpl';
 
     /** @var oxModule */
     protected $_oModule;

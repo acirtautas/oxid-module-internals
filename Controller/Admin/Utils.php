@@ -1,5 +1,8 @@
 <?php
+
 namespace OxCom\ModuleInternals\Controller\Admin;
+
+use \OxidEsales\EshopCommunity\Core\Module\Module as Module;
 
 /**
  * Module internals tools.
@@ -24,7 +27,7 @@ class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     /**
      * @var string
      */
-    public $sTemplate = 'ac_module_internals_utils.tpl';
+    public $sTemplate = 'utils.tpl';
 
     /**
      * Get active module object.
@@ -33,11 +36,11 @@ class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
      */
     public function getModule()
     {
-        if($this->_oModule === null) {
+        if ($this->_oModule === NULL) {
             $sModuleId = $this->getEditObjectId();
 
             $this->_aViewData['oxid'] = $sModuleId;
-            $this->_oModule = oxNew('oxModule');
+            $this->_oModule = oxNew(Module::class);
             $this->_oModule->load($sModuleId);
         }
 
@@ -51,7 +54,7 @@ class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
      */
     public function getModuleCache()
     {
-        if($this->_oModuleCache === null) {
+        if ($this->_oModuleCache === NULL) {
             $this->_oModuleCache = oxNew('oxModuleCache', $this->getModule());
         }
 
@@ -65,7 +68,7 @@ class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
      */
     public function getModuleInstaller()
     {
-        if($this->_oModuleInstaller === null) {
+        if ($this->_oModuleInstaller === NULL) {
             $this->_oModuleInstaller = oxNew('oxModuleInstaller', $this->getModuleCache());
         }
 
@@ -77,10 +80,10 @@ class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
      */
     public function render()
     {
-        $oModule   = $this->getModule();
+        $oModule = $this->getModule();
         $sModuleId = $oModule->getId();
 
-        $this->_aViewData['oxid']       = $sModuleId;
+        $this->_aViewData['oxid'] = $sModuleId;
         $this->_aViewData['blIsActive'] = $oModule->isActive();
 
         return $this->sTemplate;
