@@ -19,4 +19,10 @@ Functionality:
 
 Compatibility:
 
- * Requires OXID eShop CE|PE 4.9 & EE 5.2
+ * Requires OXID eShop V6
+ 
+Ideas:
+
+ * Consistency check for namespaces, if namespace is not registered or wrongly spelled in some classes
+ * Check for usage of unified namespaces
+   
