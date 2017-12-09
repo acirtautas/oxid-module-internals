@@ -35,9 +35,9 @@ class Metadata extends AdminController
         $oModule->load($sModuleId);
 
         if ($oModule->hasMetadata()) {
-            $sModulePath   = $oModule->getModulePath($sModuleId);
+            $sModulePath = $oModule->getModulePath($sModuleId);
             $sMetadataPath = $this->getConfig()->getModulesDir() . $sModulePath . "/metadata.php";
-            $sRawMetadata  = highlight_file($sMetadataPath, 1);
+            $sRawMetadata = highlight_file($sMetadataPath, 1);
             $this->addTplParam('sRawMetadata', $sRawMetadata);
         }
 
