@@ -109,7 +109,7 @@ class Module extends Module_parent
      * @param string $sExtention
      * @return bool
      */
-    public function checkFileExists($sModulesDir, $sClassName, $sExtention = '.php')
+    public function checkFileExists($sModulesDir = NULL, $sClassName, $sExtention = '.php')
     {
         if ($this->checkMetadataVersion('2.0')) {
             $composerClassLoader = include VENDOR_PATH . 'autoload.php';
@@ -428,30 +428,21 @@ class Module extends Module_parent
      * @param $aDatabaseFiles
      * @return array
      */
-    public function checkModuleFileConsistency($aMetadataFiles, $aDatabaseFiles){
-        $sModulesDir = Registry::getConfig()->getModulesDir();
+    public function checkModuleFileConsistency($aMetadataFiles, $aDatabaseFiles)
+    {
         $aResult = [];
 
         // Check if all module files are injected.
         if (is_array($aMetadataFiles)) {
-            if (!$this->checkMetadataVersion('2.0'))
+            if (!$this->checkMetadataVersion('2.0')) {
                 $aMetadataFiles = array_change_key_case($aMetadataFiles, CASE_LOWER);
+                $sModulesDir = Registry::getConfig()->getModulesDir();
+            }
             foreach ($aMetadataFiles as $sClass => $sFile) {
                 $aResult[$sClass][$sFile] = 0;
-
-                /**
-                 * @todo refactor file check - $this->checkFileExists()
-                 */
-                if ($this->checkMetadataVersion('2.0')) {
-                    $composerClassLoader = include VENDOR_PATH . 'autoload.php';
-                    if (!$composerClassLoader->findFile($sFile)) {
-                        $aResult[$sClass][$sFile] = -2;
-                    }
-                } else {
-                    if (!file_exists($sModulesDir . '/' . $sFile)) {
-                        $aResult[$sClass][$sFile] = -2;
-                    }
-                }
+                
+                if (!$this->checkFileExists($sModulesDir, $sFile, null))
+                    $aResult[$sClass][$sFile] = -2;
             }
         }
 
@@ -469,7 +460,7 @@ class Module extends Module_parent
                             @$aResult[$sClass][$sFile] = -2;
                         }
                     } else {
-                        if (!file_exists($sModulesDir . '/' . $sFile)) {
+                        if (!file_exists($sModulesDir . $sFile)) {
                             @$aResult[$sClass][$sFile] = -3;
                         }
                     }
