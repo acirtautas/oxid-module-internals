@@ -1,4 +1,5 @@
 <?php
+
 namespace OxCom\ModuleInternals\Core;
 
 use \OxidEsales\Eshop\Core\DatabaseProvider as DatabaseProvider;
@@ -7,7 +8,7 @@ use \OxidEsales\Eshop\Core\Module\ModuleList as ModuleList;
 
 /**
  * Class Metadata
- * extendeing OxidEsales\Eshop\Core\Module\Module as Module
+ * extending OxidEsales\Eshop\Core\Module\Module as Module
  */
 class Module extends Module_parent
 {
@@ -69,7 +70,8 @@ class Module extends Module_parent
      * @param $sVersion
      * @return bool
      */
-    public function checkMetadataVersion($sVersion){
+    public function checkMetadataVersion($sVersion)
+    {
         return version_compare($this->getMetaDataVersion(), $sVersion) == 0;
     }
 
@@ -100,24 +102,27 @@ class Module extends Module_parent
     /**
      * checks if module file exists on directory
      * switches between metadata version for checking
+     * checks also for namespace class if metadata version = 2.0
      *
-     * @param $sModulesDir
-     * @param $sModuleName
+     * @param string $sModulesDir
+     * @param string $sClassName
+     * @param string $sExtention
      * @return bool
      */
-    public function checkFileExists($sModulesDir, $sModuleName)
+    public function checkFileExists($sModulesDir, $sClassName, $sExtention = '.php')
     {
         if ($this->checkMetadataVersion('2.0')) {
             $composerClassLoader = include VENDOR_PATH . 'autoload.php';
 
-            return $composerClassLoader->findFile($sModuleName);
+            return $composerClassLoader->findFile($sClassName);
         } else {
-            return file_exists($sModulesDir . $sModuleName . ".php");
+            return file_exists($sModulesDir . $sClassName . $sExtention);
         }
     }
 
     /**
-     * Analyze versions in metadata ans settings.
+     * Analyze versions in metadata
+     * checks if metadata version is same as database entry for metadata
      *
      * @return array
      */
@@ -195,6 +200,9 @@ class Module extends Module_parent
             foreach ($aAllModules as $sClassName => $mModuleName) {
                 if (is_array($mModuleName)) {
                     foreach ($mModuleName as $sModuleName) {
+                        /**
+                         * we don't need to check for filesystem directory - we only use namespaces in version 2.0
+                         */
                         if ($this->checkMetadataVersion('2.0')) {
                             if (!isset($aResult[$sClassName][$sModuleName])) {
                                 $aResult[$sClassName][$sModuleName] = -1;
@@ -389,49 +397,7 @@ class Module extends Module_parent
     }
 
     /**
-     * Analyze files in metadata ans settings.
-     *
-     * @return array
-     */
-    public function checkModuleFiles()
-    {
-        $aMetadataFiles = $this->getInfo('files');
-        $aDatabaseFiles = $this->getModuleEntries(ModuleList::MODULE_KEY_FILES);
-
-        $sModulesDir = Registry::getConfig()->getModulesDir();
-
-        $aResult = [];
-
-        // Check if all module files are injected.
-        if (is_array($aMetadataFiles)) {
-            $aMetadataFiles = array_change_key_case($aMetadataFiles, CASE_LOWER);
-            foreach ($aMetadataFiles as $sClass => $sFile) {
-                $aResult[$sClass][$sFile] = 0;
-                if (!file_exists($sModulesDir . '/' . $sFile)) {
-                    $aResult[$sClass][$sFile] = -2;
-                }
-            }
-        }
-
-        // Check for redundant or missing module files
-        if (is_array($aDatabaseFiles)) {
-            foreach ($aDatabaseFiles as $sClass => $sFile) {
-                if (!isset($aResult[$sClass][$sFile])) {
-                    @$aResult[$sClass][$sFile] = -1;
-                    if (!file_exists($sModulesDir . '/' . $sFile)) {
-                        @$aResult[$sClass][$sFile] = -3;
-                    }
-                } elseif ($aResult[$sClass][$sFile] == 0) {
-                    @$aResult[$sClass][$sFile] = 1;
-                }
-            }
-        }
-
-        return $aResult;
-    }
-
-    /**
-     * Analyze controller in metadata ans settings.
+     * Analyze controller in metadata
      *
      * @return array
      */
@@ -440,8 +406,30 @@ class Module extends Module_parent
         $aMetadataFiles = $this->getInfo('controllers');
         $aDatabaseFiles = $this->getModuleEntries(ModuleList::MODULE_KEY_CONTROLLERS);
 
-        $sModulesDir = Registry::getConfig()->getModulesDir();
+        return $this->checkModuleFileConsistency($aMetadataFiles, $aDatabaseFiles);
+    }
 
+    /**
+     * Analyze file in metadata
+     *
+     * @return array
+     */
+    public function checkModuleFiles()
+    {
+        $aMetadataFiles = $this->getInfo('files');
+        $aDatabaseFiles = $this->getModuleEntries(ModuleList::MODULE_KEY_FILES);
+
+        return $this->checkModuleFileConsistency($aMetadataFiles, $aDatabaseFiles);
+    }
+
+    /**
+     * checks for database entries and filesystem check
+     * @param $aMetadataFiles
+     * @param $aDatabaseFiles
+     * @return array
+     */
+    public function checkModuleFileConsistency($aMetadataFiles, $aDatabaseFiles){
+        $sModulesDir = Registry::getConfig()->getModulesDir();
         $aResult = [];
 
         // Check if all module files are injected.
@@ -472,6 +460,9 @@ class Module extends Module_parent
             foreach ($aDatabaseFiles as $sClass => $sFile) {
                 if (!isset($aResult[$sClass][$sFile])) {
                     @$aResult[$sClass][$sFile] = -1;
+                    /**
+                     * @todo update to $this->checkFileExists()
+                     */
                     if ($this->checkMetadataVersion('2.0')) {
                         $composerClassLoader = include VENDOR_PATH . 'autoload.php';
                         if (!$composerClassLoader->findFile($sFile)) {

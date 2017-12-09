@@ -44,14 +44,6 @@ class State extends AdminController
     }
 
     /**
-     * @param DataHelper $oModuleDataProviderHelper
-     */
-    public function setModuleDataProviderHelper($oModuleDataProviderHelper)
-    {
-        $this->_oModuleDataProviderHelper = $oModuleDataProviderHelper;
-    }
-
-    /**
      * @return FixHelper
      */
     public function getModuleFixHelper()
