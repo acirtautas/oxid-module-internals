@@ -5,41 +5,41 @@
  * @author Alfonsas Cirtautas
  */
 
-$sLangName = "FranÁais";
+$sLangName = "Fran√ßais";
 
 $aLang = array(
     'charset' => 'UTF-8',
 
-    'tbclmodule_internals_metadata' => 'MÈtadonnÈes',
+    'tbclmodule_internals_metadata' => 'M√©tadonn√©es',
     'tbclmodule_internals_state'    => 'Etat',
     'tbclmodule_internals_utils'    => 'Outils',
 
     'AC_MI_VERSION'    => 'Version',
-    'AC_MI_EXTEND'     => 'Classes Ètendues',
+    'AC_MI_EXTEND'     => 'Classes √©tendues',
     'AC_MI_FILES'      => 'Fichiers',
     'AC_MI_BLOCKS'     => 'Blocs de Template',
     'AC_MI_TEMPLATES'  => 'Templates',
-    'AC_MI_SETTINGS'   => 'ParamËtres',
-    'AC_MI_EVENTS'     => 'EvËnements',
+    'AC_MI_SETTINGS'   => 'Param√®tres',
+    'AC_MI_EVENTS'     => 'Ev√®nements',
     'AC_MI_CACHE'      => 'Cache du module',
-    'AC_MI_ACTIVATION' => 'Activer / DÈsactiver le module',
+    'AC_MI_ACTIVATION' => 'Activer / D√©sactiver le module',
     'AC_MI_CONTROLLER' => 'Module Controller',
 
-    'AC_MI_FIXBTN'         => 'RÈparer',
-    'AC_MI_RESETBTN'       => 'RÈinitialiser',
+    'AC_MI_FIXBTN'         => 'R√©parer',
+    'AC_MI_RESETBTN'       => 'R√©initialiser',
     'AC_MI_ACTIVATEBTN'    => 'Activer',
-    'AC_MI_DEACTIVATEBTN'  => 'DÈsactiver',
+    'AC_MI_DEACTIVATEBTN'  => 'D√©sactiver',
 
-    'AC_LEGEND' => 'LÈgende',
+    'AC_LEGEND' => 'L√©gende',
     'AC_STATE_OK'  => 'OK',
     'AC_STATE_WA'  => 'Attention',
     'AC_STATE_ER'  => 'Erreur',
     'AC_STATE_FM'  => 'Fatal M',
     'AC_STATE_FS'  => 'Fatal S',
 
-    'AC_STATE_OK_LABEL'  => 'Les mÈtadonnÈes correspondent aux donnÈes enregistrÈes dans la boutique',
-    'AC_STATE_WA_LABEL'  => 'Les mÈtadonnÈes manquent dans la boutique',
-    'AC_STATE_ER_LABEL'  => 'Les donnÈes de la boutique n\'ont pas ÈtÈ trouvÈes dans les mÈtadonnÈes',
-    'AC_STATE_FM_LABEL'  => 'Les Fichiers dÈfinis dans les mÈtadonnÈes n\'existent pas',
-    'AC_STATE_FS_LABEL'  => 'Les fichiers dÈfinis dans la boutique n\'existent pas'
+    'AC_STATE_OK_LABEL'  => 'Les m√©tadonn√©es correspondent aux donn√©es enregistr√©es dans la boutique',
+    'AC_STATE_WA_LABEL'  => 'Les m√©tadonn√©es manquent dans la boutique',
+    'AC_STATE_ER_LABEL'  => 'Les donn√©es de la boutique n\'ont pas √©t√© trouv√©es dans les m√©tadonn√©es',
+    'AC_STATE_FM_LABEL'  => 'Les Fichiers d√©finis dans les m√©tadonn√©es n\'existent pas',
+    'AC_STATE_FS_LABEL'  => 'Les fichiers d√©finis dans la boutique n\'existent pas'
 );
