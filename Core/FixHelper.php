@@ -9,7 +9,7 @@ use OxidEsales\Eshop\Core\Module\ModuleList;
 use OxidEsales\Eshop\Core\Registry;
 
 /**
- * Class ac_module_internals_helper
+ * Class module_internals_helper
  *
  * Fix helper service: fix module states and configuration.
  */
