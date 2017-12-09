@@ -96,4 +96,51 @@ class Module extends Module_parent
 
         return $aReturn;
     }
+
+    /**
+     * checks if module file exists on directory
+     * switches between metadata version for checking
+     *
+     * @param $sModulesDir
+     * @param $sModuleName
+     * @return bool
+     */
+    public function checkFileExists($sModulesDir, $sModuleName)
+    {
+        if ($this->checkMetadataVersion('2.0')) {
+            $composerClassLoader = include VENDOR_PATH . 'autoload.php';
+
+            return $composerClassLoader->findFile($sModuleName);
+        } else {
+            return file_exists($sModulesDir . $sModuleName . ".php");
+        }
+    }
+
+    /**
+     * Analyze versions in metadata ans settings.
+     *
+     * @return array
+     */
+    public function checkModuleVersions()
+    {
+        $sMetadataVersion = $this->getInfo('version');
+        $sDatabaseVersion = $this->getModuleEntries(ModuleList::MODULE_KEY_VERSIONS);
+
+        $aResult = [];
+
+        // Check version..
+        if ($sMetadataVersion) {
+            $aResult[$sMetadataVersion] = 0;
+        }
+
+        // Check for versions match injected.
+        if ($sDatabaseVersion) {
+            if (isset($aResult[$sDatabaseVersion]))
+                return true;
+            else
+                return false;
+        }
+
+        return $aResult;
+    }
 }

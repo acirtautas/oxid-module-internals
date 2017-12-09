@@ -118,7 +118,7 @@ class State extends AdminController
         //valid  for  metadata version 1.1 and 2.0
         if ($this->getModule()->checkMetadataVersion('1.1') || $this->getModule()->checkMetadataVersion('2.0')) {
             $this->addTplParam('aEvents', $this->checkModuleEvents());
-            $this->addTplParam('aVersions', $this->checkModuleVersions());
+            $this->addTplParam('aVersions', $this->checkModuleVersions() ? 1 : -1 );
         }
 
         /**
@@ -237,7 +237,7 @@ class State extends AdminController
                     }
                 }
 
-                if ($this->checkFileExists($sModulesDir, $sModuleName))
+                if ($oModule->checkFileExists($sModulesDir, $sModuleName))
                     $aResult[$sClassName][$sModuleName] = $iState;
                 else
                     $aResult[$sClassName][$sModuleName] = -2; // class sfatalm
@@ -464,12 +464,12 @@ class State extends AdminController
 
         // Check if all module files are injected.
         if (is_array($aMetadataFiles)) {
-            if (version_compare($this->getMetaDataVersion(), '2.0') != 0)
+            if (!$oModule->checkMetadataVersion('2.0'))
                 $aMetadataFiles = array_change_key_case($aMetadataFiles, CASE_LOWER);
             foreach ($aMetadataFiles as $sClass => $sFile) {
                 $aResult[$sClass][$sFile] = 0;
 
-                if (version_compare($this->getMetaDataVersion(), '2.0') == 0) {
+                if ($oModule->checkMetadataVersion('2.0')) {
                     $composerClassLoader = include VENDOR_PATH . 'autoload.php';
                     if (!$composerClassLoader->findFile($sFile)) {
                         $aResult[$sClass][$sFile] = -2;
@@ -487,7 +487,7 @@ class State extends AdminController
             foreach ($aDatabaseFiles as $sClass => $sFile) {
                 if (!isset($aResult[$sClass][$sFile])) {
                     @$aResult[$sClass][$sFile] = -1;
-                    if (version_compare($this->getMetaDataVersion(), '2.0') == 0) {
+                    if ($oModule->checkMetadataVersion('2.0')) {
                         $composerClassLoader = include VENDOR_PATH . 'autoload.php';
                         if (!$composerClassLoader->findFile($sFile)) {
                             @$aResult[$sClass][$sFile] = -2;
@@ -585,56 +585,5 @@ class State extends AdminController
         }
 
         return $aResult;
-    }
-
-    /**
-     * Analyze versions in metadata ans settings.
-     *
-     * @return array
-     */
-    public function checkModuleVersions()
-    {
-        $oModule = $this->getModule();
-
-        $sMetadataVersion = $oModule->getInfo('version');
-        $sDatabaseVersion = $oModule->getModuleEntries(ModuleList::MODULE_KEY_VERSIONS);
-
-        $aResult = [];
-
-        // Check version..
-        if ($sMetadataVersion) {
-            $aResult[$sMetadataVersion] = 0;
-        }
-
-        // Check for versions match injected.
-        if ($sDatabaseVersion) {
-
-            if (!isset($aResult[$sDatabaseVersion])) {
-                $aResult[$sDatabaseVersion] = -1;
-            } else {
-                $aResult[$sDatabaseVersion] = 1;
-            }
-        }
-
-        return $aResult;
-    }
-
-    /**
-     * checks if module file exists on directory
-     * switches between metadata version for checking
-     *
-     * @param $sModulesDir
-     * @param $sModuleName
-     * @return bool
-     */
-    public function checkFileExists($sModulesDir, $sModuleName)
-    {
-        if ($this->getModule()->checkMetadataVersion('2.0')) {
-            $composerClassLoader = include VENDOR_PATH . 'autoload.php';
-
-            return $composerClassLoader->findFile($sModuleName);
-        } else {
-            return file_exists($sModulesDir . $sModuleName . ".php");
-        }
     }
 }
