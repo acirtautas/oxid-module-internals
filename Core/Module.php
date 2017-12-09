@@ -204,7 +204,8 @@ class Module extends Module_parent
                          * we don't need to check for filesystem directory - we only use namespaces in version 2.0
                          */
                         if ($this->checkMetadataVersion('2.0')) {
-                            if (!isset($aResult[$sClassName][$sModuleName])) {
+                            $moduleNameSpace = $this->getModuleNameSpace($sModulePath);
+                            if (!isset($aResult[$sClassName][$sModuleName]) && strpos($sModuleName ,$moduleNameSpace) === 0) {
                                 $aResult[$sClassName][$sModuleName] = -1;
                             }
                         } else {
@@ -440,7 +441,7 @@ class Module extends Module_parent
             }
             foreach ($aMetadataFiles as $sClass => $sFile) {
                 $aResult[$sClass][$sFile] = 0;
-                
+
                 if (!$this->checkFileExists($sModulesDir, $sFile, null))
                     $aResult[$sClass][$sFile] = -2;
             }
@@ -506,5 +507,27 @@ class Module extends Module_parent
         }
 
         return $aResult;
+    }
+
+    /**
+     * @param string $sModulePath
+     *
+     * @return string
+     */
+    public function getModuleNameSpace($sModulePath)
+    {
+        $moduleNameSpace = '';
+        $composerClassLoader = include VENDOR_PATH . 'autoload.php';
+        $nameSpacePrefixes   = $composerClassLoader->getPrefixesPsr4();
+        foreach ($nameSpacePrefixes as $nameSpacePrefix => $paths) {
+            foreach ($paths as $path) {
+                if (strpos($path, $sModulePath) !== false) {
+                    $moduleNameSpace = $nameSpacePrefix;
+                    return $moduleNameSpace;
+                }
+            }
+        }
+
+        return $moduleNameSpace;
     }
 }

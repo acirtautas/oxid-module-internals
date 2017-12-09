@@ -34,8 +34,7 @@ class FixHelperTest extends UnitTestCase
      */
     public function testFixExtend( )
     {
-        $moduleId = 'moduleinternals';
-        $this->setConfigParam('aModuleExtend', ['a' => 'b']);
+        $moduleId = 'cleartmp';
         $fixHelper = $this->createFixHelper($moduleId);
 
         $fixHelper->fixExtend();

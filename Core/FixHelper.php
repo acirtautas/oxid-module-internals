@@ -139,31 +139,20 @@ class FixHelper
      */
     public function fixExtend()
     {
-        $aExtend           = $this->getInfo('extend');
-        $aInstalledModules = Registry::getConfig()->getModulesWithExtendedClass();
+        $aExtendedClassesOfModule = $this->getInfo('extend');
+        $aInstalledModules        = Registry::getConfig()->getModulesWithExtendedClass();
 
         $sModulePath = $this->getModulePath();
 
         // Remove extended modules by path
         if ($sModulePath && is_array($aInstalledModules)) {
-            foreach ($aInstalledModules as $sClassName => $mModuleName) {
-                if (is_array($mModuleName)) {
-                    foreach ($mModuleName as $sKey => $sModuleName) {
-                        /**
-                         * @todo metadata version 2.0 - version 6 donät have modulepath in classname
-                         */
-                        if (strpos($sModuleName, $sModulePath . '/') === 0) {
-                            unset($aInstalledModules[$sClassName][$sKey]);
-                        }
-                    }
-                }
-            }
+            $aModules = $this->removeExtendedClassesOfModule($aInstalledModules, $sModulePath);
         }
 
-        $aModules = $this->_mergeModuleArrays($aInstalledModules, $aExtend);
-        $aModules = $this->getModuleList()->buildModuleChains($aModules);
+        $aModules      = $this->_mergeModuleArrays($aInstalledModules, $aExtendedClassesOfModule);
+        $aModuleChains = $this->getModuleList()->buildModuleChains($aModules);
 
-        $this->_saveToConfig('aModules', $aModules);
+        $this->_saveToConfig('aModules', $aModuleChains);
         $this->_clearCache();
     }
 
@@ -364,4 +353,33 @@ class FixHelper
         $oConfig->setConfigParam($sVariableName, $sVariableValue);
         $oConfig->saveShopConfVar($sVariableType, $sVariableName, $sVariableValue);
     }
+
+    /**
+     * @param $aInstalledModules
+     * @param $sModulePath
+     *
+     * @return mixed
+     */
+    protected function removeExtendedClassesOfModule($aInstalledModules, $sModulePath)
+    {
+        foreach ($aInstalledModules as $shopClassName => $mModuleClassNames) {
+            if (is_array($mModuleClassNames)) {
+                foreach ($mModuleClassNames as $sKey => $sModuleClassName) {
+                    if ($this->getModule()->checkMetaDataVersion('2.0')) {
+                        $moduleNameSpace = $this->getModule()->getModuleNameSpace($sModulePath);
+                        if (strpos($sModuleClassName, $moduleNameSpace) !== false) {
+                            unset($aInstalledModules[$shopClassName][$sKey]);
+                        }
+                    } else {
+                        if (strpos($sModuleClassName, $sModulePath . '/') === 0) {
+                            unset($aInstalledModules[$shopClassName][$sKey]);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $aInstalledModules;
+    }
+
 }
