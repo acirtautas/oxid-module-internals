@@ -1,0 +1,27 @@
+{
+    "name": "oxcom/ModuleInternals",
+    "description": "Display module internals",
+    "type": "oxideshop-module",
+
+    "minimum-stability": "dev",
+    "require": {
+        "composer/installers": "~1.0"
+    },
+    "keywords": ["oxid", "modules", "eShop", "tmp"],
+    "homepage": "https://www.oxid-esales.com/en/home.html",
+    "license": [
+        "GPL-3.0",
+        "proprietary"
+    ],
+    "extra": {
+        "oxideshop": {
+            "target-directory": "OxCom/moduleinternals"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "OxCom\\ModuleInternals\\": "../../../source/modules/oxcom/moduleinternals"
+        }
+    }
+}
+

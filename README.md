@@ -19,5 +19,10 @@ Functionality:
 
 Compatibility:
 
- * Requires OXID eShop CE|PE|EE 4.6 for metadata v1.0
- * Requires OXID eShop CE|PE 4.7 & EE 5.0 for metadata v1.1
+ * Requires OXID eShop V6
+ 
+Ideas:
+
+ * Consistency check for namespaces, if namespace is not registered or wrongly spelled in some classes
+ * Check for usage of unified namespaces
+   

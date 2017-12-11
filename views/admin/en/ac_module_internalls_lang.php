@@ -8,7 +8,7 @@
 $sLangName = "English";
 
 $aLang = array(
-    'charset' => 'ISO-8859-15',
+    'charset' => 'UTF-8',
 
     'tbclmodule_internals_metadata' => 'Metadata',
     'tbclmodule_internals_state'    => 'State',
@@ -23,6 +23,7 @@ $aLang = array(
     'AC_MI_EVENTS'     => 'Events',
     'AC_MI_CACHE'      => 'Module cache',
     'AC_MI_ACTIVATION' => 'Module Activation / Deactivation',
+    'AC_MI_CONTROLLER' => 'Modul Controller',
 
     'AC_MI_FIXBTN'         => 'Fix',
     'AC_MI_RESETBTN'       => 'Reset',

@@ -23,6 +23,7 @@ $aLang = array(
     'AC_MI_EVENTS'     => 'События',
     'AC_MI_CACHE'      => 'Кэш-модулья',
     'AC_MI_ACTIVATION' => 'Активация / Деактивация модулья',
+    'AC_MI_CONTROLLER' => 'unknown',
 
     'AC_MI_FIXBTN'         => 'Чинить',
     'AC_MI_RESETBTN'       => 'Сбросить',

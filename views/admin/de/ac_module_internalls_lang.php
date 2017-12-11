@@ -8,7 +8,7 @@
 $sLangName = "Deutsch";
 
 $aLang = array(
-    'charset' => 'ISO-8859-15',
+    'charset' => 'UTF-8',
 
     'tbclmodule_internals_metadata' => 'Metadaten',
     'tbclmodule_internals_state'    => 'Status',
@@ -17,15 +17,16 @@ $aLang = array(
     'AC_MI_VERSION'    => 'Version',
     'AC_MI_EXTEND'     => 'Erweiterte Klassen',
     'AC_MI_FILES'      => 'Dateien',
-    'AC_MI_BLOCKS'     => 'Template-Blöcke',
+    'AC_MI_BLOCKS'     => 'Template-BlÃ¶cke',
     'AC_MI_TEMPLATES'  => 'Templates',
     'AC_MI_SETTINGS'   => 'Optionen',
     'AC_MI_EVENTS'     => 'Ereignisse',
     'AC_MI_CACHE'      => 'Modul Cache',
     'AC_MI_ACTIVATION' => 'Modul-Aktivierung/-Deaktivierung',
+    'AC_MI_CONTROLLER' => 'Modul Controller',
 
     'AC_MI_FIXBTN'         => 'Fix',
-    'AC_MI_RESETBTN'       => 'Zurücksetzen',
+    'AC_MI_RESETBTN'       => 'ZurÃ¼cksetzen',
     'AC_MI_ACTIVATEBTN'    => 'Aktivieren',
     'AC_MI_DEACTIVATEBTN'  => 'Deaktivieren',
 
