@@ -14,8 +14,8 @@ $sMetadataVersion = '2.0';
 $aModule = [
     'id'          => 'moduleinternals',
     'title'       => [
-        'de' => 'OXID Community module internals (by Alfonsas Cirtautas)',
-        'en' => 'OXID Community module internals (by Alfonsas Cirtautas)',
+        'de' => 'OXID Community Module Internals (by Alfonsas Cirtautas)',
+        'en' => 'OXID Community Module Internals (by Alfonsas Cirtautas)',
     ],
     'description' => [
         'en' => 'Internal OXID eShop module system information and troubleshooting tools (V6).',
@@ -27,17 +27,17 @@ $aModule = [
     'url'         => 'https://github.com/OXIDprojects/oxid-module-internals',
     'email'       => '',
     'extend'      => [
-        OxidEsales\Eshop\Core\Module\Module::class => OxidCommunity\ModuleInternals\Core\Module::class,
+        \OxidEsales\Eshop\Core\Module\Module::class => \OxidCommunity\ModuleInternals\Core\Module::class,
     ],
     'controllers' => [
-        'module_internals_metadata' => OxidCommunity\ModuleInternals\Controller\Admin\Metadata::class,
-        'module_internals_state'    => OxidCommunity\ModuleInternals\Controller\Admin\State::class,
-        'module_internals_utils'    => OxidCommunity\ModuleInternals\Controller\Admin\Utils::class,
+        'module_internals_metadata' => \OxidCommunity\ModuleInternals\Controller\Admin\Metadata::class,
+        'module_internals_state'    => \OxidCommunity\ModuleInternals\Controller\Admin\State::class,
+        'module_internals_utils'    => \OxidCommunity\ModuleInternals\Controller\Admin\Utils::class,
     ],
     'templates'   => [
-        'metadata.tpl' => 'OxidCommunity/moduleinternals/views/admin/tpl/metadata.tpl',
-        'state.tpl'    => 'OxidCommunity/moduleinternals/views/admin/tpl/state.tpl',
-        'utils.tpl'    => 'OxidCommunity/moduleinternals/views/admin/tpl/utils.tpl',
+        'metadata.tpl' => 'oxcom/moduleinternals/views/admin/tpl/metadata.tpl',
+        'state.tpl'    => 'oxcom/moduleinternals/views/admin/tpl/state.tpl',
+        'utils.tpl'    => 'oxcom/moduleinternals/views/admin/tpl/utils.tpl',
     ],
 ];
 
