@@ -14,8 +14,8 @@ $sMetadataVersion = '2.0';
 $aModule = [
     'id'          => 'moduleinternals',
     'title'       => [
-        'de' => 'OXID module internals (by Alfonsas Cirtautas)',
-        'en' => 'OXID module internals (by Alfonsas Cirtautas)',
+        'de' => 'OXID Community module internals (by Alfonsas Cirtautas)',
+        'en' => 'OXID Community module internals (by Alfonsas Cirtautas)',
     ],
     'description' => [
         'en' => 'Internal OXID eShop module system information and troubleshooting tools (V6).',
