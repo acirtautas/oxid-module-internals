@@ -1,8 +1,12 @@
 <?php
 /**
- * Module internals tools.
- *
- * @author Alfonsas Cirtautas
+ * @package   moduleinternals
+ * @category  OXID Module
+ * @version   1.0.1
+ * @license   GPL3 License http://opensource.org/licenses/GPL
+ * @author    Alfonsas Cirtautas / OXID Community
+ * @link      https://github.com/OXIDprojects/ocb_cleartmp
+ * @see       https://github.com/acirtautas/oxid-module-internals
  */
 
 $sMetadataVersion = '2.0';
@@ -10,30 +14,30 @@ $sMetadataVersion = '2.0';
 $aModule = [
     'id'          => 'moduleinternals',
     'title'       => [
-        'de' => 'Module Internals',
-        'en' => 'Module Internals',
+        'de' => 'OXID module internals (by Alfonsas Cirtautas)',
+        'en' => 'OXID module internals (by Alfonsas Cirtautas)',
     ],
     'description' => [
         'en' => 'Internal OXID eShop module system information and troubleshooting tools (V6).',
         'de' => 'Internes OXID eShop Modulsystem Informations- und Troubleshooting Werkzeuge (V6).',
     ],
     'thumbnail'   => 'module_internals.png',
-    'version'     => '0.4.0',
-    'author'      => 'Oxid Community',
+    'version'     => '1.0.1',
+    'author'      => 'OXID Community',
     'url'         => 'https://github.com/OXIDprojects/oxid-module-internals',
     'email'       => '',
     'extend'      => [
-        OxidEsales\Eshop\Core\Module\Module::class                      => OxCom\ModuleInternals\Core\Module::class,
+        OxidEsales\Eshop\Core\Module\Module::class => OxidCommunity\ModuleInternals\Core\Module::class,
     ],
     'controllers' => [
-        'module_internals_metadata' => OxCom\ModuleInternals\Controller\Admin\Metadata::class,
-        'module_internals_state'    => OxCom\ModuleInternals\Controller\Admin\State::class,
-        'module_internals_utils'    => OxCom\ModuleInternals\Controller\Admin\Utils::class,
+        'module_internals_metadata' => OxidCommunity\ModuleInternals\Controller\Admin\Metadata::class,
+        'module_internals_state'    => OxidCommunity\ModuleInternals\Controller\Admin\State::class,
+        'module_internals_utils'    => OxidCommunity\ModuleInternals\Controller\Admin\Utils::class,
     ],
     'templates'   => [
-        'metadata.tpl' => 'OxCom/moduleinternals/views/admin/tpl/metadata.tpl',
-        'state.tpl'    => 'OxCom/moduleinternals/views/admin/tpl/state.tpl',
-        'utils.tpl'    => 'OxCom/moduleinternals/views/admin/tpl/utils.tpl',
+        'metadata.tpl' => 'OxidCommunity/moduleinternals/views/admin/tpl/metadata.tpl',
+        'state.tpl'    => 'OxidCommunity/moduleinternals/views/admin/tpl/state.tpl',
+        'utils.tpl'    => 'OxidCommunity/moduleinternals/views/admin/tpl/utils.tpl',
     ],
 ];
 

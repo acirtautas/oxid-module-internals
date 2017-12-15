@@ -1,6 +1,15 @@
 <?php
+/**
+ * @package   moduleinternals
+ * @category  OXID Module
+ * @version   1.0.1
+ * @license   GPL3 License http://opensource.org/licenses/GPL
+ * @author    Alfonsas Cirtautas / OXID Community
+ * @link      https://github.com/OXIDprojects/ocb_cleartmp
+ * @see       https://github.com/acirtautas/oxid-module-internals
+ */
 
-namespace OxCom\ModuleInternals\Controller\Admin;
+namespace OxidCommunity\ModuleInternals\Controller\Admin;
 
 use \OxidEsales\Eshop\Core\Module\Module as Module;
 use \OxidEsales\Eshop\Core\Module\ModuleCache as ModuleCache;
@@ -17,6 +26,7 @@ use \OxidEsales\Eshop\Core\Module\ModuleInstaller as ModuleInstaller;
  */
 class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminController
 {
+
     /** @var oxModule */
     protected $_oModule;
 
@@ -38,7 +48,7 @@ class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
      */
     public function getModule()
     {
-        if ($this->_oModule === NULL) {
+        if ($this->_oModule === null) {
             $sModuleId = $this->getEditObjectId();
 
             $this->addTplParam('oxid', $sModuleId);
@@ -56,7 +66,7 @@ class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
      */
     public function getModuleCache()
     {
-        if ($this->_oModuleCache === NULL) {
+        if ($this->_oModuleCache === null) {
             $this->_oModuleCache = oxNew(ModuleCache::class, $this->getModule());
         }
 
@@ -70,7 +80,7 @@ class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
      */
     public function getModuleInstaller()
     {
-        if ($this->_oModuleInstaller === NULL) {
+        if ($this->_oModuleInstaller === null) {
             $this->_oModuleInstaller = oxNew(ModuleInstaller::class, $this->getModuleCache());
         }
 

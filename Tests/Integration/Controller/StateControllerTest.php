@@ -1,18 +1,28 @@
 <?php
+/**
+ * @package   moduleinternals
+ * @category  OXID Module
+ * @version   1.0.1
+ * @license   GPL3 License http://opensource.org/licenses/GPL
+ * @author    Alfonsas Cirtautas / OXID Community
+ * @link      https://github.com/OXIDprojects/ocb_cleartmp
+ * @see       https://github.com/acirtautas/oxid-module-internals
+ */
 
-namespace OxCom\ModuleInternals\Tests\Integration\Controller;
+namespace OxidCommunity\ModuleInternals\Tests\Integration\Controller;
 
 use OxidEsales\TestingLibrary\UnitTestCase;
-use OxCom\ModuleInternals\Controller\Admin\State;
+use OxidCommunity\ModuleInternals\Controller\Admin\State;
 use OxidEsales\Eshop\Core\Module\Module as Module;
-use OxCom\ModuleInternals\Core\DataHelper as DataHelper;
-use OxCom\ModuleInternals\Core\FixHelper as FixHelper;
+use OxidCommunity\ModuleInternals\Core\DataHelper as DataHelper;
+use OxidCommunity\ModuleInternals\Core\FixHelper as FixHelper;
 
 /**
  *
  */
 class StateControllerTest extends UnitTestCase
 {
+
     /**
      *
      */

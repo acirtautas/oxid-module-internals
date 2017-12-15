@@ -1,6 +1,15 @@
 <?php
+/**
+ * @package   moduleinternals
+ * @category  OXID Module
+ * @version   1.0.1
+ * @license   GPL3 License http://opensource.org/licenses/GPL
+ * @author    Alfonsas Cirtautas / OXID Community
+ * @link      https://github.com/OXIDprojects/ocb_cleartmp
+ * @see       https://github.com/acirtautas/oxid-module-internals
+ */
 
-namespace OxCom\ModuleInternals\Core;
+namespace OxidCommunity\ModuleInternals\Core;
 
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Module\Module;
@@ -15,6 +24,7 @@ use OxidEsales\Eshop\Core\Registry;
  */
 class FixHelper
 {
+
     /** @var Module */
     protected $_oModule;
 
@@ -33,8 +43,8 @@ class FixHelper
      */
     public function __construct(Module $oModule, ModuleList $oModuleList, ModuleCache $oModuleCache)
     {
-        $this->_oModule      = $oModule;
-        $this->_oModuleList  = $oModuleList;
+        $this->_oModule = $oModule;
+        $this->_oModuleList = $oModuleList;
         $this->_oModuleCache = $oModuleCache;
     }
 
@@ -124,10 +134,10 @@ class FixHelper
      */
     public function fixVersion()
     {
-        $sVersion  = $this->getInfo('version');
-        $aVersions = (array)Registry::getConfig()->getConfigParam('aModuleVersions');
+        $sVersion = $this->getInfo('version');
+        $aVersions = (array) Registry::getConfig()->getConfigParam('aModuleVersions');
         if (is_array($aVersions)) {
-            $aVersions[$this->getModuleId()] = $sVersion;
+            $aVersions[ $this->getModuleId() ] = $sVersion;
         }
 
         $this->_saveToConfig('aModuleVersions', $aVersions);
@@ -140,7 +150,7 @@ class FixHelper
     public function fixExtend()
     {
         $aExtendedClassesOfModule = $this->getInfo('extend');
-        $aInstalledModules        = Registry::getConfig()->getModulesWithExtendedClass();
+        $aInstalledModules = Registry::getConfig()->getModulesWithExtendedClass();
 
         $sModulePath = $this->getModulePath();
 
@@ -149,7 +159,7 @@ class FixHelper
             $aModules = $this->removeExtendedClassesOfModule($aInstalledModules, $sModulePath);
         }
 
-        $aModules      = $this->_mergeModuleArrays($aInstalledModules, $aExtendedClassesOfModule);
+        $aModules = $this->_mergeModuleArrays($aInstalledModules, $aExtendedClassesOfModule);
         $aModuleChains = $this->getModuleList()->buildModuleChains($aModules);
 
         $this->_saveToConfig('aModules', $aModuleChains);
@@ -162,10 +172,10 @@ class FixHelper
     public function fixFiles()
     {
         $aModuleFiles = $this->getInfo('files');
-        $aFiles       = (array)Registry::getConfig()->getConfigParam('aModuleFiles');
+        $aFiles = (array) Registry::getConfig()->getConfigParam('aModuleFiles');
 
         if (is_array($aModuleFiles)) {
-            $aFiles[$this->getModuleId()] = array_change_key_case($aModuleFiles, CASE_LOWER);
+            $aFiles[ $this->getModuleId() ] = array_change_key_case($aModuleFiles, CASE_LOWER);
         }
 
         $this->_saveToConfig('aModuleFiles', $aFiles);
@@ -179,9 +189,9 @@ class FixHelper
     {
         $aModuleTemplates = $this->getInfo('templates');
 
-        $aTemplates = (array)Registry::getConfig()->getConfigParam('aModuleTemplates');
+        $aTemplates = (array) Registry::getConfig()->getConfigParam('aModuleTemplates');
         if (is_array($aModuleTemplates)) {
-            $aTemplates[$this->getModuleId()] = $aModuleTemplates;
+            $aTemplates[ $this->getModuleId() ] = $aModuleTemplates;
         }
 
         $this->_saveToConfig('aModuleTemplates', $aTemplates);
@@ -193,15 +203,15 @@ class FixHelper
      */
     public function fixBlocks()
     {
-        $oConfig       = Registry::getConfig();
+        $oConfig = Registry::getConfig();
         $aModuleBlocks = $this->getInfo('blocks');
-        $sShopId       = $oConfig->getShopId();
-        $oDb           = DatabaseProvider::getDb();
+        $sShopId = $oConfig->getShopId();
+        $oDb = DatabaseProvider::getDb();
 
         // Cleanup !!!
         $oDb->execute(
             'DELETE FROM oxtplblocks WHERE oxmodule = ? AND oxshopid = ?',
-            array($this->getModuleId(), $sShopId)
+            [$this->getModuleId(), $sShopId]
         );
 
         if (is_array($aModuleBlocks)) {
@@ -213,15 +223,15 @@ class FixHelper
             ';
 
             foreach ($aModuleBlocks as $aValue) {
-                $sOxId     = Registry::get('oxUtilsObject')->generateUId();
+                $sOxId = Registry::get('oxUtilsObject')->generateUId();
                 $sTemplate = $aValue['template'];
                 $iPosition = $aValue['position'] ? $aValue['position'] : 1;
-                $sBlock    = $aValue['block'];
-                $sFile     = $aValue['file'];
+                $sBlock = $aValue['block'];
+                $sFile = $aValue['file'];
 
                 $oDb->execute(
                     $sSql,
-                    array($sOxId, 1, $sShopId, $sTemplate, $sBlock, $iPosition, $sFile, $this->getModuleId())
+                    [$sOxId, 1, $sShopId, $sTemplate, $sBlock, $iPosition, $sFile, $this->getModuleId()]
                 );
             }
         }
@@ -235,16 +245,16 @@ class FixHelper
     public function fixSettings()
     {
         $aModuleSettings = $this->getInfo('settings');
-        $oConfig         = Registry::getConfig();
-        $sShopId         = $oConfig->getShopId();
-        $oDb             = DatabaseProvider::getDb();
+        $oConfig = Registry::getConfig();
+        $sShopId = $oConfig->getShopId();
+        $oDb = DatabaseProvider::getDb();
 
         // Cleanup !!!
         $oDb->execute(
             'DELETE FROM oxconfig WHERE oxmodule = ? AND oxshopid = ?',
-            array(sprintf('module:%s', $this->getModuleId()), $sShopId)
+            [sprintf('module:%s', $this->getModuleId()), $sShopId]
         );
-        $oDb->execute('DELETE FROM oxconfigdisplay WHERE oxcfgmodule = ?', array($this->getModuleId()));
+        $oDb->execute('DELETE FROM oxconfigdisplay WHERE oxcfgmodule = ?', [$this->getModuleId()]);
 
         if (is_array($aModuleSettings)) {
 
@@ -252,12 +262,12 @@ class FixHelper
                 $sOxId = Registry::get('oxUtilsObject')->generateUId();
 
                 $sModule = 'module:' . $this->getModuleId();
-                $sName   = $aValue['name'];
-                $sType   = $aValue['type'];
-                $sValue  = is_null($oConfig->getConfigParam($sName)) ? $aValue['value'] : $oConfig->getConfigParam(
+                $sName = $aValue['name'];
+                $sType = $aValue['type'];
+                $sValue = is_null($oConfig->getConfigParam($sName)) ? $aValue['value'] : $oConfig->getConfigParam(
                     $sName
                 );
-                $sGroup  = $aValue['group'];
+                $sGroup = $aValue['group'];
 
                 $sConstraints = '';
                 if ($aValue['constraints']) {
@@ -278,7 +288,7 @@ class FixHelper
                     (?, ?, ?, ?, ?, ?)
                 ';
 
-                $oDb->execute($sInsertSql, array($sOxId, $sModule, $sName, $sGroup, $sConstraints, $iPosition));
+                $oDb->execute($sInsertSql, [$sOxId, $sModule, $sName, $sGroup, $sConstraints, $iPosition]);
             }
         }
 
@@ -291,10 +301,10 @@ class FixHelper
     public function fixEvents()
     {
         $aModuleEvents = $this->getInfo('events');
-        $aEvents       = (array)Registry::getConfig()->getConfigParam('aModuleEvents');
+        $aEvents = (array) Registry::getConfig()->getConfigParam('aModuleEvents');
 
         if (is_array($aEvents)) {
-            $aEvents[$this->getModuleId()] = $aModuleEvents;
+            $aEvents[ $this->getModuleId() ] = $aModuleEvents;
         }
 
         $this->_saveToConfig('aModuleEvents', $aEvents);
@@ -323,16 +333,16 @@ class FixHelper
         if (is_array($aAllModuleArray) && is_array($aAddModuleArray)) {
             foreach ($aAddModuleArray as $sClass => $aModuleChain) {
                 if (!is_array($aModuleChain)) {
-                    $aModuleChain = array($aModuleChain);
+                    $aModuleChain = [$aModuleChain];
                 }
-                if (isset($aAllModuleArray[$sClass])) {
+                if (isset($aAllModuleArray[ $sClass ])) {
                     foreach ($aModuleChain as $sModule) {
-                        if (!in_array($sModule, $aAllModuleArray[$sClass])) {
-                            $aAllModuleArray[$sClass][] = $sModule;
+                        if (!in_array($sModule, $aAllModuleArray[ $sClass ])) {
+                            $aAllModuleArray[ $sClass ][] = $sModule;
                         }
                     }
                 } else {
-                    $aAllModuleArray[$sClass] = $aModuleChain;
+                    $aAllModuleArray[ $sClass ] = $aModuleChain;
                 }
             }
         }
@@ -368,11 +378,11 @@ class FixHelper
                     if ($this->getModule()->checkMetaDataVersion('2.0')) {
                         $moduleNameSpace = $this->getModule()->getModuleNameSpace($sModulePath);
                         if (strpos($sModuleClassName, $moduleNameSpace) !== false) {
-                            unset($aInstalledModules[$shopClassName][$sKey]);
+                            unset($aInstalledModules[ $shopClassName ][ $sKey ]);
                         }
                     } else {
                         if (strpos($sModuleClassName, $sModulePath . '/') === 0) {
-                            unset($aInstalledModules[$shopClassName][$sKey]);
+                            unset($aInstalledModules[ $shopClassName ][ $sKey ]);
                         }
                     }
                 }

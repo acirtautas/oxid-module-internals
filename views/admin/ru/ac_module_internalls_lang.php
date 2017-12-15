@@ -1,13 +1,17 @@
 <?php
 /**
- * Module internals tools.
- *
- * @author Alfonsas Cirtautas
+ * @package   moduleinternals
+ * @category  OXID Module
+ * @version   1.0.1
+ * @license   GPL3 License http://opensource.org/licenses/GPL
+ * @author    Alfonsas Cirtautas / OXID Community
+ * @link      https://github.com/OXIDprojects/ocb_cleartmp
+ * @see       https://github.com/acirtautas/oxid-module-internals
  */
 
 $sLangName = "Русский";
 
-$aLang = array(
+$aLang = [
     'charset' => 'UTF-8',
 
     'tbclmodule_internals_metadata' => 'Метаданные',
@@ -25,21 +29,21 @@ $aLang = array(
     'AC_MI_ACTIVATION' => 'Активация / Деактивация модулья',
     'AC_MI_CONTROLLER' => 'unknown',
 
-    'AC_MI_FIXBTN'         => 'Чинить',
-    'AC_MI_RESETBTN'       => 'Сбросить',
-    'AC_MI_ACTIVATEBTN'    => 'Активировать',
-    'AC_MI_DEACTIVATEBTN'  => 'Дезактивировать',
+    'AC_MI_FIXBTN'        => 'Чинить',
+    'AC_MI_RESETBTN'      => 'Сбросить',
+    'AC_MI_ACTIVATEBTN'   => 'Активировать',
+    'AC_MI_DEACTIVATEBTN' => 'Дезактивировать',
 
-    'AC_LEGEND' => 'Легенда',
-    'AC_STATE_OK'  => 'Хорошо',
-    'AC_STATE_WA'  => 'Предупреждение',
-    'AC_STATE_ER'  => 'Ошибка',
-    'AC_STATE_FM'  => 'Ошибка М',
-    'AC_STATE_FS'  => 'Ошибка С',
+    'AC_LEGEND'   => 'Легенда',
+    'AC_STATE_OK' => 'Хорошо',
+    'AC_STATE_WA' => 'Предупреждение',
+    'AC_STATE_ER' => 'Ошибка',
+    'AC_STATE_FM' => 'Ошибка М',
+    'AC_STATE_FS' => 'Ошибка С',
 
-    'AC_STATE_OK_LABEL'  => 'Метаданные соответствует данным, хранящимся в магазине',
-    'AC_STATE_WA_LABEL'  => 'Метаданные отсутствует в данных магазина',
-    'AC_STATE_ER_LABEL'  => 'Данные Магазина не найдены в метаданных',
-    'AC_STATE_FM_LABEL'  => 'Файлы, определенные в метаданных не существует',
-    'AC_STATE_FS_LABEL'  => 'Файлы, определенные в данных магазина не существует'
-);
+    'AC_STATE_OK_LABEL' => 'Метаданные соответствует данным, хранящимся в магазине',
+    'AC_STATE_WA_LABEL' => 'Метаданные отсутствует в данных магазина',
+    'AC_STATE_ER_LABEL' => 'Данные Магазина не найдены в метаданных',
+    'AC_STATE_FM_LABEL' => 'Файлы, определенные в метаданных не существует',
+    'AC_STATE_FS_LABEL' => 'Файлы, определенные в данных магазина не существует'
+];

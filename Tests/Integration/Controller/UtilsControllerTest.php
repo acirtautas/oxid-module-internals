@@ -1,18 +1,28 @@
 <?php
+/**
+ * @package   moduleinternals
+ * @category  OXID Module
+ * @version   1.0.1
+ * @license   GPL3 License http://opensource.org/licenses/GPL
+ * @author    Alfonsas Cirtautas / OXID Community
+ * @link      https://github.com/OXIDprojects/ocb_cleartmp
+ * @see       https://github.com/acirtautas/oxid-module-internals
+ */
 
-namespace OxCom\ModuleInternals\Tests\Integration\Controller;
+namespace OxidCommunity\ModuleInternals\Tests\Integration\Controller;
 
 use OxidEsales\TestingLibrary\UnitTestCase;
 
 class UtilsControllerTest extends UnitTestCase
 {
+
     /**
      * Test module getter.
      */
     public function testGetModule()
     {
         $moduleId = 'moduleinternals';
-        $utilsController = $this->getMock(\OxCom\ModuleInternals\Controller\Admin\Utils::class, ['getEditObjectId']);
+        $utilsController = $this->getMock(\OxidCommunity\ModuleInternals\Controller\Admin\Utils::class, ['getEditObjectId']);
         $utilsController->expects($this->any())->method('getEditObjectId')->will($this->returnValue($moduleId));
 
         $module = $utilsController->getModule();
@@ -27,7 +37,7 @@ class UtilsControllerTest extends UnitTestCase
     public function testGetModulePath()
     {
         $moduleId = 'moduleinternals';
-        $utilsController = $this->getMock(\OxCom\ModuleInternals\Controller\Admin\Utils::class, ['getEditObjectId']);
+        $utilsController = $this->getMock(\OxidCommunity\ModuleInternals\Controller\Admin\Utils::class, ['getEditObjectId']);
         $utilsController->expects($this->any())->method('getEditObjectId')->will($this->returnValue($moduleId));
 
         $module = $utilsController->getModuleCache();
@@ -40,7 +50,7 @@ class UtilsControllerTest extends UnitTestCase
      */
     public function testGetModuleInstaller()
     {
-        $utilsController = oxNew(\OxCom\ModuleInternals\Controller\Admin\Utils::class);
+        $utilsController = oxNew(\OxidCommunity\ModuleInternals\Controller\Admin\Utils::class);
 
         $module = $utilsController->getModuleInstaller();
 
@@ -59,7 +69,7 @@ class UtilsControllerTest extends UnitTestCase
         $moduleCache = $this->getMock(\OxidEsales\Eshop\Core\Module\ModuleCache::class, ['resetCache'], [$module]);
         $moduleCache->expects($this->any())->method('resetCache');
 
-        $utilsController = $this->getMock(\OxCom\ModuleInternals\Controller\Admin\Utils::class, ['getModuleCache', 'getEditObjectId']);
+        $utilsController = $this->getMock(\OxidCommunity\ModuleInternals\Controller\Admin\Utils::class, ['getModuleCache', 'getEditObjectId']);
         $utilsController->expects($this->any())->method('getEditObjectId')->will($this->returnValue($moduleId));
         $utilsController->expects($this->any())->method('getModuleCache')->will($this->returnValue($moduleCache));
 

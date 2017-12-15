@@ -1,9 +1,8 @@
-Oxid Module Internals
-=====================
+Great module proudly presented by [OXID Hackathon 2017](https://openspacer.org/12-oxid-community/185-oxid-hackathon-nuernberg-2017/) ;-)
 
-Internal OXID eShop module system information and troubleshooting tools.
+Module version for OXID eShop 6. Original module by [Alfonsas Cirtautas](https://github.com/acirtautas/oxid-module-internals).
 
-Functionality:
+# Features
 
  * Display highlighted metadata file content.
  * Reset module related shop cache data.
@@ -17,12 +16,22 @@ Functionality:
    * Version
    * Events
 
-Compatibility:
+# Installation
 
- * Requires OXID eShop V6
- 
-Ideas:
+```
+composer require oxid-community/moduleinternals
+```
+
+# Screenshot
+
+![OXID_moduleinternals](screenshot.png)
+
+# Ideas
 
  * Consistency check for namespaces, if namespace is not registered or wrongly spelled in some classes
  * Check for usage of unified namespaces
-   
+
+# Changelog
+
+* 2017-12-15	1.0.1	namespace, docblocks
+* 2017-12-09	1.0.0	module release

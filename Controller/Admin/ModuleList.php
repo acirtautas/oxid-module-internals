@@ -1,6 +1,15 @@
 <?php
+/**
+ * @package   moduleinternals
+ * @category  OXID Module
+ * @version   1.0.1
+ * @license   GPL3 License http://opensource.org/licenses/GPL
+ * @author    Alfonsas Cirtautas / OXID Community
+ * @link      https://github.com/OXIDprojects/ocb_cleartmp
+ * @see       https://github.com/acirtautas/oxid-module-internals
+ */
 
-namespace OxCom\ModuleInternals\Controller\Admin;
+namespace OxidCommunity\ModuleInternals\Controller\Admin;
 
 /**
  * Class Metadata

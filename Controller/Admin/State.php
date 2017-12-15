@@ -1,8 +1,17 @@
 <?php
+/**
+ * @package   moduleinternals
+ * @category  OXID Module
+ * @version   1.0.1
+ * @license   GPL3 License http://opensource.org/licenses/GPL
+ * @author    Alfonsas Cirtautas / OXID Community
+ * @link      https://github.com/OXIDprojects/ocb_cleartmp
+ * @see       https://github.com/acirtautas/oxid-module-internals
+ */
 
-namespace OxCom\ModuleInternals\Controller\Admin;
+namespace OxidCommunity\ModuleInternals\Controller\Admin;
 
-use OxCom\ModuleInternals\Core\FixHelper as FixHelper;
+use OxidCommunity\ModuleInternals\Core\FixHelper as FixHelper;
 use OxidEsales\Eshop\Application\Controller\Admin\AdminController;
 use OxidEsales\Eshop\Core\Module\ModuleCache as ModuleCache;
 use OxidEsales\Eshop\Core\Module\ModuleList as ModuleList;
@@ -19,6 +28,7 @@ use OxidEsales\Eshop\Core\Module\Module as Module;
  */
 class State extends AdminController
 {
+
     /**
      * @var string
      */
@@ -47,7 +57,7 @@ class State extends AdminController
      */
     public function getModuleFixHelper()
     {
-        if ($this->_oModuleFixHelper === NULL) {
+        if ($this->_oModuleFixHelper === null) {
             $this->_oModuleFixHelper = oxNew(
                 FixHelper::class,
                 $this->getModule(),
@@ -74,7 +84,7 @@ class State extends AdminController
      */
     public function getModule()
     {
-        if ($this->_oModule === NULL) {
+        if ($this->_oModule === null) {
             $sModuleId = $this->getEditObjectId();
 
             $this->addTplParam('oxid', $sModuleId);

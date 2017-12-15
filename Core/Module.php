@@ -1,6 +1,15 @@
 <?php
+/**
+ * @package   moduleinternals
+ * @category  OXID Module
+ * @version   1.0.1
+ * @license   GPL3 License http://opensource.org/licenses/GPL
+ * @author    Alfonsas Cirtautas / OXID Community
+ * @link      https://github.com/OXIDprojects/ocb_cleartmp
+ * @see       https://github.com/acirtautas/oxid-module-internals
+ */
 
-namespace OxCom\ModuleInternals\Core;
+namespace OxidCommunity\ModuleInternals\Core;
 
 use \OxidEsales\Eshop\Core\DatabaseProvider as DatabaseProvider;
 use \OxidEsales\Eshop\Core\Registry as Registry;
@@ -12,6 +21,7 @@ use \OxidEsales\Eshop\Core\Module\ModuleList as ModuleList;
  */
 class Module extends Module_parent
 {
+
     /**
      * Get template blocks defined in database.
      *
@@ -68,6 +78,7 @@ class Module extends Module_parent
      * check if current metadata version is $sVersion
      *
      * @param $sVersion
+     *
      * @return bool
      */
     public function checkMetadataVersion($sVersion)
@@ -92,8 +103,8 @@ class Module extends Module_parent
         $aReturn = [];
         $aList = oxNew(ModuleList::class)->getModuleConfigParametersByKey($sType);
 
-        if (isset($aList[$this->getId()])) {
-            $aReturn = $aList[$this->getId()];
+        if (isset($aList[ $this->getId() ])) {
+            $aReturn = $aList[ $this->getId() ];
         }
 
         return $aReturn;
@@ -107,9 +118,10 @@ class Module extends Module_parent
      * @param string $sModulesDir
      * @param string $sClassName
      * @param string $sExtention
+     *
      * @return bool
      */
-    public function checkFileExists($sModulesDir = NULL, $sClassName, $sExtention = '.php')
+    public function checkFileExists($sModulesDir = null, $sClassName, $sExtention = '.php')
     {
         if ($this->checkMetadataVersion('2.0')) {
             $composerClassLoader = include VENDOR_PATH . 'autoload.php';
@@ -135,15 +147,15 @@ class Module extends Module_parent
 
         // Check version..
         if ($sMetadataVersion) {
-            $aResult[$sMetadataVersion] = 0;
+            $aResult[ $sMetadataVersion ] = 0;
         }
 
         // Check for versions match injected.
         if ($sDatabaseVersion) {
-            if (!isset($aResult[$sDatabaseVersion])) {
-                $aResult[$sDatabaseVersion] = -1;
+            if (!isset($aResult[ $sDatabaseVersion ])) {
+                $aResult[ $sDatabaseVersion ] = -1;
             } else {
-                $aResult[$sDatabaseVersion] = 1;
+                $aResult[ $sDatabaseVersion ] = 1;
             }
         }
 
@@ -169,7 +181,7 @@ class Module extends Module_parent
         }
 
         $aResult = [];
-        $sModulesDir = Registry::getConfig()->getModulesDir(TRUE);
+        $sModulesDir = Registry::getConfig()->getModulesDir(true);
 
         // Check if all classes are extended.
         if (is_array($aMetadataExtend)) {
@@ -181,17 +193,17 @@ class Module extends Module_parent
 
             foreach ($aMetadataExtend as $sClassName => $sModuleName) {
                 $iState = 0;
-                if (is_array($aAllModules) && isset($aAllModules[$sClassName])) {
+                if (is_array($aAllModules) && isset($aAllModules[ $sClassName ])) {
                     // Is module extending class
-                    if (is_array($aAllModules[$sClassName])) {
-                        $iState = in_array($sModuleName, $aAllModules[$sClassName]) ? 1 : 0;
+                    if (is_array($aAllModules[ $sClassName ])) {
+                        $iState = in_array($sModuleName, $aAllModules[ $sClassName ]) ? 1 : 0;
                     }
                 }
 
                 if ($this->checkFileExists($sModulesDir, $sModuleName))
-                    $aResult[$sClassName][$sModuleName] = $iState;
+                    $aResult[ $sClassName ][ $sModuleName ] = $iState;
                 else
-                    $aResult[$sClassName][$sModuleName] = -2; // class sfatalm
+                    $aResult[ $sClassName ][ $sModuleName ] = -2; // class sfatalm
             }
         }
 
@@ -205,12 +217,12 @@ class Module extends Module_parent
                          */
                         if ($this->checkMetadataVersion('2.0')) {
                             $moduleNameSpace = $this->getModuleNameSpace($sModulePath);
-                            if (!isset($aResult[$sClassName][$sModuleName]) && strpos($sModuleName ,$moduleNameSpace) === 0) {
-                                $aResult[$sClassName][$sModuleName] = -1;
+                            if (!isset($aResult[ $sClassName ][ $sModuleName ]) && strpos($sModuleName, $moduleNameSpace) === 0) {
+                                $aResult[ $sClassName ][ $sModuleName ] = -1;
                             }
                         } else {
-                            if (!isset($aResult[$sClassName][$sModuleName]) && strpos($sModuleName, $sModulePath . '/') === 0) {
-                                $aResult[$sClassName][$sModuleName] = -1;
+                            if (!isset($aResult[ $sClassName ][ $sModuleName ]) && strpos($sModuleName, $sModulePath . '/') === 0) {
+                                $aResult[ $sClassName ][ $sModuleName ] = -1;
                             }
                         }
                     }
@@ -261,7 +273,7 @@ class Module extends Module_parent
                     $iState = -2;
                 }
 
-                $aResult[$aBlock['template']][$aBlock['file']]['file'] = $iState;
+                $aResult[ $aBlock['template'] ][ $aBlock['file'] ]['file'] = $iState;
             }
         }
 
@@ -271,13 +283,13 @@ class Module extends Module_parent
 
                 $sBaseFile = basename($aDbBlock['OXFILE']);
 
-                if (!isset($aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXFILE']])) {
-                    $aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXFILE']] = -1;
+                if (!isset($aResult[ $aDbBlock['OXTEMPLATE'] ][ $aDbBlock['OXFILE'] ])) {
+                    $aResult[ $aDbBlock['OXTEMPLATE'] ][ $aDbBlock['OXFILE'] ] = -1;
                     if (!file_exists($sModulesDir . '/' . $sModulePath . '/' . $aDbBlock['OXFILE']) &&
                         !file_exists($sModulesDir . '/' . $sModulePath . '/out/blocks/' . $sBaseFile) &&
                         !file_exists($sModulesDir . '/' . $sModulePath . '/out/blocks/' . $sBaseFile) . '.tpl'
                     ) {
-                        $aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXFILE']]['file'] = -3;
+                        $aResult[ $aDbBlock['OXTEMPLATE'] ][ $aDbBlock['OXFILE'] ]['file'] = -3;
                     }
                 }
             }
@@ -288,29 +300,29 @@ class Module extends Module_parent
             foreach ($aMetadataBlocks as $aBlock) {
 
                 // Get template from shop..
-                $sTemplate = Registry::getConfig()->getTemplatePath($aBlock['template'], FALSE);
+                $sTemplate = Registry::getConfig()->getTemplatePath($aBlock['template'], false);
 
                 // Get template from shop admin ..
                 if (!$sTemplate) {
-                    $sTemplate = Registry::getConfig()->getTemplatePath($aBlock['template'], TRUE);
+                    $sTemplate = Registry::getConfig()->getTemplatePath($aBlock['template'], true);
                 }
 
                 // Get template from module ..
-                if (!$sTemplate && isset($aMetadataTemplates[$aBlock['template']])) {
+                if (!$sTemplate && isset($aMetadataTemplates[ $aBlock['template'] ])) {
 
                     $sModulesDir = Registry::getConfig()->getModulesDir();
 
-                    if (file_exists($sModulesDir . '/' . $aMetadataTemplates[$aBlock['template']])) {
-                        $sTemplate = $sModulesDir . '/' . $aMetadataTemplates[$aBlock['template']];
+                    if (file_exists($sModulesDir . '/' . $aMetadataTemplates[ $aBlock['template'] ])) {
+                        $sTemplate = $sModulesDir . '/' . $aMetadataTemplates[ $aBlock['template'] ];
                     }
                 }
 
                 if (empty($sTemplate)) {
-                    $aResult[$aBlock['template']][$aBlock['file']]['template'] = -3;
+                    $aResult[ $aBlock['template'] ][ $aBlock['file'] ]['template'] = -3;
                 } else {
                     $sContent = file_get_contents($sTemplate);
                     if (!preg_match('/\[{.*block.* name.*= *"' . $aBlock['block'] . '".*}\]/', $sContent)) {
-                        $aResult[$aBlock['template']][$aBlock['file']]['template'] = -1;
+                        $aResult[ $aBlock['template'] ][ $aBlock['file'] ]['template'] = -1;
                     }
                 }
             }
@@ -335,7 +347,7 @@ class Module extends Module_parent
         if (is_array($aMetadataSettings)) {
             foreach ($aMetadataSettings as $aData) {
                 $sName = $aData['name'];
-                $aResult[$sName] = 0;
+                $aResult[ $sName ] = 0;
             }
         }
 
@@ -344,10 +356,10 @@ class Module extends Module_parent
             foreach ($aDatabaseSettings as $aData) {
                 $sName = $aData['OXVARNAME'];
 
-                if (!isset($aResult[$sName])) {
-                    $aResult[$sName] = -1;
+                if (!isset($aResult[ $sName ])) {
+                    $aResult[ $sName ] = -1;
                 } else {
-                    $aResult[$sName] = 1;
+                    $aResult[ $sName ] = 1;
                 }
             }
         }
@@ -373,9 +385,9 @@ class Module extends Module_parent
         if (is_array($aMetadataTemplates)) {
             $aMetadataTemplates = array_change_key_case($aMetadataTemplates, CASE_LOWER);
             foreach ($aMetadataTemplates as $sTemplate => $sFile) {
-                $aResult[$sTemplate][$sFile] = 0;
+                $aResult[ $sTemplate ][ $sFile ] = 0;
                 if (!file_exists($sModulesDir . '/' . $sFile)) {
-                    $aResult[$sTemplate][$sFile] = -2;
+                    $aResult[ $sTemplate ][ $sFile ] = -2;
                 }
             }
         }
@@ -383,13 +395,13 @@ class Module extends Module_parent
         // Check for redundant or missing module templates
         if (is_array($aDatabaseTemplates)) {
             foreach ($aDatabaseTemplates as $sTemplate => $sFile) {
-                if (!isset($aResult[$sTemplate][$sFile])) {
-                    @$aResult[$sTemplate][$sFile] = -1;
+                if (!isset($aResult[ $sTemplate ][ $sFile ])) {
+                    @$aResult[ $sTemplate ][ $sFile ] = -1;
                     if (!file_exists($sModulesDir . '/' . $sFile)) {
-                        @$aResult[$sTemplate][$sFile] = -3;
+                        @$aResult[ $sTemplate ][ $sFile ] = -3;
                     }
-                } elseif ($aResult[$sTemplate][$sFile] == 0) {
-                    @$aResult[$sTemplate][$sFile] = 1;
+                } elseif ($aResult[ $sTemplate ][ $sFile ] == 0) {
+                    @$aResult[ $sTemplate ][ $sFile ] = 1;
                 }
             }
         }
@@ -425,8 +437,10 @@ class Module extends Module_parent
 
     /**
      * checks for database entries and filesystem check
+     *
      * @param $aMetadataFiles
      * @param $aDatabaseFiles
+     *
      * @return array
      */
     public function checkModuleFileConsistency($aMetadataFiles, $aDatabaseFiles)
@@ -440,33 +454,33 @@ class Module extends Module_parent
                 $sModulesDir = Registry::getConfig()->getModulesDir();
             }
             foreach ($aMetadataFiles as $sClass => $sFile) {
-                $aResult[$sClass][$sFile] = 0;
+                $aResult[ $sClass ][ $sFile ] = 0;
 
                 if (!$this->checkFileExists($sModulesDir, $sFile, null))
-                    $aResult[$sClass][$sFile] = -2;
+                    $aResult[ $sClass ][ $sFile ] = -2;
             }
         }
 
         // Check for redundant or missing module files
         if (is_array($aDatabaseFiles)) {
             foreach ($aDatabaseFiles as $sClass => $sFile) {
-                if (!isset($aResult[$sClass][$sFile])) {
-                    @$aResult[$sClass][$sFile] = -1;
+                if (!isset($aResult[ $sClass ][ $sFile ])) {
+                    @$aResult[ $sClass ][ $sFile ] = -1;
                     /**
                      * @todo update to $this->checkFileExists()
                      */
                     if ($this->checkMetadataVersion('2.0')) {
                         $composerClassLoader = include VENDOR_PATH . 'autoload.php';
                         if (!$composerClassLoader->findFile($sFile)) {
-                            @$aResult[$sClass][$sFile] = -2;
+                            @$aResult[ $sClass ][ $sFile ] = -2;
                         }
                     } else {
                         if (!file_exists($sModulesDir . $sFile)) {
-                            @$aResult[$sClass][$sFile] = -3;
+                            @$aResult[ $sClass ][ $sFile ] = -3;
                         }
                     }
-                } elseif ($aResult[$sClass][$sFile] == 0) {
-                    @$aResult[$sClass][$sFile] = 1;
+                } elseif ($aResult[ $sClass ][ $sFile ] == 0) {
+                    @$aResult[ $sClass ][ $sFile ] = 1;
                 }
             }
         }
@@ -490,7 +504,7 @@ class Module extends Module_parent
         if (is_array($aMetadataEvents)) {
             foreach ($aMetadataEvents as $sEvent => $mCallback) {
                 $sCallback = print_r($mCallback, 1);
-                $aResult[$sEvent][$sCallback] = 0;
+                $aResult[ $sEvent ][ $sCallback ] = 0;
             }
         }
 
@@ -498,10 +512,10 @@ class Module extends Module_parent
         if (is_array($aDatabaseEvents)) {
             foreach ($aDatabaseEvents as $sEvent => $mCallback) {
                 $sCallback = print_r($mCallback, 1);
-                if (!isset($aResult[$sEvent][$sCallback])) {
-                    $aResult[$sEvent][$sCallback] = -1;
+                if (!isset($aResult[ $sEvent ][ $sCallback ])) {
+                    $aResult[ $sEvent ][ $sCallback ] = -1;
                 } else {
-                    $aResult[$sEvent][$sCallback] = 1;
+                    $aResult[ $sEvent ][ $sCallback ] = 1;
                 }
             }
         }
@@ -518,11 +532,12 @@ class Module extends Module_parent
     {
         $moduleNameSpace = '';
         $composerClassLoader = include VENDOR_PATH . 'autoload.php';
-        $nameSpacePrefixes   = $composerClassLoader->getPrefixesPsr4();
+        $nameSpacePrefixes = $composerClassLoader->getPrefixesPsr4();
         foreach ($nameSpacePrefixes as $nameSpacePrefix => $paths) {
             foreach ($paths as $path) {
                 if (strpos($path, $sModulePath) !== false) {
                     $moduleNameSpace = $nameSpacePrefix;
+
                     return $moduleNameSpace;
                 }
             }
