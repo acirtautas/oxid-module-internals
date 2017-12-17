@@ -32,7 +32,7 @@ $aModule = [
     'controllers' => [
         'module_internals_metadata' => \OxidCommunity\ModuleInternals\Controller\Admin\Metadata::class,
         'module_internals_state'    => \OxidCommunity\ModuleInternals\Controller\Admin\State::class,
-        'module_internals_utils'    => \OxidCommunity\ModuleInternals\Controller\Admin\Utils::class,
+        'module_internals_utils'    => \OxidCommunity\ModuleInternals\Controller\Admin\UtilsController::class,
     ],
     'templates'   => [
         'metadata.tpl' => 'oxcom/moduleinternals/views/admin/tpl/metadata.tpl',

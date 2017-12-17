@@ -23,15 +23,15 @@
 <div>
     <h3>[{oxmultilang ident="AC_MI_ACTIVATION"}]</h3>
     [{if $blIsActive }]
-    <button [{if $oxid == 'moduleinternals'}]disabled[{/if}] onclick="module_internals_fix('deactivate_module')">[{oxmultilang ident="AC_MI_DEACTIVATEBTN"}]</button>
+    <button [{if $oxid == 'moduleinternals'}]disabled[{/if}] onclick="module_internals_fix('deactivateModule')">[{oxmultilang ident="AC_MI_DEACTIVATEBTN"}]</button>
     [{else}]
-    <button [{if $oxid == 'moduleinternals'}]disabled[{/if}] onclick="module_internals_fix('activate_module')">[{oxmultilang ident="AC_MI_ACTIVATEBTN"}]</button>
+    <button [{if $oxid == 'moduleinternals'}]disabled[{/if}] onclick="module_internals_fix('activateModule')">[{oxmultilang ident="AC_MI_ACTIVATEBTN"}]</button>
     [{/if}]
 </div>
 
 <div>
     <h3>[{oxmultilang ident="AC_MI_CACHE"}]</h3>
-    <button onclick="module_internals_fix('reset_cache')">[{oxmultilang ident="AC_MI_RESETBTN"}]</button>
+    <button onclick="module_internals_fix('resetModuleCache')">[{oxmultilang ident="AC_MI_RESETBTN"}]</button>
 </div>
 
 [{include file="bottomitem.tpl"}]

@@ -24,7 +24,7 @@ use \OxidEsales\Eshop\Core\Module\ModuleInstaller as ModuleInstaller;
 /**
  * Internal module utilities.
  */
-class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminController
+class UtilsController extends \OxidEsales\Eshop\Application\Controller\Admin\AdminController
 {
 
     /** @var oxModule */
@@ -104,7 +104,7 @@ class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     /**
      * Reset module cache.
      */
-    public function reset_cache()
+    public function resetModuleCache()
     {
         $this->getModuleCache()->resetCache();
     }
@@ -112,7 +112,7 @@ class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     /**
      * Activate module.
      */
-    public function activate_module()
+    public function activateModule()
     {
         $this->getModuleInstaller()->activate($this->getModule());
     }
@@ -120,7 +120,7 @@ class Utils extends \OxidEsales\Eshop\Application\Controller\Admin\AdminControll
     /**
      * Deactivate module.
      */
-    public function deactivate_module()
+    public function deactivateModule()
     {
         $this->getModuleInstaller()->deactivate($this->getModule());
     }
