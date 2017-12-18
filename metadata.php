@@ -27,7 +27,7 @@ $aModule = [
     'url'         => 'https://github.com/OXIDprojects/oxid-module-internals',
     'email'       => '',
     'extend'      => [
-        \OxidEsales\Eshop\Core\Module\Module::class => \OxidCommunity\ModuleInternals\Core\Module::class,
+        \OxidEsales\Eshop\Core\Module\Module::class => \OxidCommunity\ModuleInternals\Core\InternalModule::class,
     ],
     'controllers' => [
         'module_internals_metadata' => \OxidCommunity\ModuleInternals\Controller\Admin\Metadata::class,

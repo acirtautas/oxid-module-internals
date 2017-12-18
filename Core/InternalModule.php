@@ -16,10 +16,10 @@ use \OxidEsales\Eshop\Core\Registry as Registry;
 use \OxidEsales\Eshop\Core\Module\ModuleList as ModuleList;
 
 /**
- * Class Metadata
- * extending OxidEsales\Eshop\Core\Module\Module as Module
+ * Class InternalModule: chain extends OxidEsales\Eshop\Core\Module\Module
+ * @package OxidCommunity\ModuleInternals\Core
  */
-class Module extends Module_parent
+class InternalModule extends InternalModule_parent
 {
 
     /**
