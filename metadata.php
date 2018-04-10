@@ -22,7 +22,7 @@ $aModule = [
         'de' => 'Internes OXID eShop Modulsystem Informations- und Troubleshooting Werkzeuge (V6).',
     ],
     'thumbnail'   => 'module_internals.png',
-    'version'     => '1.0.1',
+    'version'     => '1.0.2',
     'author'      => 'OXID Community',
     'url'         => 'https://github.com/OXIDprojects/oxid-module-internals',
     'email'       => '',
