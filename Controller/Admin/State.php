@@ -168,6 +168,14 @@ class State extends AdminController
     }
 
     /**
+     * Fix module controllers.
+     */
+    public function fixControllers()
+    {
+        $this->getModuleFixHelper()->fixControllers();
+    }
+
+    /**
      * Fix module templates.
      */
     public function fix_templates()

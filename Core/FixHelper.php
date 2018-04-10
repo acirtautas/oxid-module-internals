@@ -167,7 +167,7 @@ class FixHelper
     }
 
     /**
-     * Files files config
+     * Fixes files config
      */
     public function fixFiles()
     {
@@ -179,6 +179,22 @@ class FixHelper
         }
 
         $this->_saveToConfig('aModuleFiles', $aFiles);
+        $this->_clearCache();
+    }
+
+    /**
+     * Fixes module controllers.
+     */
+    public function fixControllers()
+    {
+        $moduleControllers = $this->getInfo('controllers');
+        $controllers = (array)Registry::getConfig()->getConfigParam('aModuleControllers');
+
+        if (is_array($moduleControllers)) {
+            $controllers[$this->getModuleId()] = $moduleControllers;
+        }
+
+        $this->_saveToConfig('aModuleControllers', $controllers);
         $this->_clearCache();
     }
 
