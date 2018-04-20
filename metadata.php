@@ -14,16 +14,16 @@ $sMetadataVersion = '2.0';
 $aModule = [
     'id'          => 'moduleinternals',
     'title'       => [
-        'de' => 'OXID Community Module Internals (by Alfonsas Cirtautas)',
-        'en' => 'OXID Community Module Internals (by Alfonsas Cirtautas)',
+        'de' => 'OXID Community Module Internals',
+        'en' => 'OXID Community Module Internals',
     ],
     'description' => [
         'en' => 'Internal OXID eShop module system information and troubleshooting tools (V6).',
         'de' => 'Internes OXID eShop Modulsystem Informations- und Troubleshooting Werkzeuge (V6).',
     ],
     'thumbnail'   => 'module_internals.png',
-    'version'     => '1.0.2',
-    'author'      => 'OXID Community',
+    'version'     => '1.0.3',
+    'author'      => 'Alfonsas Cirtautas & OXID Community',
     'url'         => 'https://github.com/OXIDprojects/oxid-module-internals',
     'email'       => '',
     'extend'      => [

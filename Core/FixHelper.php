@@ -154,12 +154,13 @@ class FixHelper
 
         $sModulePath = $this->getModulePath();
 
+        $aModules = [];
         // Remove extended modules by path
         if ($sModulePath && is_array($aInstalledModules)) {
             $aModules = $this->removeExtendedClassesOfModule($aInstalledModules, $sModulePath);
         }
 
-        $aModules = $this->_mergeModuleArrays($aInstalledModules, $aExtendedClassesOfModule);
+        $aModules = $this->_mergeModuleArrays($aModules, $aExtendedClassesOfModule);
         $aModuleChains = $this->getModuleList()->buildModuleChains($aModules);
 
         $this->_saveToConfig('aModules', $aModuleChains);
@@ -392,7 +393,7 @@ class FixHelper
                 foreach ($mModuleClassNames as $sKey => $sModuleClassName) {
                     if ($this->getModule()->checkMetaDataVersion('2.0')) {
                         $moduleNameSpace = $this->getModule()->getModuleNameSpace($sModulePath);
-                        if (strpos($sModuleClassName, $moduleNameSpace) !== false) {
+                        if (strlen($moduleNameSpace) && strpos($sModuleClassName, $moduleNameSpace) !== false) {
                             unset($aInstalledModules[ $shopClassName ][ $sKey ]);
                         }
                     } else {
