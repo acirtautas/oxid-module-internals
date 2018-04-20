@@ -273,7 +273,6 @@ class FixHelper
         $oDb->execute('DELETE FROM oxconfigdisplay WHERE oxcfgmodule = ?', [$this->getModuleId()]);
 
         if (is_array($aModuleSettings)) {
-
             foreach ($aModuleSettings as $aValue) {
                 $sOxId = Registry::get('oxUtilsObject')->generateUId();
 
@@ -283,7 +282,7 @@ class FixHelper
                 $sValue = is_null($oConfig->getConfigParam($sName)) ? $aValue['value'] : $oConfig->getConfigParam(
                     $sName
                 );
-                $sGroup = $aValue['group'];
+                $sGroup = $aValue['group'] ?? '';
 
                 $sConstraints = '';
                 if ($aValue['constraints']) {
