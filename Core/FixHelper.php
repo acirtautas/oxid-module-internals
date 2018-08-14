@@ -242,7 +242,7 @@ class FixHelper
             foreach ($aModuleBlocks as $aValue) {
                 $sOxId = Registry::get('oxUtilsObject')->generateUId();
                 $sTemplate = $aValue['template'];
-                $iPosition = $aValue['position'] ? $aValue['position'] : 1;
+                $iPosition = isset($aValue['position']) ? $aValue['position'] : 1;
                 $sBlock = $aValue['block'];
                 $sFile = $aValue['file'];
 
@@ -286,13 +286,13 @@ class FixHelper
                 $sGroup = $aValue['group'] ?? '';
 
                 $sConstraints = '';
-                if ($aValue['constraints']) {
+                if (isset($aValue['constraints'])) {
                     $sConstraints = $aValue['constraints'];
-                } elseif ($aValue['constrains']) {
+                } elseif (isset($aValue['constrains'])) {
                     $sConstraints = $aValue['constrains'];
                 }
 
-                $iPosition = $aValue['position'] ? $aValue['position'] : 1;
+                $iPosition = isset($aValue['position']) ? $aValue['position'] : 1;
 
                 $oConfig->setConfigParam($sName, $sValue);
                 $oConfig->saveShopConfVar($sType, $sName, $sValue, $sShopId, $sModule);
