@@ -60,15 +60,14 @@ class CheckConsistency
         {
             $aModule = array();
             $oModule->load($sModId);
-            $oHelper = $this->getModuleDataProviderHelper($oModule);
 
             $aModule['title'] = $sModId." - ".$sTitle;
-            $aModule['oxid'] = $oHelper->getModuleId();
-            $aModule['aExtended'] = $oHelper->checkExtendedClasses();
-            $aModule['aBlocks'] = $oHelper->checkTemplateBlocks();
-            $aModule['aSettings'] = $oHelper->checkModuleSettings();
-            $aModule['aFiles'] = $oHelper->checkModuleFiles();
-            $aModule['aTemplates'] = $oHelper->checkModuleTemplates();
+            $aModule['oxid'] = $oModule->getModuleId();
+            $aModule['aExtended'] = $oModule->checkExtendedClasses();
+            $aModule['aBlocks'] = $oModule->checkTemplateBlocks();
+            $aModule['aSettings'] = $oModule->checkModuleSettings();
+            $aModule['aFiles'] = $oModule->checkModuleFiles();
+            $aModule['aTemplates'] = $oModule->checkModuleTemplates();
 
             $this->_sModId  = '';
             $aModuleChecks[$sModId] = $aModule;
@@ -97,7 +96,6 @@ class CheckConsistency
     {
 
         $oConfig  = Registry::get(Config::class);
-        $aActiveModules = array();
         $aModulePaths = array_flip($aModulePaths);
         $aActiveModules = array_diff($aModulePaths,$aDisabledModules);
 
@@ -158,19 +156,5 @@ class CheckConsistency
     public function getEditObjectId()
     {
         return $this->_sModId;
-    }
-
-    /**
-     * @param $oModule
-     *
-     * @return ac_module_internals_data_helper
-     */
-    public function getModuleDataProviderHelper($oModule)
-    {
-        if ($this->_oModuleDataProviderHelper === null) {
-            $this->_oModuleDataProviderHelper = oxNew('ac_module_internals_data_helper', $oModule, oxNew('oxModuleList'));
-        }
-
-        return $this->_oModuleDataProviderHelper;
     }
 }
