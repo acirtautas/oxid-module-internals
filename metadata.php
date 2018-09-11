@@ -22,7 +22,7 @@ $aModule = [
         'de' => 'Internes OXID eShop Modulsystem Informations- und Troubleshooting Werkzeuge (V6).',
     ],
     'thumbnail'   => 'module_internals.png',
-    'version'     => '1.0.1',
+    'version'     => '1.1.0',
     'author'      => 'OXID Community',
     'url'         => 'https://github.com/OXIDprojects/oxid-module-internals',
     'email'       => '',
@@ -33,12 +33,28 @@ $aModule = [
         'module_internals_metadata' => \OxidCommunity\ModuleInternals\Controller\Admin\Metadata::class,
         'module_internals_state'    => \OxidCommunity\ModuleInternals\Controller\Admin\State::class,
         'module_internals_utils'    => \OxidCommunity\ModuleInternals\Controller\Admin\UtilsController::class,
+        'module_internals_checkconsistency'    => \OxidCommunity\ModuleInternals\Controller\CheckConsistency::class,
     ],
     'templates'   => [
         'metadata.tpl' => 'oxcom/moduleinternals/views/admin/tpl/metadata.tpl',
         'state.tpl'    => 'oxcom/moduleinternals/views/admin/tpl/state.tpl',
         'utils.tpl'    => 'oxcom/moduleinternals/views/admin/tpl/utils.tpl',
+        'checkconsistency.tpl'    => 'oxcom/moduleinternals/views/flow/tpl/checkconsistency.tpl',
     ],
+    'settings'    => [
+        [
+            'group' => 'main',
+            'name'  => 'blACActiveCompleteCheck',
+            'type'  => 'bool',
+            'value' => 'false'
+        ],
+        [
+            'group' => 'main',
+            'name'  => 'sACActiveCompleteKey',
+            'type'  => 'str',
+            'value' => ''
+        ],
+    ]
 ];
 
 

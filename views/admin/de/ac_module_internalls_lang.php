@@ -45,5 +45,8 @@ $aLang = [
     'AC_STATE_WA_LABEL' => 'Metadaten fehlen in den Shop-Daten',
     'AC_STATE_ER_LABEL' => 'Shop-Daten wurden nicht in den Metadaten gefunden',
     'AC_STATE_FM_LABEL' => 'Die Dateien, die in den Metadaten definiert wurden, gibt es nicht',
-    'AC_STATE_FS_LABEL' => 'Die Dateien, die in den Shop-Daten definiert wurden, gibt es nicht'
+    'AC_STATE_FS_LABEL' => 'Die Dateien, die in den Shop-Daten definiert wurden, gibt es nicht',
+
+    'SHOP_MODULE_blACActiveCompleteCheck'     => 'Zugriff auf Übersichtsseite erlauben',
+    'SHOP_MODULE_sACActiveCompleteKey'        => 'Zugriffsschlüssel'
 ];
