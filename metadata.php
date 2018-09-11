@@ -8,8 +8,14 @@
  * @link      https://github.com/OXIDprojects/ocb_cleartmp
  * @see       https://github.com/acirtautas/oxid-module-internals
  */
+use OxidEsales\Eshop\Core\Config;
+use OxidEsales\Eshop\Core\Registry;
 
 $sMetadataVersion = '2.0';
+
+$sLinkToClass = Registry::get(Config::class)->getConfigParam('sShopURL').'index.php';
+$sLinkToClass.= "?cl=checkconsistency";
+$sLinkToClass.= "&key=".Registry::get(Config::class)->getConfigParam('sACActiveCompleteKey');
 
 $aModule = [
     'id'          => 'moduleinternals',
@@ -18,8 +24,12 @@ $aModule = [
         'en' => 'OXID Community Module Internals (by Alfonsas Cirtautas)',
     ],
     'description' => [
-        'en' => 'Internal OXID eShop module system information and troubleshooting tools (V6).',
-        'de' => 'Internes OXID eShop Modulsystem Informations- und Troubleshooting Werkzeuge (V6).',
+        'en' => 'Internal OXID eShop module system information and troubleshooting tools (V6).
+        <hr>
+    Komplette &Uuml;bersicht: <a href="'.$sLinkToClass.'" target="_blank">'.$sLinkToClass.'</a>',
+        'de' => 'Internes OXID eShop Modulsystem Informations- und Troubleshooting Werkzeuge (V6).
+        <hr>
+    Komplette &Uuml;bersicht: <a href="'.$sLinkToClass.'" target="_blank">'.$sLinkToClass.'</a>',
     ],
     'thumbnail'   => 'module_internals.png',
     'version'     => '1.1.0',
