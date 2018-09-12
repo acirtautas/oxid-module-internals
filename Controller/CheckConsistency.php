@@ -8,7 +8,7 @@ use OxidEsales\Eshop\Core\Module\ModuleList as ModuleList;
 use OxidEsales\Eshop\Core\Module\Module as Module;
 use OxidEsales\Eshop\Core\SeoEncoder;
 
-class CheckConsistency
+class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\FrontendController
 {
     /**
      * @var string
