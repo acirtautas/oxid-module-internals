@@ -28,6 +28,7 @@ class CheckConsistency
 
     public function init()
     {
+        echo __METHOD__ . " " . __LINE__ . "<br>" . PHP_EOL;
         $oConfig  = Registry::get(Config::class);
 
         $redirectUrl = $oConfig->getShopUrl();
@@ -51,6 +52,7 @@ class CheckConsistency
      */
     public function render()
     {
+        echo __METHOD__ . " " . __LINE__ . "<br>" . PHP_EOL;
         $oConfig  = Registry::get(Config::class);
         $aModules = $this->_getActiveModules($oConfig->getConfigParam('aDisabledModules'),$oConfig->getConfigParam('aModulePaths'));
 
