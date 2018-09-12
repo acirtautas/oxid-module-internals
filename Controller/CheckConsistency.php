@@ -28,7 +28,6 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
 
     public function init()
     {
-        echo __METHOD__ . " " . __LINE__ . "<br>" . PHP_EOL;
         $oConfig  = Registry::get(Config::class);
 
         $redirectUrl = $oConfig->getShopUrl();
@@ -52,10 +51,8 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
      */
     public function render()
     {
-        echo __METHOD__ . " " . __LINE__ . "<br>" . PHP_EOL;
         $oConfig  = Registry::get(Config::class);
         $aModules = $this->_getActiveModules($oConfig->getConfigParam('aDisabledModules'),$oConfig->getConfigParam('aModulePaths'));
-
         $aModuleChecks = array();
         $oModule = oxNew(Module::class);
         foreach($aModules as $sModId => $sTitle)
@@ -64,7 +61,9 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
             $oModule->load($sModId);
 
             $aModule['title'] = $sModId." - ".$sTitle;
-            $aModule['oxid'] = $oModule->getModuleId();
+
+            $aModule['oxid'] = $oModule->getId();
+
             $aModule['aExtended'] = $oModule->checkExtendedClasses();
             $aModule['aBlocks'] = $oModule->checkTemplateBlocks();
             $aModule['aSettings'] = $oModule->checkModuleSettings();
@@ -74,16 +73,14 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
             $this->_sModId  = '';
             $aModuleChecks[$sModId] = $aModule;
         }
-
         $this->_aViewData['aModules'] = $aModuleChecks;
         $this->_aViewData['sState'] = array(
-                -3 => 'sfatals',
-                -2 => 'sfatalm',
-                -1 => 'serror',
-                0 => 'swarning',
-                1 => 'sok'
+        -3 => 'sfatals',
+        -2 => 'sfatalm',
+        -1 => 'serror',
+        0 => 'swarning',
+        1 => 'sok'
         );
-
         return $this->sTemplate;
     }
 
