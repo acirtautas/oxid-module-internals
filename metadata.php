@@ -17,6 +17,20 @@ $sLinkToClass = Registry::get(Config::class)->getConfigParam('sShopURL').'index.
 $sLinkToClass.= "?cl=checkconsistency";
 $sLinkToClass.= "&key=".Registry::get(Config::class)->getConfigParam('sACActiveCompleteKey');
 
+$sLinkAndText = '<a href="'.$sLinkToClass.'" target="_blank">'.$sLinkToClass.'</a>';
+
+if(trim(Registry::get(Config::class)->getConfigParam('sACActiveCompleteKey')) == '')
+{
+    $sLinkAndText_EN = '<p>
+    <strong>No Access-Key is set - change it in configuration!</strong>
+</p>';
+
+    $sLinkAndText_DE = '<p>
+    <strong>Es ist keine Zugriffsschl&uuml;ssel gepeichert - bitte in der Konfiguration hinterlegen!</strong>
+    
+</p>';
+}
+
 $aModule = [
     'id'          => 'moduleinternals',
     'title'       => [
@@ -26,11 +40,13 @@ $aModule = [
     'description' => [
         'en' => 'Internal OXID eShop module system information and troubleshooting tools (V6).
         <hr>
-    Overview health status: <a href="'.$sLinkToClass.'" target="_blank">'.$sLinkToClass.'</a>',
+        '.$sLinkAndText_EN.'        
+    Overview health status: '.$sLinkAndText,
 
         'de' => 'Internes OXID eShop Modulsystem Informations- und Troubleshooting Werkzeuge (V6).
         <hr>
-    Komplette &Uuml;bersicht: <a href="'.$sLinkToClass.'" target="_blank">'.$sLinkToClass.'</a>',
+        '.$sLinkAndText_DE.'
+    Komplette &Uuml;bersicht: '.$sLinkAndText,
     ],
     'thumbnail'   => 'module_internals.png',
     'version'     => '1.1.0',
