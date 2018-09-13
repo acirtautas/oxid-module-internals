@@ -16,9 +16,13 @@
         padding-top: 7px;
         border-top: 1px solid #ddd;
     }
-    .actions{border-top: 1px solid #ddd;}
+    .actions{border-top: 1px solid #ddd;background: #eee;}
+    .checks:nth-of-type(even){
+        background: #eee;
+    }
 </style>
 [{foreach from=$aModules key=ModulId item=ModId}]
+    <div class="checks">
 
     <h2>[{oxmultilang ident="AC_MI_MODULE"}]: [{$ModId.title}]</h2>
     [{if $ModId.aVersions|@count > 0}]
@@ -225,6 +229,7 @@
     }]
         -
     [{/if}]
+    </div>
 [{/foreach}]
 
 <div class="actions">
