@@ -2,7 +2,7 @@
 /**
  * @package   moduleinternals
  * @category  OXID Module
- * @version   1.0.1
+ * @version   1.1.0
  * @license   GPL3 License http://opensource.org/licenses/GPL
  * @author    Alfonsas Cirtautas / OXID Community
  * @link      https://github.com/OXIDprojects/ocb_cleartmp
@@ -26,7 +26,8 @@ $aModule = [
     'description' => [
         'en' => 'Internal OXID eShop module system information and troubleshooting tools (V6).
         <hr>
-    Komplette &Uuml;bersicht: <a href="'.$sLinkToClass.'" target="_blank">'.$sLinkToClass.'</a>',
+    Overview health status: <a href="'.$sLinkToClass.'" target="_blank">'.$sLinkToClass.'</a>',
+
         'de' => 'Internes OXID eShop Modulsystem Informations- und Troubleshooting Werkzeuge (V6).
         <hr>
     Komplette &Uuml;bersicht: <a href="'.$sLinkToClass.'" target="_blank">'.$sLinkToClass.'</a>',
