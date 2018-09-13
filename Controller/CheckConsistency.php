@@ -15,14 +15,8 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
      */
     public $sTemplate = 'checkconsistency.tpl';
 
-    /** @var oxModule */
+    /** @var Module */
     protected $_oModule;
-
-    /** @var ac_module_internals_data_helper */
-    protected $_oModuleDataProviderHelper;
-
-    /** @var ac_module_internals_fix_helper */
-    protected $_oModuleFixHelper;
 
     protected $_sModId;
 
@@ -33,13 +27,13 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
         $redirectUrl = $oConfig->getShopUrl();
         $sKey = $oConfig->getRequestParameter('key');
 
-        //todo: Exeception / Logging
+        //todo: add Exeception / Logging
         if((bool)$oConfig->getConfigParam('blACActiveCompleteCheck') == false )
         {
             Registry::getUtils()->redirect($redirectUrl, false, 403);
         }
 
-        //todo: Exeception / Logging
+        //todo: add Exeception / Logging
         if($sKey != $oConfig->getConfigParam('sACActiveCompleteKey'))
         {
             Registry::getUtils()->redirect($redirectUrl, false, 403);
@@ -98,11 +92,11 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
         }
         $this->_aViewData['aModules'] = $aModuleChecks;
         $this->_aViewData['sState'] = array(
-        -3 => 'sfatals',
-        -2 => 'sfatalm',
-        -1 => 'serror',
-        0 => 'swarning',
-        1 => 'sok'
+            -3 => 'sfatals',
+            -2 => 'sfatalm',
+            -1 => 'serror',
+            0 => 'swarning',
+            1 => 'sok'
         );
         return $this->sTemplate;
     }
