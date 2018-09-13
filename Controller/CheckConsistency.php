@@ -61,14 +61,37 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
             $oModule->load($sModId);
 
             $aModule['title'] = $sModId." - ".$sTitle;
-
             $aModule['oxid'] = $oModule->getId();
 
             $aModule['aExtended'] = $oModule->checkExtendedClasses();
             $aModule['aBlocks'] = $oModule->checkTemplateBlocks();
             $aModule['aSettings'] = $oModule->checkModuleSettings();
-            $aModule['aFiles'] = $oModule->checkModuleFiles();
+            //$aModule['aFiles'] = $oModule->checkModuleFiles();
             $aModule['aTemplates'] = $oModule->checkModuleTemplates();
+
+            $aModule['aFiles'] = array();
+            $aModule['aEvents'] = array();
+            $aModule['aVersions'] = array();
+            $aModule['aControllers'] = array();
+
+            // valid not for  metadata version 1.*
+            if ($oModule->checkMetadataVersion('1.0') || $oModule->checkMetadataVersion('1.1')) {
+                $aModule['aFiles'] =  $oModule->checkModuleFiles();
+            }
+
+            // valid  for  metadata version 1.1 and 2.0
+            if ($oModule->checkMetadataVersion('1.1') || $oModule->checkMetadataVersion('2.0')) {
+                $aModule['aEvents'] =  $oModule->checkModuleEvents();
+                $aModule['aVersions'] =  $oModule->checkModuleVersions();
+            }
+
+            /**
+             * @todo check if files is set - should'nt be
+             */
+            if ($oModule->checkMetadataVersion('2.0')) {
+                $aModule['aControllers'] = $oModule->checkModuleController();
+            }
+
 
             $this->_sModId  = '';
             $aModuleChecks[$sModId] = $aModule;
