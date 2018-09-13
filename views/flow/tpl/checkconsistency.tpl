@@ -9,13 +9,21 @@
     span.state.sfatals {color:red;text-decoration:underline;}
     button.fix {position: absolute;top:0; right: 0;}
     .actions i {margin-right:20px;display:inline_blocks;}
+    h3 {
+        font-size: 14px;
+        font-weight: bold;
+        margin: 7px 0 10px 0;
+        padding-top: 7px;
+        border-top: 1px solid #ddd;
+    }
+    .actions{border-top: 1px solid #ddd;}
 </style>
 [{foreach from=$aModules key=ModulId item=ModId}]
 
-    <h2>Modul: [{$ModId.title}]</h2>
+    <h2>[{oxmultilang ident="AC_MI_MODULE"}]: [{$ModId.title}]</h2>
     [{if $ModId.aVersions|@count > 0}]
         <div style="position: relative;">
-            <h3>[{oxmultilang ident="AC_MI_VERSION"}]</h3>
+            <h3>[{oxmultilang ident="AC_MI_VERSION"}]:</h3>
             [{assign var="_ok" value=1}]
             [{foreach from=$ModId.aVersions key=sVersion item=iState}]
                 <span class="state [{$sState.$iState}]">[{$sVersion}]</span>
@@ -30,7 +38,7 @@
 
     [{if $aControllers|@count > 0}]
         <div style="position: relative;">
-            <h3>[{oxmultilang ident="AC_MI_CONTROLLER"}]</h3>
+            <h3>[{oxmultilang ident="AC_MI_CONTROLLER"}]:</h3>
             <table>
                 [{assign var="_ok" value=1}]
                 [{foreach from=$aControllers key=sClass item=aModules}]
@@ -55,7 +63,7 @@
 
     [{if $ModId.aExtended|@count > 0}]
         <div style="position: relative;">
-            <h3>[{oxmultilang ident="AC_MI_EXTEND"}]</h3>
+            <h3>[{oxmultilang ident="AC_MI_EXTEND"}]:</h3>
             <table>
                 [{assign var="_ok" value=1}]
                 [{foreach from=$ModId.aExtended key=sClass item=aModules}]
@@ -79,7 +87,7 @@
 
     [{if $ModId.aFiles|@count > 0}]
         <div style="position: relative;">
-            <h3>[{oxmultilang ident="AC_MI_FILES"}]</h3>
+            <h3>[{oxmultilang ident="AC_MI_FILES"}]:</h3>
             <table>
                 [{assign var="_ok" value=1}]
                 [{foreach from=$ModId.aFiles key=sClass item=aFiles}]
@@ -103,7 +111,7 @@
 
     [{if $ModId.aBlocks|@count > 0}]
         <div style="position: relative;">
-            <h3>[{oxmultilang ident="AC_MI_BLOCKS"}]</h3>
+            <h3>[{oxmultilang ident="AC_MI_BLOCKS"}]:</h3>
             <table>
                 [{assign var="_ok" value=1}]
                 [{foreach from=$ModId.aBlocks key=sTemplate item=aFiles}]
@@ -136,7 +144,7 @@
 
     [{if $ModId.aTemplates|@count > 0}]
         <div style="position: relative;">
-            <h3>[{oxmultilang ident="AC_MI_TEMPLATES"}]</h3>
+            <h3>[{oxmultilang ident="AC_MI_TEMPLATES"}]:</h3>
             <table>
                 [{assign var="_ok" value=1}]
                 [{foreach from=$ModId.aTemplates key=sTemplate item=aFiles}]
@@ -160,7 +168,7 @@
 
     [{if $ModId.aSettings|@count > 0}]
         <div style="position: relative;">
-            <h3>[{oxmultilang ident="AC_MI_SETTINGS"}]</h3>
+            <h3>[{oxmultilang ident="AC_MI_SETTINGS"}]:</h3>
             <table>
                 [{assign var="_ok" value=1}]
                 [{foreach from=$ModId.aSettings key=sName item=iState}]
@@ -184,7 +192,7 @@
 
     [{if $ModId.aEvents|@count > 0}]
         <div style="position: relative;">
-            <h3>[{oxmultilang ident="AC_MI_EVENTS"}]</h3>
+            <h3>[{oxmultilang ident="AC_MI_EVENTS"}]:</h3>
             <table>
                 [{assign var="_ok" value=1}]
                 [{foreach from=$ModId.aEvents key=sEvent item=aCallbacks}]
@@ -208,6 +216,7 @@
 
     [{if $ModId.aEvents|@count == 0
     && $ModId.aSettings|@count == 0
+    && $ModId.aControllers|@count == 0
     && $ModId.aTemplates|@count == 0
     && $ModId.aBlocks|@count == 0
     && $ModId.aFiles|@count == 0
@@ -217,6 +226,15 @@
         -
     [{/if}]
 [{/foreach}]
-</body>
 
+<div class="actions">
+    <b>[{oxmultilang ident="AC_LEGEND"}] : </b>
+    <span class="state sok">[{oxmultilang ident="AC_STATE_OK"}]</span> <i>[{oxmultilang ident="AC_STATE_OK_LABEL"}]</i>
+    <span class="state swarning">[{oxmultilang ident="AC_STATE_WA"}]</span> <i>[{oxmultilang ident="AC_STATE_WA_LABEL"}]</i>
+    <span class="state serror">[{oxmultilang ident="AC_STATE_ER"}]</span> <i>[{oxmultilang ident="AC_STATE_ER_LABEL"}]</i>
+    <span class="state sfatalm">[{oxmultilang ident="AC_STATE_FM"}]</span> <i>[{oxmultilang ident="AC_STATE_FM_LABEL"}]</i>
+    <span class="state sfatals">[{oxmultilang ident="AC_STATE_FS"}]</span> <i>[{oxmultilang ident="AC_STATE_FS_LABEL"}]</i>
+</div>
+
+</body>
 </html>

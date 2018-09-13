@@ -47,4 +47,7 @@ $aLang = [
     'AC_STATE_FM_LABEL' => 'Die Dateien, die in den Metadaten definiert wurden, gibt es nicht',
     'AC_STATE_FS_LABEL' => 'Die Dateien, die in den Shop-Daten definiert wurden, gibt es nicht',
 
+
+    'AC_MI_MODULE' => 'Modul',
+
 ];
