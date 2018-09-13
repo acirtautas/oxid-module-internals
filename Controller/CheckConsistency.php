@@ -47,7 +47,7 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
     }
 
     /**
-     * @throws oxSystemComponentException
+     * @return null|string
      */
     public function render()
     {
@@ -112,7 +112,6 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
      * @param array $aModulePaths
      *
      * @return array
-     * @throws oxSystemComponentException
      */
     protected function _getActiveModules(array $aDisabledModules, array $aModulePaths)
     {
@@ -129,7 +128,6 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
         foreach($aTmpActiveModules as $sKey => $sValue)
         {
             $oModule->load($sKey);
-
             //Version einbinden
             $aVersions = $oConfig->getConfigParam('aModuleVersions');
             $sTitle = $oModule->getTitle().' - v'.$aVersions[$oModule->getId()];
@@ -154,29 +152,5 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
         }
 
         return $aActiveModules;
-    }
-
-    /**
-     * Get active module object.
-     *
-     * @return Module
-     */
-    public function getModule()
-    {
-        if ($this->_oModule === null) {
-            $sModuleId = $this->_sModId;
-            echo "--".$sModuleId;
-            $this->_aViewData['oxid'] = $sModuleId;
-
-            $this->_oModule = oxNew(Module::class);
-            $this->_oModule->load($sModuleId);
-        }
-
-        return $this->_oModule;
-    }
-
-    public function getEditObjectId()
-    {
-        return $this->_sModId;
     }
 }
