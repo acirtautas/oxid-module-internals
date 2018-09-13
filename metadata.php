@@ -54,13 +54,13 @@ $aModule = [
     ],
     'settings'    => [
         [
-            'group' => 'main',
+            'group' => 'AC_CONFIG',
             'name'  => 'blACActiveCompleteCheck',
             'type'  => 'bool',
             'value' => 'false'
         ],
         [
-            'group' => 'main',
+            'group' => 'AC_CONFIG',
             'name'  => 'sACActiveCompleteKey',
             'type'  => 'str',
             'value' => ''

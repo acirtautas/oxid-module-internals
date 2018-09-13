@@ -18,6 +18,8 @@ $aLang = [
     'tbclmodule_internals_state'    => 'Etat',
     'tbclmodule_internals_utils'    => 'Outils',
 
+    'SHOP_MODULE_GROUP_AC_CONFIG'    => 'Configuration',
+
     'AC_MI_VERSION'    => 'Version',
     'AC_MI_EXTEND'     => 'Classes étendues',
     'AC_MI_FILES'      => 'Fichiers',
