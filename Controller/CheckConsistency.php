@@ -74,7 +74,9 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
             }
 
             // valid  for  metadata version 1.1 and 2.0
-            if ($oModule->checkMetadataVersion('1.1') || $oModule->checkMetadataVersion('2.0')) {
+            if ($oModule->checkMetadataVersion('1.1') || $oModule->checkMetadataVersion('2.0')
+                    || $oModule->checkMetadataVersion('2.1')
+            ) {
                 $aModule['aEvents'] =  $oModule->checkModuleEvents();
                 $aModule['aVersions'] =  $oModule->checkModuleVersions();
             }
@@ -82,7 +84,7 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
             /**
              * @todo check if files is set - should'nt be
              */
-            if ($oModule->checkMetadataVersion('2.0')) {
+            if ($oModule->checkMetadataVersion('2.0')  || $oModule->checkMetadataVersion('2.1')) {
                 $aModule['aControllers'] = $oModule->checkModuleController();
             }
 
