@@ -18,7 +18,7 @@ $aLang = [
     'tbclmodule_internals_state'    => 'Статус',
     'tbclmodule_internals_utils'    => 'Утилиты',
 
-    'SHOP_MODULE_GROUP_AC_CONFIG'    => 'Config',
+    'SHOP_MODULE_GROUP_AC_CONFIG'    => 'конфигурация',
 
     'AC_MI_VERSION'    => 'Версия',
     'AC_MI_EXTEND'     => 'Расширенные классы',

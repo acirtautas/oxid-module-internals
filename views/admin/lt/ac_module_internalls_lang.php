@@ -18,7 +18,7 @@ $aLang = [
     'tbclmodule_internals_state'    => 'Būklė',
     'tbclmodule_internals_utils'    => 'Įrankiai',
 
-    'SHOP_MODULE_GROUP_AC_CONFIG'    => 'конфигурация',
+    'SHOP_MODULE_GROUP_AC_CONFIG'    => 'Конфигурация',
 
     'AC_MI_VERSION'    => 'Versija',
     'AC_MI_EXTEND'     => 'Modulio klasės',
