@@ -18,8 +18,6 @@ $aLang = [
     'tbclmodule_internals_state'    => 'State',
     'tbclmodule_internals_utils'    => 'Utils',
 
-    'SHOP_MODULE_GROUP_AC_CONFIG'    => 'Configuration',
-
     'AC_MI_VERSION'    => 'Version',
     'AC_MI_EXTEND'     => 'Extended Classes',
     'AC_MI_FILES'      => 'Files',
@@ -29,7 +27,7 @@ $aLang = [
     'AC_MI_EVENTS'     => 'Events',
     'AC_MI_CACHE'      => 'Module cache',
     'AC_MI_ACTIVATION' => 'Module Activation / Deactivation',
-    'AC_MI_CONTROLLER' => 'Modul Controller',
+    'AC_MI_CONTROLLER' => 'Module Controller',
 
     'AC_MI_FIXBTN'        => 'Fix',
     'AC_MI_RESETBTN'      => 'Reset',
@@ -47,5 +45,7 @@ $aLang = [
     'AC_STATE_WA_LABEL' => 'Metadata missing in shop data',
     'AC_STATE_ER_LABEL' => 'Shop data not found in metadata',
     'AC_STATE_FM_LABEL' => 'Files defined in metadata does not exist',
-    'AC_STATE_FS_LABEL' => 'Files defined in shop data does not exist'
+    'AC_STATE_FS_LABEL' => 'Files defined in shop data does not exist',
+
+    'AC_MI_MODULE' => 'Module',
 ];

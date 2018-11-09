@@ -18,8 +18,6 @@ $aLang = [
     'tbclmodule_internals_state'    => 'Статус',
     'tbclmodule_internals_utils'    => 'Утилиты',
 
-    'SHOP_MODULE_GROUP_AC_CONFIG'    => 'конфигурация',
-
     'AC_MI_VERSION'    => 'Версия',
     'AC_MI_EXTEND'     => 'Расширенные классы',
     'AC_MI_FILES'      => 'Файлы',
@@ -29,7 +27,7 @@ $aLang = [
     'AC_MI_EVENTS'     => 'События',
     'AC_MI_CACHE'      => 'Кэш-модулья',
     'AC_MI_ACTIVATION' => 'Активация / Деактивация модулья',
-    'AC_MI_CONTROLLER' => 'unknown',
+    'AC_MI_CONTROLLER' => 'модуль',
 
     'AC_MI_FIXBTN'        => 'Чинить',
     'AC_MI_RESETBTN'      => 'Сбросить',
@@ -47,5 +45,7 @@ $aLang = [
     'AC_STATE_WA_LABEL' => 'Метаданные отсутствует в данных магазина',
     'AC_STATE_ER_LABEL' => 'Данные Магазина не найдены в метаданных',
     'AC_STATE_FM_LABEL' => 'Файлы, определенные в метаданных не существует',
-    'AC_STATE_FS_LABEL' => 'Файлы, определенные в данных магазина не существует'
+    'AC_STATE_FS_LABEL' => 'Файлы, определенные в данных магазина не существует',
+
+    'AC_MI_MODULE' => 'модуль',
 ];
