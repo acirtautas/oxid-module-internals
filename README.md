@@ -4,6 +4,8 @@ Module version for OXID eShop 6. Original module by [Alfonsas Cirtautas](https:/
 
 # Features
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d57c5d4c3f5047a99dbe23b34f0ef1df)](https://app.codacy.com/app/keywan.ghadami/oxid-module-internals?utm_source=github.com&utm_medium=referral&utm_content=OXIDprojects/oxid-module-internals&utm_campaign=Badge_Grade_Settings)
+
  * Display highlighted metadata file content.
  * Reset module related shop cache data.
  * Toggle module activation / deactivation
