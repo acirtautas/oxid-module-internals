@@ -18,8 +18,6 @@ $aLang = [
     'tbclmodule_internals_state'    => 'Status',
     'tbclmodule_internals_utils'    => 'Hilfsmittel',
 
-    'SHOP_MODULE_GROUP_AC_CONFIG'    => 'Einstellungen',
-
     'AC_MI_VERSION'    => 'Version',
     'AC_MI_EXTEND'     => 'Erweiterte Klassen',
     'AC_MI_FILES'      => 'Dateien',
@@ -49,6 +47,7 @@ $aLang = [
     'AC_STATE_FM_LABEL' => 'Die Dateien, die in den Metadaten definiert wurden, gibt es nicht',
     'AC_STATE_FS_LABEL' => 'Die Dateien, die in den Shop-Daten definiert wurden, gibt es nicht',
 
-    'SHOP_MODULE_blACActiveCompleteCheck'     => 'Zugriff auf Übersichtsseite erlauben',
-    'SHOP_MODULE_sACActiveCompleteKey'        => 'Zugriffsschlüssel'
+
+    'AC_MI_MODULE' => 'Modul',
+
 ];
