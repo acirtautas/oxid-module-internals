@@ -34,8 +34,8 @@ if(trim(Registry::get(Config::class)->getConfigParam('sACActiveCompleteKey')) ==
 $aModule = [
     'id'          => 'moduleinternals',
     'title'       => [
-        'de' => 'OXID Community Module Internals (by Alfonsas Cirtautas)',
-        'en' => 'OXID Community Module Internals (by Alfonsas Cirtautas)',
+        'de' => 'OXID Community Module Internals',
+        'en' => 'OXID Community Module Internals',
     ],
     'description' => [
         'en' => 'Internal OXID eShop module system information and troubleshooting tools (V6).
@@ -49,7 +49,7 @@ $aModule = [
     Komplette &Uuml;bersicht: '.$sLinkAndText,
     ],
     'thumbnail'   => 'module_internals.png',
-    'version'     => '1.1.0',
+    'version'     => '1.2.0',
     'author'      => 'OXID Community',
     'url'         => 'https://github.com/OXIDprojects/oxid-module-internals',
     'email'       => '',

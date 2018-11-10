@@ -154,12 +154,13 @@ class FixHelper
 
         $sModulePath = $this->getModulePath();
 
+        $aModules = [];
         // Remove extended modules by path
         if ($sModulePath && is_array($aInstalledModules)) {
             $aModules = $this->removeExtendedClassesOfModule($aInstalledModules, $sModulePath);
         }
 
-        $aModules = $this->_mergeModuleArrays($aInstalledModules, $aExtendedClassesOfModule);
+        $aModules = $this->_mergeModuleArrays($aModules, $aExtendedClassesOfModule);
         $aModuleChains = $this->getModuleList()->buildModuleChains($aModules);
 
         $this->_saveToConfig('aModules', $aModuleChains);
@@ -167,7 +168,7 @@ class FixHelper
     }
 
     /**
-     * Files files config
+     * Fixes files config
      */
     public function fixFiles()
     {
@@ -179,6 +180,22 @@ class FixHelper
         }
 
         $this->_saveToConfig('aModuleFiles', $aFiles);
+        $this->_clearCache();
+    }
+
+    /**
+     * Fixes module controllers.
+     */
+    public function fixControllers()
+    {
+        $moduleControllers = $this->getInfo('controllers');
+        $controllers = (array)Registry::getConfig()->getConfigParam('aModuleControllers');
+
+        if (is_array($moduleControllers)) {
+            $controllers[$this->getModuleId()] = $moduleControllers;
+        }
+
+        $this->_saveToConfig('aModuleControllers', $controllers);
         $this->_clearCache();
     }
 
@@ -225,7 +242,7 @@ class FixHelper
             foreach ($aModuleBlocks as $aValue) {
                 $sOxId = Registry::get('oxUtilsObject')->generateUId();
                 $sTemplate = $aValue['template'];
-                $iPosition = $aValue['position'] ? $aValue['position'] : 1;
+                $iPosition = $aValue['position'] ?? 1;
                 $sBlock = $aValue['block'];
                 $sFile = $aValue['file'];
 
@@ -257,7 +274,6 @@ class FixHelper
         $oDb->execute('DELETE FROM oxconfigdisplay WHERE oxcfgmodule = ?', [$this->getModuleId()]);
 
         if (is_array($aModuleSettings)) {
-
             foreach ($aModuleSettings as $aValue) {
                 $sOxId = Registry::get('oxUtilsObject')->generateUId();
 
@@ -267,16 +283,16 @@ class FixHelper
                 $sValue = is_null($oConfig->getConfigParam($sName)) ? $aValue['value'] : $oConfig->getConfigParam(
                     $sName
                 );
-                $sGroup = $aValue['group'];
+                $sGroup = $aValue['group'] ?? '';
 
                 $sConstraints = '';
-                if ($aValue['constraints']) {
+                if (isset($aValue['constraints'])) {
                     $sConstraints = $aValue['constraints'];
-                } elseif ($aValue['constrains']) {
+                } elseif (isset($aValue['constrains'])) {
                     $sConstraints = $aValue['constrains'];
                 }
 
-                $iPosition = $aValue['position'] ? $aValue['position'] : 1;
+                $iPosition = $aValue['position'] ?? 1;
 
                 $oConfig->setConfigParam($sName, $sValue);
                 $oConfig->saveShopConfVar($sType, $sName, $sValue, $sShopId, $sModule);
@@ -377,7 +393,7 @@ class FixHelper
                 foreach ($mModuleClassNames as $sKey => $sModuleClassName) {
                     if ($this->getModule()->checkMetaDataVersion('2.0')) {
                         $moduleNameSpace = $this->getModule()->getModuleNameSpace($sModulePath);
-                        if (strpos($sModuleClassName, $moduleNameSpace) !== false) {
+                        if (strlen($moduleNameSpace) && strpos($sModuleClassName, $moduleNameSpace) !== false) {
                             unset($aInstalledModules[ $shopClassName ][ $sKey ]);
                         }
                     } else {

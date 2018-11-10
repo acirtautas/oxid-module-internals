@@ -58,7 +58,7 @@
             [{/foreach}]
         </table>
         [{if !$_ok}]
-        <button class="fix" onclick="module_internals_fix('fix_extend')">[{oxmultilang ident="AC_MI_FIXBTN"}]</button>
+        <button class="fix" onclick="module_internals_fix('fixControllers')">[{oxmultilang ident="AC_MI_FIXBTN"}]</button>
         [{/if}]
         <br>
     </div>
