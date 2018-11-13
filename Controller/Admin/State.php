@@ -12,6 +12,7 @@
 namespace OxidCommunity\ModuleInternals\Controller\Admin;
 
 use OxidCommunity\ModuleInternals\Core\FixHelper as FixHelper;
+use OxidCommunity\ModuleInternals\Core\InternalModule;
 use OxidEsales\Eshop\Application\Controller\Admin\AdminController;
 use OxidEsales\Eshop\Core\Module\ModuleCache as ModuleCache;
 use OxidEsales\Eshop\Core\Module\ModuleList as ModuleList;
@@ -80,7 +81,7 @@ class State extends AdminController
     /**
      * Get active module object.
      *
-     * @return Module
+     * @return InternalModule
      */
     public function getModule()
     {
@@ -116,8 +117,8 @@ class State extends AdminController
             $this->addTplParam('aFiles', $this->getModule()->checkModuleFiles());
         }
 
-        // valid  for  metadata version 1.1 and 2.0
-        if ($this->getModule()->checkMetadataVersion('1.1') || $this->getModule()->checkMetadataVersion('2.0')) {
+        // valid  for  metadata version 1.1 and 2.*
+        if ($this->getModule()->isMetadataVersionGreaterEqual('1.1')) {
             $this->addTplParam('aEvents', $this->getModule()->checkModuleEvents());
             $this->addTplParam('aVersions', $this->getModule()->checkModuleVersions());
         }
