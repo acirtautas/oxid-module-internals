@@ -7,6 +7,7 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Module\ModuleList as ModuleList;
 use OxidEsales\Eshop\Core\Module\Module as Module;
 use OxidEsales\Eshop\Core\SeoEncoder;
+use OxidCommunity\ModuleInternals\Core\InternalModule;
 
 class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\FrontendController
 {
@@ -49,11 +50,13 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
         $aModules = $this->_getActiveModules($oConfig->getConfigParam('aDisabledModules'),$oConfig->getConfigParam('aModulePaths'));
         $aModuleChecks = array();
         $oModule = oxNew(Module::class);
+        /*
+         * @var InternalModule $oModule
+         */
         foreach($aModules as $sModId => $sTitle)
         {
             $aModule = array();
             $oModule->load($sModId);
-
             $aModule['title'] = $sModId." - ".$sTitle;
             $aModule['oxid'] = $oModule->getId();
 
@@ -68,15 +71,13 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
             $aModule['aVersions'] = array();
             $aModule['aControllers'] = array();
 
-            // valid not for  metadata version 1.*
-            if ($oModule->checkMetadataVersion('1.0') || $oModule->checkMetadataVersion('1.1')) {
+            // files not valid for  metadata version gt 2.0
+            if (!$oModule->isMetadataVersionGreaterEqual('2.0')) {
                 $aModule['aFiles'] =  $oModule->checkModuleFiles();
             }
 
             // valid  for  metadata version 1.1 and 2.0
-            if ($oModule->checkMetadataVersion('1.1') || $oModule->checkMetadataVersion('2.0')
-                    || $oModule->checkMetadataVersion('2.1')
-            ) {
+            if ($oModule->isMetadataVersionGreaterEqual('1.1') ) {
                 $aModule['aEvents'] =  $oModule->checkModuleEvents();
                 $aModule['aVersions'] =  $oModule->checkModuleVersions();
             }
@@ -84,7 +85,7 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
             /**
              * @todo check if files is set - should'nt be
              */
-            if ($oModule->checkMetadataVersion('2.0')  || $oModule->checkMetadataVersion('2.1')) {
+            if ($oModule->isMetadataVersionGreaterEqual('2.0')) {
                 $aModule['aControllers'] = $oModule->checkModuleController();
             }
 

@@ -71,7 +71,24 @@ class InternalModule extends InternalModule_parent
             $sLatestVersion = '2.0';
         }
 
+        if (method_exists(ModuleList::class, 'getSmartyPluginDirectories')) {
+            $sLatestVersion = '2.1';
+        }
+
+
         return version_compare($sLatestVersion, $sMetadataVersion) >= 0;
+    }
+
+    /**
+     * check if current metadata version is $sVersion
+     *
+     * @param $sVersion
+     *
+     * @return bool
+     */
+    public function isMetadataVersionGreaterEqual($sVersion)
+    {
+        return version_compare($this->getMetaDataVersion(), $sVersion) >= 0;
     }
 
     /**
@@ -123,7 +140,7 @@ class InternalModule extends InternalModule_parent
      */
     public function checkFileExists($sModulesDir = null, $sClassName, $sExtention = '.php')
     {
-        if ($this->checkMetadataVersion('2.0')) {
+        if ($this->isMetadataVersionGreaterEqual('2.0')) {
             $composerClassLoader = include VENDOR_PATH . 'autoload.php';
 
             return $composerClassLoader->findFile($sClassName);
@@ -188,7 +205,7 @@ class InternalModule extends InternalModule_parent
             /**
              * only convert class names to lower if we don't use namespace
              */
-            if (!$this->checkMetadataVersion('2.0'))
+            if (!$this->isMetadataVersionGreaterEqual('2.0'))
                 $aMetadataExtend = array_change_key_case($aMetadataExtend, CASE_LOWER);
 
             foreach ($aMetadataExtend as $sClassName => $sModuleName) {
@@ -215,7 +232,7 @@ class InternalModule extends InternalModule_parent
                         /**
                          * we don't need to check for filesystem directory - we only use namespaces in version 2.0
                          */
-                        if ($this->checkMetadataVersion('2.0')) {
+                        if ($this->isMetadataVersionGreaterEqual('2.0')) {
                             $moduleNameSpace = $this->getModuleNameSpace($sModulePath);
                             if (!isset($aResult[ $sClassName ][ $sModuleName ]) && strpos($sModuleName, $moduleNameSpace) === 0) {
                                 $aResult[ $sClassName ][ $sModuleName ] = -1;
@@ -449,7 +466,7 @@ class InternalModule extends InternalModule_parent
 
         // Check if all module files are injected.
         if (is_array($aMetadataFiles)) {
-            if (!$this->checkMetadataVersion('2.0')) {
+            if (!$this->isMetadataVersionGreaterEqual('2.0')) {
                 $aMetadataFiles = array_change_key_case($aMetadataFiles, CASE_LOWER);
                 $sModulesDir = Registry::getConfig()->getModulesDir();
             }
@@ -469,7 +486,7 @@ class InternalModule extends InternalModule_parent
                     /**
                      * @todo update to $this->checkFileExists()
                      */
-                    if ($this->checkMetadataVersion('2.0')) {
+                    if ($this->isMetadataVersionGreaterEqual('2.0')) {
                         $composerClassLoader = include VENDOR_PATH . 'autoload.php';
                         if (!$composerClassLoader->findFile($sFile)) {
                             @$aResult[ $sClass ][ $sFile ] = -2;
