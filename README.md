@@ -34,6 +34,7 @@ composer require oxid-community/moduleinternals
  * Check for usage of unified namespaces
 
 # Changelog
+* 2018-11-14  1.2.1 migration support from 1.0.1
 * 2018-11-14  1.2.0 support metadata v2.1
 * 2018-09-13  1.1.0 add external module healthy status page
 * 2017-12-15	1.0.1	namespace, docblocks
