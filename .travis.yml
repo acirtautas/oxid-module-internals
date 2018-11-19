@@ -1,0 +1,22 @@
+language: php
+
+php:
+  - "7.0"
+  - "7.1"
+
+env: TRAVIS_ERROR_LEVEL=22519
+
+services: mysql
+
+before_install:
+  - echo 'Europe/Berlin' | sudo tee /etc/timezone
+  - sudo dpkg-reconfigure --frontend noninteractive tzdata
+  - mysql -e 'CREATE DATABASE oxid;'
+
+before_script:
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - sh ./.travis.before_script.sh
+
+script:
+  - cd ~/OXID/
+  - ./vendor/bin/runtests
