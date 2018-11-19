@@ -14,5 +14,5 @@ sed -i -e "s@partial_module_paths: null@partial_module_paths: fp/debugbar@g" tes
 sed -i -e "s@run_tests_for_shop: true@run_tests_for_shop: false@g" test_config.yml
 
 # DebugBar Registrieren
-composer config repositories.florianpalme/oxid-debugbar vcs ${TRAVIS_BUILD_DIR}
-composer require "florianpalme/oxid-debugbar:dev-${BRANCH}#${TRAVIS_COMMIT}"
+composer config repositories.oxid-community/moduleinternals vcs ${TRAVIS_BUILD_DIR}
+composer require "oxid-community/moduleinternals:dev-${BRANCH}#${TRAVIS_COMMIT}"
