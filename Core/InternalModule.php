@@ -290,7 +290,7 @@ class InternalModule extends InternalModule_parent
                     $iState = -2;
                 }
 
-                $aResult[ $aBlock['template'] ][ $aBlock['file'] ]['file'] = $iState;
+                $aResult[$aBlock['template']][$aBlock['block']][$aBlock['file']]['file'] = $iState;
             }
         }
 
@@ -300,13 +300,13 @@ class InternalModule extends InternalModule_parent
 
                 $sBaseFile = basename($aDbBlock['OXFILE']);
 
-                if (!isset($aResult[ $aDbBlock['OXTEMPLATE'] ][ $aDbBlock['OXFILE'] ])) {
-                    $aResult[ $aDbBlock['OXTEMPLATE'] ][ $aDbBlock['OXFILE'] ] = -1;
+                if (!isset($aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXBLOCKNAME']][$aDbBlock['OXFILE']])) {
+                    $aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXBLOCKNAME']][$aDbBlock['OXFILE']]['file'] = -1;
                     if (!file_exists($sModulesDir . '/' . $sModulePath . '/' . $aDbBlock['OXFILE']) &&
                         !file_exists($sModulesDir . '/' . $sModulePath . '/out/blocks/' . $sBaseFile) &&
                         !file_exists($sModulesDir . '/' . $sModulePath . '/out/blocks/' . $sBaseFile) . '.tpl'
                     ) {
-                        $aResult[ $aDbBlock['OXTEMPLATE'] ][ $aDbBlock['OXFILE'] ]['file'] = -3;
+                        $aResult[$aDbBlock['OXTEMPLATE']][$aDbBlock['OXBLOCKNAME']][$aDbBlock['OXFILE']]['file'] = -3;
                     }
                 }
             }
@@ -335,11 +335,11 @@ class InternalModule extends InternalModule_parent
                 }
 
                 if (empty($sTemplate)) {
-                    $aResult[ $aBlock['template'] ][ $aBlock['file'] ]['template'] = -3;
+                    $aResult[$aBlock['template']][$aBlock['block']][$aBlock['file']]['template'] = -3;
                 } else {
                     $sContent = file_get_contents($sTemplate);
                     if (!preg_match('/\[{.*block.* name.*= *"' . $aBlock['block'] . '".*}\]/', $sContent)) {
-                        $aResult[ $aBlock['template'] ][ $aBlock['file'] ]['template'] = -1;
+                        $aResult[$aBlock['template']][$aBlock['block']][$aBlock['file']]['block'] = -3;
                     }
                 }
             }
