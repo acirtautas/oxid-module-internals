@@ -19,8 +19,6 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
     /** @var Module */
     protected $_oModule;
 
-    protected $_sModId;
-
     public function init()
     {
         $oConfig  = Registry::get(Config::class);
@@ -55,42 +53,10 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
          */
         foreach($aModules as $sModId => $sTitle)
         {
-            $aModule = array();
             $oModule->load($sModId);
-            $aModule['title'] = $sModId." - ".$sTitle;
-            $aModule['oxid'] = $oModule->getId();
 
-            $aModule['aExtended'] = $oModule->checkExtendedClasses();
-            $aModule['aBlocks'] = $oModule->checkTemplateBlocks();
-            $aModule['aSettings'] = $oModule->checkModuleSettings();
-            //$aModule['aFiles'] = $oModule->checkModuleFiles();
-            $aModule['aTemplates'] = $oModule->checkModuleTemplates();
+            $aModule = $oModule->checkState($sTitle);
 
-            $aModule['aFiles'] = array();
-            $aModule['aEvents'] = array();
-            $aModule['aVersions'] = array();
-            $aModule['aControllers'] = array();
-
-            // files not valid for  metadata version gt 2.0
-            if (!$oModule->isMetadataVersionGreaterEqual('2.0')) {
-                $aModule['aFiles'] =  $oModule->checkModuleFiles();
-            }
-
-            // valid  for  metadata version 1.1 and 2.0
-            if ($oModule->isMetadataVersionGreaterEqual('1.1') ) {
-                $aModule['aEvents'] =  $oModule->checkModuleEvents();
-                $aModule['aVersions'] =  $oModule->checkModuleVersions();
-            }
-
-            /**
-             * @todo check if files is set - should'nt be
-             */
-            if ($oModule->isMetadataVersionGreaterEqual('2.0')) {
-                $aModule['aControllers'] = $oModule->checkModuleController();
-            }
-
-
-            $this->_sModId  = '';
             $aModuleChecks[$sModId] = $aModule;
         }
         $this->_aViewData['aModules'] = $aModuleChecks;
@@ -150,4 +116,6 @@ class CheckConsistency  extends \OxidEsales\Eshop\Application\Controller\Fronten
 
         return $aActiveModules;
     }
+
+
 }
