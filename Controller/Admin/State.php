@@ -106,28 +106,11 @@ class State extends AdminController
     public function render()
     {
         //valid for all metadata versions
-        $this->addTplParam('oxid', $this->getModule()->getId());
-        $this->addTplParam('aExtended', $this->getModule()->checkExtendedClasses());
-        $this->addTplParam('aBlocks', $this->getModule()->checkTemplateBlocks());
-        $this->addTplParam('aSettings', $this->getModule()->checkModuleSettings());
-        $this->addTplParam('aTemplates', $this->getModule()->checkModuleTemplates());
-
-        // valid not for  metadata version 1.*
-        if ($this->getModule()->checkMetadataVersion('1.0') || $this->getModule()->checkMetadataVersion('1.1')) {
-            $this->addTplParam('aFiles', $this->getModule()->checkModuleFiles());
+        $module = $this->getModule();
+        $state = $module->checkState();
+        foreach ($state as $paramName => $paramValue) {
+            $this->addTplParam($paramName, $paramValue);
         }
-
-        // valid  for  metadata version 1.1 and 2.*
-        if ($this->getModule()->isMetadataVersionGreaterEqual('1.1')) {
-            $this->addTplParam('aEvents', $this->getModule()->checkModuleEvents());
-            $this->addTplParam('aVersions', $this->getModule()->checkModuleVersions());
-        }
-
-        /**
-         * @todo check if files is set - should'nt be
-         */
-        if ($this->getModule()->checkMetadataVersion('2.0'))
-            $this->addTplParam('aControllers', $this->getModule()->checkModuleController());
 
 
         $this->addTplParam(

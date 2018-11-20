@@ -562,4 +562,49 @@ class InternalModule extends InternalModule_parent
 
         return $moduleNameSpace;
     }
+
+    /**
+     * @param $oModule
+     * @param $sModId
+     * @param $sTitle
+     * @return array
+     */
+    public function checkState($sTitle = '')
+    {
+        $oModule = $this;
+        $aModule = array();
+        $aModule['oxid'] = $oModule->getId();
+        $aModule['title'] = $aModule['oxid'] . " - " . $sTitle;
+
+        $aModule['aExtended'] = $oModule->checkExtendedClasses();
+        $aModule['aBlocks'] = $oModule->checkTemplateBlocks();
+        $aModule['aSettings'] = $oModule->checkModuleSettings();
+        $aModule['aTemplates'] = $oModule->checkModuleTemplates();
+
+        $aModule['aFiles'] = array();
+        $aModule['aEvents'] = array();
+        $aModule['aVersions'] = array();
+        $aModule['aControllers'] = array();
+
+        // files are valid for  metadata version < 2.0
+        if ($oModule->isMetadataVersionGreaterEqual('2.0')) {
+            /**
+             * @todo check if files is set - should'nt be
+             */
+        } else {
+            $aModule['aFiles'] = $oModule->checkModuleFiles();
+        }
+
+        // valid  for  metadata version >= 1.1
+        if ($oModule->isMetadataVersionGreaterEqual('1.1')) {
+            $aModule['aEvents'] = $oModule->checkModuleEvents();
+            $aModule['aVersions'] = $oModule->checkModuleVersions();
+        }
+
+
+        if ($oModule->isMetadataVersionGreaterEqual('2.0')) {
+            $aModule['aControllers'] = $oModule->checkModuleController();
+        }
+        return $aModule;
+    }
 }
