@@ -190,7 +190,7 @@ class InternalModule extends InternalModule_parent
             return $this->checked;
         }
         $title = parent::getTitle();
-        $res = $this->checkState();
+        $this->checkState();
         if (! $this->stateFine) {
             $title .= ' <strong style="color: #900">Issue found!</strong>';
         }
@@ -248,6 +248,13 @@ class InternalModule extends InternalModule_parent
                     }
                 }
 
+                if (strpos($sClassName,'OxidEsales\\EshopCommunity\\') !== false ||
+                    strpos($sClassName,'OxidEsales\\EshopEnterprise\\') !== false ||
+                    strpos($sClassName,'OxidEsales\\EshopProfessional\\') !== false
+                ) {
+                    $iState = -3;
+                }
+
                 if (!$this->checkPhpFileExists($sModulesDir, $sModuleName)) {
                     $iState = -2; // class sfatalm
                 }
@@ -260,6 +267,9 @@ class InternalModule extends InternalModule_parent
 
         // Check for redundant extend data by path
         if ($sModulePath && is_array($aAllModules)) {
+            if ($this->isMetadataVersionGreaterEqual('2.0')) {
+                $moduleNameSpace = $this->getModuleNameSpace($sModulePath);
+            }
             foreach ($aAllModules as $sClassName => $mModuleName) {
                 if (is_array($mModuleName)) {
                     foreach ($mModuleName as $sModuleName) {
@@ -267,7 +277,6 @@ class InternalModule extends InternalModule_parent
                          * we don't need to check for filesystem directory - we only use namespaces in version 2.0
                          */
                         if ($this->isMetadataVersionGreaterEqual('2.0')) {
-                            $moduleNameSpace = $this->getModuleNameSpace($sModulePath);
                             if (!isset($aResult[ $sClassName ][ $sModuleName ]) && strpos($sModuleName, $moduleNameSpace) === 0) {
                                 $this->stateFine = false;
                                 $aResult[ $sClassName ][ $sModuleName ] = -1;
@@ -599,6 +608,17 @@ class InternalModule extends InternalModule_parent
      */
     public function getModuleNameSpace($sModulePath)
     {
+        $sModulesDir = Registry::getConfig()->getModulesDir();
+        $file = $sModulesDir . $sModulePath . '/composer.json';
+        if (file_exists($file)) {
+            $data = json_decode(file_get_contents($file), true);
+            $namesspaces = $data["autoload"]["psr-4"];
+            $prefix = array_keys($namesspaces);
+            $moduleNameSpace = $prefix[0];
+            return $moduleNameSpace;
+        }
+
+
         $moduleNameSpace = '';
         $composerClassLoader = include VENDOR_PATH . 'autoload.php';
         $nameSpacePrefixes = $composerClassLoader->getPrefixesPsr4();
