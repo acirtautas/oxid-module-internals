@@ -21,6 +21,8 @@ use \OxidEsales\Eshop\Core\Module\ModuleList as ModuleList;
  */
 class InternalModule extends InternalModule_parent
 {
+    protected $stateFine = true;
+    protected $checked = false;
 
     /**
      * Get template blocks defined in database.
@@ -165,7 +167,6 @@ class InternalModule extends InternalModule_parent
         $sDatabaseVersion = $this->getModuleEntries(ModuleList::MODULE_KEY_VERSIONS);
 
         $aResult = [];
-
         // Check version..
         if ($sMetadataVersion) {
             $aResult[ $sMetadataVersion ] = 0;
@@ -175,12 +176,26 @@ class InternalModule extends InternalModule_parent
         if ($sDatabaseVersion) {
             if (!isset($aResult[ $sDatabaseVersion ])) {
                 $aResult[ $sDatabaseVersion ] = -1;
+                $this->stateFine = false;
             } else {
                 $aResult[ $sDatabaseVersion ] = 1;
             }
         }
 
         return $aResult;
+    }
+
+    public function getTitle() {
+        if ($this->checked !== false) {
+            return $this->checked;
+        }
+        $title = parent::getTitle();
+        $res = $this->checkState();
+        if (! $this->stateFine) {
+            $title .= ' <strong style="color: #900">Issue found!</strong>';
+        }
+        $this->checked = $title;
+        return $title;
     }
 
     /**
@@ -233,10 +248,13 @@ class InternalModule extends InternalModule_parent
                     }
                 }
 
-                if ($this->checkPhpFileExists($sModulesDir, $sModuleName))
-                    $aResult[ $sClassName ][ $sModuleName ] = $iState;
-                else
-                    $aResult[ $sClassName ][ $sModuleName ] = -2; // class sfatalm
+                if (!$this->checkPhpFileExists($sModulesDir, $sModuleName)) {
+                    $iState = -2; // class sfatalm
+                }
+                if ($iState != 1) {
+                    $this->stateFine = false;
+                }
+                $aResult[ $sClassName ][ $sModuleName ] = $iState;
             }
         }
 
@@ -251,10 +269,12 @@ class InternalModule extends InternalModule_parent
                         if ($this->isMetadataVersionGreaterEqual('2.0')) {
                             $moduleNameSpace = $this->getModuleNameSpace($sModulePath);
                             if (!isset($aResult[ $sClassName ][ $sModuleName ]) && strpos($sModuleName, $moduleNameSpace) === 0) {
+                                $this->stateFine = false;
                                 $aResult[ $sClassName ][ $sModuleName ] = -1;
                             }
                         } else {
                             if (!isset($aResult[ $sClassName ][ $sModuleName ]) && strpos($sModuleName, $sModulePath . '/') === 0) {
+                                $this->stateFine = false;
                                 $aResult[ $sClassName ][ $sModuleName ] = -1;
                             }
                         }
@@ -305,7 +325,9 @@ class InternalModule extends InternalModule_parent
                 ) {
                     $iState = -2;
                 }
-
+                if ($iState != 1) {
+                    $this->stateFine = false;
+                }
                 $aResult[$aBlock['template']][$aBlock['block']][$aBlock['file']]['file'] = $iState;
             }
         }
@@ -352,6 +374,7 @@ class InternalModule extends InternalModule_parent
 
                 if (empty($sTemplate)) {
                     $aResult[$aBlock['template']][$aBlock['block']][$aBlock['file']]['template'] = -3;
+                    $this->stateFine = false;
                 } else {
                     $sContent = file_get_contents($sTemplate);
                     if (!preg_match('/\[{.*block.* name.*= *"' . $aBlock['block'] . '".*}\]/', $sContent)) {
@@ -384,6 +407,7 @@ class InternalModule extends InternalModule_parent
             }
         }
 
+        $problems = $aResult;
         // Check for redundant settings for current module.
         if (is_array($aDatabaseSettings)) {
             foreach ($aDatabaseSettings as $aData) {
@@ -391,10 +415,16 @@ class InternalModule extends InternalModule_parent
 
                 if (!isset($aResult[ $sName ])) {
                     $aResult[ $sName ] = -1;
+                    $this->stateFine = false;
                 } else {
                     $aResult[ $sName ] = 1;
+                    unset($problems[$sName]);
                 }
             }
+        }
+
+        if ($problems) {
+            $this->stateFine = false;
         }
 
         return $aResult;
@@ -420,6 +450,7 @@ class InternalModule extends InternalModule_parent
                 $aResult[ $sTemplate ][ $sFile ] = 0;
                 if (!$this->checkFileExists($sModulesDir . '/' . $sFile)) {
                     $aResult[ $sTemplate ][ $sFile ] = -2;
+                    $this->stateFine = false;
                 }
             }
         }
@@ -428,6 +459,7 @@ class InternalModule extends InternalModule_parent
         if (is_array($aDatabaseTemplates)) {
             foreach ($aDatabaseTemplates as $sTemplate => $sFile) {
                 if (!isset($aResult[ $sTemplate ][ $sFile ])) {
+                    $this->stateFine = false;
                     @$aResult[ $sTemplate ][ $sFile ] = -1;
                     if (!file_exists($sModulesDir . '/' . $sFile)) {
                         @$aResult[ $sTemplate ][ $sFile ] = -3;
@@ -488,8 +520,10 @@ class InternalModule extends InternalModule_parent
             foreach ($aMetadataFiles as $sClass => $sFile) {
                 $aResult[ $sClass ][ $sFile ] = 0;
 
-                if (!$this->checkPhpFileExists($sModulesDir, $sFile, null))
-                    $aResult[ $sClass ][ $sFile ] = -2;
+                if (!$this->checkPhpFileExists($sModulesDir, $sFile, null)) {
+                    $aResult[$sClass][$sFile] = -2;
+                    $this->stateFine = false;
+                }
             }
         }
 
@@ -505,10 +539,12 @@ class InternalModule extends InternalModule_parent
                         $composerClassLoader = include VENDOR_PATH . 'autoload.php';
                         if (!$composerClassLoader->findFile($sFile)) {
                             @$aResult[ $sClass ][ $sFile ] = -2;
+                            $this->stateFine = false;
                         }
                     } else {
                         if (!file_exists($sModulesDir . $sFile)) {
                             @$aResult[ $sClass ][ $sFile ] = -3;
+                            $this->stateFine = false;
                         }
                     }
                 } elseif ($aResult[ $sClass ][ $sFile ] == 0) {
@@ -546,6 +582,7 @@ class InternalModule extends InternalModule_parent
                 $sCallback = print_r($mCallback, 1);
                 if (!isset($aResult[ $sEvent ][ $sCallback ])) {
                     $aResult[ $sEvent ][ $sCallback ] = -1;
+                    $this->stateFine = false;
                 } else {
                     $aResult[ $sEvent ][ $sCallback ] = 1;
                 }
