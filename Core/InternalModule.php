@@ -138,16 +138,20 @@ class InternalModule extends InternalModule_parent
      *
      * @return bool
      */
-    public function checkFileExists($sModulesDir = null, $sClassName, $sExtention = '.php')
+    public function checkPhpFileExists($sModulesDir = null, $sClassName, $sExtention = '.php')
     {
         if ($this->isMetadataVersionGreaterEqual('2.0')) {
             $composerClassLoader = include VENDOR_PATH . 'autoload.php';
 
             return $composerClassLoader->findFile($sClassName);
         } else {
-            return file_exists($sModulesDir . $sClassName . $sExtention);
+            $sExtensionPath = $sModulesDir . $sClassName . $sExtention;
+            $res = $this->checkFileExists($sExtensionPath);
+            return $res;
         }
     }
+
+
 
     /**
      * Analyze versions in metadata
@@ -205,8 +209,20 @@ class InternalModule extends InternalModule_parent
             /**
              * only convert class names to lower if we don't use namespace
              */
-            if (!$this->isMetadataVersionGreaterEqual('2.0'))
+            if (!$this->isMetadataVersionGreaterEqual('2.0')) {
                 $aMetadataExtend = array_change_key_case($aMetadataExtend, CASE_LOWER);
+                //convert legacy classnames because $aAllModules dos not contain legacy classes
+                if (method_exists(Registry::class ,'getBackwardsCompatibilityClassMap')) {
+                    $map = Registry::getBackwardsCompatibilityClassMap();
+                    foreach ($aMetadataExtend as $legacyName => $file) {
+                        if (isset($map[$legacyName])) {
+                            $namespaceName = $map[$legacyName];
+                            $aMetadataExtend[$namespaceName] = $file;
+                            unset($aMetadataExtend[$legacyName]);
+                        }
+                    }
+                }
+            }
 
             foreach ($aMetadataExtend as $sClassName => $sModuleName) {
                 $iState = 0;
@@ -217,7 +233,7 @@ class InternalModule extends InternalModule_parent
                     }
                 }
 
-                if ($this->checkFileExists($sModulesDir, $sModuleName))
+                if ($this->checkPhpFileExists($sModulesDir, $sModuleName))
                     $aResult[ $sClassName ][ $sModuleName ] = $iState;
                 else
                     $aResult[ $sClassName ][ $sModuleName ] = -2; // class sfatalm
@@ -400,10 +416,9 @@ class InternalModule extends InternalModule_parent
 
         // Check if all module templates are injected.
         if (is_array($aMetadataTemplates)) {
-            $aMetadataTemplates = array_change_key_case($aMetadataTemplates, CASE_LOWER);
             foreach ($aMetadataTemplates as $sTemplate => $sFile) {
                 $aResult[ $sTemplate ][ $sFile ] = 0;
-                if (!file_exists($sModulesDir . '/' . $sFile)) {
+                if (!$this->checkFileExists($sModulesDir . '/' . $sFile)) {
                     $aResult[ $sTemplate ][ $sFile ] = -2;
                 }
             }
@@ -473,7 +488,7 @@ class InternalModule extends InternalModule_parent
             foreach ($aMetadataFiles as $sClass => $sFile) {
                 $aResult[ $sClass ][ $sFile ] = 0;
 
-                if (!$this->checkFileExists($sModulesDir, $sFile, null))
+                if (!$this->checkPhpFileExists($sModulesDir, $sFile, null))
                     $aResult[ $sClass ][ $sFile ] = -2;
             }
         }
@@ -606,5 +621,26 @@ class InternalModule extends InternalModule_parent
             $aModule['aControllers'] = $oModule->checkModuleController();
         }
         return $aModule;
+    }
+
+    /**
+     * @param $sExtensionPath
+     * @return bool
+     */
+    protected function checkFileExists($sExtensionPath)
+    {
+        $res = file_exists($sExtensionPath);
+        if ($res) {
+            $dir = dirname($sExtensionPath);
+            $file = basename($sExtensionPath);
+
+            //check if filename case sensitive so we will see errors
+            //also on case insensitive filesystems
+            if (!in_array($file, scandir($dir))) {
+                $res = false;
+            }
+
+        }
+        return $res;
     }
 }
