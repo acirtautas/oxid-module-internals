@@ -2,7 +2,7 @@
   "name": "oxid-community/moduleinternals",
   "description": "Display module internals",
   "type": "oxideshop-module",
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "keywords": [
     "oxid",
     "modules",
@@ -13,9 +13,15 @@
   "license": [
     "GPL-3.0"
   ],
+  "require":{
+    "symfony/console" : "^2.7",
+    "composer/composer" : "^1.6",
+    "oxid-esales/oxideshop-ce" : "^6.0"
+  },
   "extra": {
     "oxideshop": {
-      "target-directory": "oxcom/moduleinternals"
+      "target-directory": "oxcom/moduleinternals",
+      "console-commands" : ["OxidCommunity\\ModuleInternals\\Command\\ModuleFixCommand"]
     }
   },
   "autoload": {
